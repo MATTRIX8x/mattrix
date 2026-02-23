@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATTRIX v2.00 — User Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg-deep: #0a0d1a;
+    --bg-main: #0e1121;
+    --bg-panel: #141828;
+    --bg-card: #1a1f35;
+    --bg-hover: #1f2640;
+    --cyan: #00ced1;
+    --cyan-dim: #008c91;
+    --cyan-glow: rgba(0,206,209,0.15);
+    --green: #00ff7f;
+    --red: #ff4444;
+    --yellow: #ffd700;
+    --orange: #ff8c00;
+    --text: #c8d0e0;
+    --text-dim: #6b7394;
+    --text-bright: #e8ecf4;
+    --border: #283050;
+    --border-light: #384268;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ─── Header ─── */
+  header {
+    background: linear-gradient(135deg, #0c1428 0%, #0e1a35 50%, #0c1428 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 35px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  }
+  header h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  header .subtitle {
+    font-size: 1.05em;
+    color: var(--text-dim);
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+  header .version {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 4px 18px;
+    border: 1px solid var(--cyan-dim);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8em;
+    color: var(--cyan-dim);
+    letter-spacing: 2px;
+  }
+  header .platform {
+    margin-top: 12px;
+    font-size: 0.85em;
+    color: var(--text-dim);
+  }
+  header .platform span {
+    color: var(--cyan-dim);
+    font-weight: 500;
+  }
+
+  /* ─── Navigation ─── */
+  nav {
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+  }
+  nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.82em;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 3px;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  nav a:hover {
+    color: var(--cyan);
+    background: var(--cyan-glow);
+  }
+
+  /* ─── Main ─── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+
+  /* ─── Sections ─── */
+  .section {
+    margin-bottom: 12px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 22px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+  }
+  .section-header:hover {
+    border-color: var(--cyan-dim);
+    background: var(--bg-card);
+  }
+  .section-header .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75em;
+    color: var(--cyan);
+    background: rgba(0,206,209,0.1);
+    padding: 3px 10px;
+    border-radius: 3px;
+    min-width: 28px;
+    text-align: center;
+  }
+  .section-header h2 {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-bright);
+    flex: 1;
+  }
+  .section-header .arrow {
+    font-size: 0.9em;
+    color: var(--text-dim);
+    transition: transform 0.3s;
+  }
+  .section.open .section-header .arrow {
+    transform: rotate(90deg);
+  }
+  .section-content {
+    display: none;
+    padding: 24px 22px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+  }
+  .section.open .section-content {
+    display: block;
+  }
+
+  /* ─── Content Styles ─── */
+  h3 {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--cyan);
+    margin: 24px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3:first-child { margin-top: 0; }
+
+  p { margin-bottom: 12px; }
+
+  .key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    color: var(--cyan);
+    background: rgba(0,206,209,0.08);
+    padding: 1px 7px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    color: var(--green);
+  }
+
+  .warn {
+    color: var(--orange);
+    font-weight: 500;
+  }
+
+  .danger {
+    color: var(--red);
+    font-weight: 500;
+  }
+
+  /* ─── Tables ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 18px;
+    font-size: 0.9em;
+  }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    color: var(--cyan);
+    font-weight: 500;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  td {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:hover td { background: var(--bg-hover); }
+
+  /* ─── Info Boxes ─── */
+  .box {
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin: 14px 0;
+    font-size: 0.92em;
+    border-left: 3px solid;
+  }
+  .box.info {
+    background: rgba(0,206,209,0.06);
+    border-color: var(--cyan-dim);
+  }
+  .box.warn {
+    background: rgba(255,140,0,0.06);
+    border-color: var(--orange);
+    color: var(--text);
+  }
+  .box.danger {
+    background: rgba(255,68,68,0.06);
+    border-color: var(--red);
+    color: var(--text);
+  }
+  .box.success {
+    background: rgba(0,255,127,0.06);
+    border-color: var(--green);
+  }
+  .box strong {
+    color: var(--text-bright);
+  }
+
+  /* ─── Steps ─── */
+  .step {
+    display: flex;
+    gap: 14px;
+    margin: 10px 0;
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8em;
+    color: var(--bg-deep);
+    background: var(--cyan);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* ─── Code blocks ─── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    background: var(--bg-card);
+    padding: 2px 6px;
+    border-radius: 2px;
+    color: var(--cyan);
+  }
+
+  .path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    color: var(--yellow);
+    word-break: break-all;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-dim);
+    font-size: 0.8em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  footer .copy { color: var(--cyan-dim); }
+
+  /* ─── Print ─── */
+  @media print {
+    body { background: #fff; color: #222; font-size: 11pt; }
+    header { background: #f5f5f5; }
+    header h1 { color: #006666; }
+    nav { display: none; }
+    .section-content { display: block !important; }
+    .section-header .arrow { display: none; }
+    .box { border: 1px solid #ccc; }
+    table { font-size: 9pt; }
+    th { background: #eee; }
+  }
+
+  /* ─── Mobile ─── */
+  @media (max-width: 640px) {
+    header h1 { font-size: 1.5em; letter-spacing: 2px; }
+    nav a { font-size: 0.75em; padding: 4px 10px; }
+    main { padding: 16px 12px 40px; }
+    .section-header { padding: 12px 14px; }
+    .section-content { padding: 16px 14px; }
+    table { font-size: 0.82em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MATTRIX v2.00</h1>
+  <div class="subtitle">User Manual — Forex Basket Trading System</div>
+  <div class="version">BETA RELEASE — EXPIRES 2026.05.31</div>
+  <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicator + Synthetic Charts</div>
+</header>
+
+<nav>
+  <a href="#quickstart">Quick Start</a>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#settings">Settings</a>
+  <a href="#manual">Manual Trading</a>
+  <a href="#auto">Auto Trading</a>
+  <a href="#risk">Risk Management</a>
+  <a href="#troubleshoot">Troubleshooting</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 1. QUICK START -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section open" id="quickstart">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">1</span>
+    <h2>Quick Start</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <div class="box info">
+      MATTRIX runs entirely inside <strong>MetaTrader 5</strong>. No external tools, no Excel, no bridges. All analysis, execution, and risk management happen in one platform.
+    </div>
+
+    <h3>Requirements</h3>
+    <p>MetaTrader 5 (any broker), demo or live account. All 28 major currency pairs must be visible in Market Watch (Ctrl+M). The EA trades the Big8 currencies: <span class="key">EUR</span> <span class="key">GBP</span> <span class="key">AUD</span> <span class="key">NZD</span> <span class="key">USD</span> <span class="key">CAD</span> <span class="key">CHF</span> <span class="key">JPY</span>.</p>
+
+    <h3>Installation</h3>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <div>Copy <code>MATTRIX_v2.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Copy <code>MATTRIX_SyntheticCharts.ex5</code> to <span class="path">MQL5\Experts</span>. Copy <code>MATTRIX_RONROFF.ex5</code> to <span class="path">MQL5\Indicators</span>. That's it — three files, no source code needed.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">2</span>
+      <div>Open any major pair chart (e.g. BTCUSD or EURUSD). Drag the EA onto the chart. In the Inputs tab, enter your <span class="key">Beta Key</span>. Check "Allow Algo Trading".</div>
+    </div>
+    <div class="step">
+      <span class="step-num">3</span>
+      <div>Attach <code>MATTRIX_SyntheticCharts.ex5</code> to a second chart for synthetic currency index charts (#EUR, #GBP, ... #RON, #ROFF). Attach <code>MATTRIX_RONROFF.ex5</code> indicator to any chart for the RON/ROFF strength display.</div>
+    </div>
+
+    <div class="box success">
+      <strong>First run:</strong> Start with a demo account and default settings. Observe for at least one full trading session before changing anything. The defaults are conservative and safe.
+    </div>
+
+    <h3>Delivered Files</h3>
+    <table>
+      <tr><th>File</th><th>Type</th><th>Copy To</th><th>Purpose</th></tr>
+      <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard</td></tr>
+      <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF charts</td></tr>
+      <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF strength display</td></tr>
+    </table>
+
+    <div class="box warn">
+      <strong>Security:</strong> Only compiled <code>.ex5</code> files are distributed. Source code is never shared. Do not distribute files to anyone outside the beta group.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 2. DASHBOARD OVERVIEW -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="dashboard">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">2</span>
+    <h2>Dashboard Overview</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Header Bar</h3>
+    <table>
+      <tr><th>Element</th><th>Description</th></tr>
+      <tr><td>MATTRIX v2.00</td><td>Version identifier</td></tr>
+      <tr><td>Lot mode</td><td>Shows current $/pip or lot size setting</td></tr>
+      <tr><td>Date/Time</td><td>Local time (your PC clock)</td></tr>
+      <tr><td>P/L</td><td>Total portfolio profit/loss with trade count</td></tr>
+    </table>
+
+    <h3>Main Grid — 28 Pairs</h3>
+    <p>Each row represents one currency pair with the following columns:</p>
+    <table>
+      <tr><th>Column</th><th>Description</th><th>Color Logic</th></tr>
+      <tr><td><span class="key">Pair</span></td><td>Currency pair name (clickable → opens chart)</td><td>Green BG = BUY signal, Red BG = SELL signal</td></tr>
+      <tr><td><span class="key">Sprd</span></td><td>Current spread in pips</td><td>Orange normal, Red if exceeds MaxSpread</td></tr>
+      <tr><td><span class="key">PipW</span></td><td>Weekly pips (from Monday open)</td><td>Green = up, Red = down</td></tr>
+      <tr><td><span class="key">PipD</span></td><td>Daily pips (from today's open)</td><td>Green = up, Red = down</td></tr>
+      <tr><td><span class="key">PipS</span></td><td>Session pips (from last pip reset)</td><td>Green = up, Red = down</td></tr>
+      <tr><td><span class="key">PipE</span></td><td>Event pips (active only during Session 4 events)</td><td>Gold = up, Orange = down, Dash = no event</td></tr>
+      <tr><td><span class="key">PStr</span></td><td>Pip Strength: base currency pips minus quote currency pips</td><td>Green &gt;5, Red &lt;-5, Gray neutral</td></tr>
+      <tr><td><span class="key">Scr</span></td><td>Score differential: base score minus quote score</td><td>Green ≥4, Red ≤-4, Gray neutral</td></tr>
+      <tr><td><span class="key">Gap</span></td><td>Momentum gap indicator</td><td>Green = bullish, Red = bearish</td></tr>
+      <tr><td><span class="key">ADR%</span></td><td>How much of the average daily range is consumed</td><td>Green &lt;50%, Yellow 50-80%, Red &gt;80%</td></tr>
+      <tr><td><span class="key">ADR</span></td><td>Average Daily Range in pips (14-day)</td><td>Yellow (info only)</td></tr>
+      <tr><td><span class="key">BUY/SELL/CLOSE</span></td><td>Manual trade buttons per pair</td><td>Active or grayed when spread-blocked</td></tr>
+      <tr><td><span class="key">LotB/LotS</span></td><td>Current buy/sell lot volume</td><td>Green buy, Red sell, hidden if none</td></tr>
+      <tr><td><span class="key">OrdB/OrdS</span></td><td>Number of open buy/sell orders</td><td>Green buy, Red sell, hidden if none</td></tr>
+      <tr><td><span class="key">P/L</span></td><td>Profit/loss per pair (pips or $)</td><td>Green profit, Red loss, hidden if none</td></tr>
+    </table>
+
+    <h3>MATTRIX Score Panel (Right Side)</h3>
+    <p>Shows all 8 currencies ranked by their MATTRIX Score, strongest on top. Each row displays the rank, currency name, score (with ▲▼ visual bars), COT score, session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums.</p>
+
+    <h3>Basket Buttons (Footer)</h3>
+    <p>Currency basket buttons for EUR, GBP, AUD, NZD, USD, CAD, CHF, JPY — each with BUY, SELL, CLOSE. Plus RON and ROFF basket buttons. Spread is shown per basket; buttons are grayed out when basket spread is too high.</p>
+
+    <h3>Info Panel</h3>
+    <table>
+      <tr><th>Row</th><th>Content</th><th>Update</th></tr>
+      <tr><td>1</td><td>BAL, EQU, Δ (equity-balance), Margin Level %</td><td>Live</td></tr>
+      <tr><td>2</td><td>Portfolio TP, Portfolio SL, Pair TP, Pair SL</td><td>From settings</td></tr>
+      <tr><td>3</td><td>Profit Locks L1–L4 (format: trigger→floor)</td><td>Settings + active lock highlighted green</td></tr>
+      <tr><td>4</td><td>Trail status, active Session, Cycles counter, DD%</td><td>Live</td></tr>
+    </table>
+    <p>The info panel can be hidden/shown with the <span class="key">Hide Info</span> button below it.</p>
+
+    <h3>Dashboard Sorting</h3>
+    <p>When enabled (<span class="key">Sort pairs = true</span>), the 28 pairs are sorted by the selected column with the strongest on top. Sorting refreshes every N seconds (configurable) to avoid visual jumping. All button clicks remain correctly mapped to the displayed pair.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 3. SETTINGS REFERENCE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="settings">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">3</span>
+    <h2>Settings Reference</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Trigger Filters</h3>
+    <p>Each filter can be enabled/disabled independently. A trade is only opened when ALL active filters agree.</p>
+    <table>
+      <tr><th>Filter</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">PipW</span></td><td><span class="val">OFF</span></td><td>Weekly pip threshold — too aggressive for first test</td></tr>
+      <tr><td><span class="key">PipD</span></td><td><span class="val">OFF</span></td><td>Daily pip threshold</td></tr>
+      <tr><td><span class="key">PipS</span></td><td><span class="val">OFF</span></td><td>Session pip threshold</td></tr>
+      <tr><td><span class="key">PipE</span></td><td><span class="val">OFF</span></td><td>Event pip threshold (Session 4)</td></tr>
+      <tr><td><span class="key">PipStrength</span></td><td><span class="val">ON</span> Buy 80 / Sell -80</td><td>Minimum pip strength differential to trigger trade</td></tr>
+      <tr><td><span class="key">Score</span></td><td><span class="val">ON</span> Buy 4 / Sell -4</td><td>Minimum score differential — only trades the strongest setups</td></tr>
+      <tr><td><span class="key">Gap</span></td><td><span class="val">OFF</span></td><td>Momentum gap filter</td></tr>
+      <tr><td><span class="key">ADR%</span></td><td><span class="val">ON</span> Max 75%</td><td>Prevents entries when daily range is nearly exhausted</td></tr>
+      <tr><td><span class="key">MaxExposure</span></td><td><span class="val">ON</span> Max 3</td><td>Maximum trades involving the same currency</td></tr>
+    </table>
+
+    <h3>COT Scores</h3>
+    <p>All COT scores default to <span class="val">0</span>. You must enter these manually based on the latest CFTC Commitment of Traders report. Use the Claude AI prompt (see FAQ #2a and #9a in Discord) to generate scores.</p>
+
+    <h3>Trade Management</h3>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">LotSize</span></td><td><span class="val">0.01</span></td><td>Fixed lot size (used when DollarPerPip = 0)</td></tr>
+      <tr><td><span class="key">DollarPerPip</span></td><td><span class="val">0.10</span></td><td>Target $/pip — lot is auto-calculated per pair</td></tr>
+      <tr><td><span class="key">MaxTradesPerPair</span></td><td><span class="val">1</span></td><td>How many positions per pair (pyramiding)</td></tr>
+      <tr><td><span class="key">MaxTotalTrades</span></td><td><span class="val">28</span></td><td>Maximum total open positions</td></tr>
+      <tr><td><span class="key">MaxSpread</span></td><td><span class="val">1.5</span></td><td>Per-pair spread limit (pips)</td></tr>
+      <tr><td><span class="key">MaxBasketSprd</span></td><td><span class="val">3.0</span></td><td>Basket spread limit (pips sum)</td></tr>
+      <tr><td><span class="key">UsePyramid</span></td><td><span class="val">OFF</span></td><td>Allow multiple entries per pair</td></tr>
+    </table>
+
+    <h3>TP / SL</h3>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Level</th><th>Description</th></tr>
+      <tr><td><span class="key">PortfolioTP</span></td><td><span class="val">0</span> (off)</td><td>Portfolio ($)</td><td>Close all when portfolio profit reaches this</td></tr>
+      <tr><td><span class="key">PortfolioSL</span></td><td><span class="val">0</span> (off)</td><td>Portfolio ($)</td><td>Close all when portfolio loss reaches this</td></tr>
+      <tr><td><span class="key">PipTP</span></td><td><span class="val">0</span> (off)</td><td>Pair (pips)</td><td>Take profit per individual trade</td></tr>
+      <tr><td><span class="key">PipSL</span></td><td><span class="val">50</span></td><td>Pair (pips)</td><td>Safety stop-loss per individual trade</td></tr>
+    </table>
+
+    <h3>Profit Locks</h3>
+    <p>Locks protect your profit at the portfolio level. When portfolio profit reaches the "At" value, the profit floor is set to the "Lock" value. If profit falls back to the floor, all trades are closed.</p>
+    <table>
+      <tr><th>Lock</th><th>At Profit</th><th>Lock Floor</th></tr>
+      <tr><td>L1</td><td><span class="val">$30</span></td><td><span class="val">$5</span></td></tr>
+      <tr><td>L2</td><td><span class="val">$60</span></td><td><span class="val">$20</span></td></tr>
+      <tr><td>L3</td><td><span class="val">$100</span></td><td><span class="val">$50</span></td></tr>
+      <tr><td>L4–L6</td><td><span class="val">0</span> (off)</td><td>—</td></tr>
+    </table>
+    <p>The <span class="key">Trail</span> feature continues moving the floor up after the last lock is reached. Info panel shows: <span class="val">OFF</span> (disabled), <span class="val">WAIT</span> (enabled, no lock reached yet), <span class="val">ACTIVE $50</span> (trailing from $50 floor).</p>
+
+    <h3>Sessions</h3>
+    <table>
+      <tr><th>Session</th><th>Default</th><th>Time (Local)</th><th>Description</th></tr>
+      <tr><td>S1 (Asia)</td><td><span class="val">OFF</span></td><td>00:00–08:59</td><td>Low liquidity, disabled for safety</td></tr>
+      <tr><td>S2 (London)</td><td><span class="val">ON</span></td><td>09:00–13:59</td><td>European session</td></tr>
+      <tr><td>S3 (NYC Overlap)</td><td><span class="val">ON</span></td><td>14:00–18:00</td><td>Highest liquidity window</td></tr>
+      <tr><td>S4 (Event)</td><td><span class="val">OFF</span></td><td>Manual</td><td>For NFP, CPI, and other high-impact events</td></tr>
+    </table>
+    <p><span class="key">StopProfit</span> and <span class="key">StopLoss</span> (default: 1 each) control how many profitable/losing portfolio cycles are allowed per session before auto-trading stops.</p>
+
+    <h3>Display</h3>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">Sort pairs</span></td><td><span class="val">OFF</span></td><td>Sort 28 pairs by selected column (strongest on top)</td></tr>
+      <tr><td><span class="key">Sort by</span></td><td><span class="val">0 (PStr)</span></td><td>0=PStr, 1=Score, 2=PipS, 3=P/L</td></tr>
+      <tr><td><span class="key">Sort refresh</span></td><td><span class="val">3 sec</span></td><td>How often the sort order updates (prevents visual jumping)</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 4. MANUAL TRADING -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="manual">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">4</span>
+    <h2>Manual Trading</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <div class="box info">
+      <strong>IN CHART VERITAS</strong> — The score tells you the direction. The chart confirms the entry. Always verify your setup visually before clicking BUY or SELL.
+    </div>
+
+    <h3>Step 1: Enter Your Scores</h3>
+    <p>Open the EA settings (F7) and enter COT scores for each currency (-4 to +4, unique, no zeros, sum = 0). The Score and PipStrength columns in the dashboard update immediately. Use the Claude AI prompt (Discord FAQ #2a) to generate a score proposal, then verify against your charts.</p>
+
+    <h3>Step 2: Read the Dashboard</h3>
+    <p>Look for pairs where multiple columns align: high <span class="key">PStr</span>, strong <span class="key">Scr</span> differential, low <span class="key">ADR%</span>, and acceptable <span class="key">Sprd</span>. A green <span class="key">BUY</span> or red <span class="key">SELL</span> signal indicator appears when all active filters agree.</p>
+
+    <h3>Step 3: Open the Chart</h3>
+    <p>Click on any <span class="key">pair name</span> in the dashboard to open that pair's chart with your configured template and timeframe. Click on a <span class="key">currency label</span> (EUR, GBP, ...) in the basket buttons to open the synthetic currency index chart (#EUR, #GBP, etc.).</p>
+    <div class="box info">
+      <strong>Note:</strong> Synthetic charts (#EUR–#JPY, #RON, #ROFF) require the <code>MATTRIX_SyntheticCharts.ex5</code> EA to be running on a separate chart. Without it, the custom symbols don't exist and the chart won't open.
+    </div>
+
+    <h3>Step 4: Execute</h3>
+    <p><strong>Per-pair trading:</strong> Click <span class="key">BUY</span> or <span class="key">SELL</span> on any pair row. The trade opens immediately with your configured lot size or $/pip setting.</p>
+    <p><strong>Basket trading:</strong> Click <span class="key">BUY</span> on a currency label (e.g. EUR) to buy all 7 pairs where EUR is the base. Click <span class="key">SELL</span> for the inverse. RON and ROFF baskets trade 8 pairs each.</p>
+
+    <h3>Spread Protection</h3>
+    <p>The EA automatically guards every entry with spread checks. Per-pair buttons are <strong>grayed out and disabled</strong> when the pair's spread exceeds <span class="key">MaxSpread</span>. Basket buttons are grayed out when the basket's combined spread exceeds <span class="key">MaxBasketSprd</span>. You cannot override this — it protects you from expensive entries.</p>
+
+    <h3>No Hedging</h3>
+    <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
+
+    <h3>Pyramiding</h3>
+    <p>When <span class="key">UsePyramid = ON</span>, you can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). When OFF (default), one trade per pair maximum. For beta testing, pyramiding is disabled — observe single entries first.</p>
+
+    <h3>Closing Positions</h3>
+    <table>
+      <tr><th>Button</th><th>Action</th></tr>
+      <tr><td><span class="key">CLOSE</span> (per pair)</td><td>Closes all positions for that specific pair</td></tr>
+      <tr><td><span class="key">CLOSE</span> (per currency)</td><td>Closes all 7 basket positions for that currency</td></tr>
+      <tr><td><span class="key">CLOSE ALL</span></td><td>Closes every open position and resets Locks/Cycles</td></tr>
+      <tr><td><span class="key">CLOSE PROFIT</span></td><td>Closes only positions currently in profit</td></tr>
+      <tr><td><span class="key">CLOSE LOSS</span></td><td>Closes only positions currently in loss</td></tr>
+    </table>
+
+    <h3>RESET EA</h3>
+    <p>Performs a soft reset: clears all Locks, resets Cycle counters, recalculates ADR, resets session/weekly pip references. <strong>Does not close any open trades.</strong> Use this after manually closing all positions to start a fresh analysis cycle.</p>
+
+    <h3>AUTO ON / AUTO OFF</h3>
+    <p>Shown in the bottom-right corner with DEMO or LIVE indicator. This reflects the <span class="key">AutoTrade</span> setting (F7). When OFF, the EA displays signals but does not execute trades automatically — manual buttons still work. Change via Settings (F7), not by clicking.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 5. AUTO TRADING -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="auto">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">5</span>
+    <h2>Auto Trading</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>How Auto Trading Works</h3>
+    <p>When <span class="key">AutoTrade = ON</span> and the current time is within an active session, the EA evaluates all 28 pairs on every tick. If ALL active filters agree on a direction, the trade opens automatically.</p>
+
+    <p>The execution flow on each tick:</p>
+    <div class="step"><span class="step-num">1</span><div>Update market data (prices, spreads, pip calculations)</div></div>
+    <div class="step"><span class="step-num">2</span><div>Calculate signals (evaluate all filters per pair)</div></div>
+    <div class="step"><span class="step-num">3</span><div>Execute signals (open trades where filters agree)</div></div>
+    <div class="step"><span class="step-num">4</span><div>Check risk management (locks, portfolio TP/SL)</div></div>
+    <div class="step"><span class="step-num">5</span><div>Update dashboard (display only, after all trading is done)</div></div>
+
+    <div class="box success">
+      <strong>Trade execution happens before dashboard updates.</strong> Display latency never affects order timing. Signal to execution: approximately 3–8 milliseconds.
+    </div>
+
+    <h3>Session Control</h3>
+    <p>Auto trading only operates during active sessions. Outside session hours, the EA displays data but does not trade. When a session ends and <span class="key">CloseAllSession</span> is enabled, all open positions are closed automatically.</p>
+
+    <h3>Cycle Limits</h3>
+    <p><span class="key">StopProfit = 1</span> means: after one profitable portfolio cycle (all trades closed with net profit), auto trading pauses until next session or RESET EA. Same logic for <span class="key">StopLoss</span>. Set to 0 for unlimited cycles.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 6. RISK MANAGEMENT -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="risk">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">6</span>
+    <h2>Risk Management</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Three Layers of Protection</h3>
+
+    <p><strong>Layer 1 — Pair Level:</strong> Each individual trade has a <span class="key">PipSL</span> safety stop (default 50 pips). This is the last line of defense — it prevents any single trade from running away.</p>
+
+    <p><strong>Layer 2 — Portfolio Level:</strong> <span class="key">PortfolioTP</span> and <span class="key">PortfolioSL</span> monitor the combined P/L of all open positions. When triggered, all trades close at once.</p>
+
+    <p><strong>Layer 3 — Profit Locks:</strong> The most sophisticated layer. As portfolio profit grows, locks progressively raise the floor. If profit retraces to the floor, everything closes — locking in the guaranteed minimum.</p>
+
+    <h3>Profit Lock Example</h3>
+    <div class="box info">
+      Portfolio reaches +$35 → <strong>Lock L1 activates:</strong> floor at $5.<br>
+      Portfolio grows to +$70 → <strong>Lock L2 activates:</strong> floor rises to $20.<br>
+      Portfolio pulls back to +$18 → Below L2 floor ($20) → <strong>All trades closed.</strong> Profit secured: $18.<br>
+      Without locks: profit might have dropped to -$50.
+    </div>
+
+    <h3>Trailing</h3>
+    <p>When <span class="key">Trail = ON</span> and the last configured lock is reached, the floor keeps moving up with profit (minus trail distance). This allows unlimited upside while protecting the profit already made.</p>
+
+    <h3>Exposure Control</h3>
+    <p><span class="key">MaxExposure = 3</span> means no currency can appear in more than 3 open trades. This prevents over-concentration. With 8 currencies and 28 pairs, uncontrolled exposure can quickly spiral.</p>
+
+    <div class="box danger">
+      <strong>Important:</strong> Start with default settings on a demo account. The defaults are designed to be conservative. Only increase lot sizes, disable safety stops, or add more sessions after you have observed the system for at least 2–3 full trading days.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 7. TROUBLESHOOTING -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="troubleshoot">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">7</span>
+    <h2>Troubleshooting</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>EA Won't Load</h3>
+    <table>
+      <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+      <tr><td>"Invalid Beta Key"</td><td>Wrong or empty key</td><td>Enter correct key in Settings → Beta Key</td></tr>
+      <tr><td>"Beta Key expired"</td><td>Date past expiry</td><td>Contact Matt for updated version</td></tr>
+      <tr><td>"Symbol not found"</td><td>Pairs missing in Market Watch</td><td>Right-click Market Watch → Show All</td></tr>
+    </table>
+
+    <h3>No Trades Opening</h3>
+    <table>
+      <tr><th>Check</th><th>What to Look For</th></tr>
+      <tr><td>AUTO ON/OFF</td><td>Must show AUTO ON for auto-trading</td></tr>
+      <tr><td>Session</td><td>Info panel must show active session (S1/S2/S3), not OFF</td></tr>
+      <tr><td>Filters</td><td>Score filter at ±4 is very strict — only the strongest setups trigger</td></tr>
+      <tr><td>Spreads</td><td>High spreads (weekends, news) block all entries</td></tr>
+      <tr><td>Cycles</td><td>If Cycles shows 1/1W or 1/1L, auto trading has paused — use RESET EA</td></tr>
+      <tr><td>COT Scores</td><td>All zeros = no score differential = no signals</td></tr>
+    </table>
+
+    <h3>Dashboard Missing or Cut Off</h3>
+    <p>Adjust <span class="key">Dashboard X/Y origin</span> in settings. On smaller screens, move origin closer to (10, 50). The dashboard requires approximately 1250px width and 600px height for full display.</p>
+
+    <h3>Synthetic Charts Empty</h3>
+    <p><code>MATTRIX_SyntheticCharts.ex5</code> must be running on a separate chart. History is built on the first tick after attaching — wait for market hours. Check Experts tab for "10/10 synthetic symbols ready".</p>
+
+    <h3>Getting Help</h3>
+    <p>Post in the Discord <span class="key">#bug-reports</span> channel with a screenshot of the Experts tab (Ctrl+T → Experts) and your issue description. Include your broker name and account type (demo/live).</p>
+
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
+  <div style="margin-top:6px;">MATTRIX v2.00 Beta — Decision Follows Structure</div>
+  <div style="margin-top:10px; font-size:0.9em;">
+    <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
+  </div>
+</footer>
+
+<script>
+function toggleSection(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Open section from nav link
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').substring(1);
+    const section = document.getElementById(id);
+    if (section && !section.classList.contains('open')) {
+      section.classList.add('open');
+    }
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>
