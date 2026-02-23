@@ -1,2 +1,2 @@
-# mattrix
-MATTRIX 8x — Forex Basket Trading System
+# MATTRIX 8x
+Private repository. Visit the website for documentation.
