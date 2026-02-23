@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATTRIX 8x — Decision Follows Structure</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg-deep: #060911;
+    --bg-main: #0a0d1a;
+    --bg-card: #111628;
+    --bg-card-hover: #161d35;
+    --cyan: #00ced1;
+    --cyan-dim: #008c91;
+    --cyan-glow: rgba(0,206,209,0.12);
+    --green: #00ff7f;
+    --text: #b8c0d4;
+    --text-bright: #e4e8f2;
+    --text-dim: #505878;
+    --border: #1e2744;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    width: 100%;
+    text-align: center;
+    padding: 60px 20px 50px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,206,209,0.06) 0%, transparent 60%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  }
+
+  .logo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 8px;
+    text-transform: uppercase;
+  }
+  .logo-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+    margin-top: 4px;
+  }
+  .tagline {
+    font-size: 1.15em;
+    color: var(--text);
+    margin-top: 20px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  .tagline em {
+    color: var(--cyan);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .badge-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    padding: 4px 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+  }
+  .badge.mt5 { border-color: var(--cyan-dim); color: var(--cyan-dim); }
+
+  /* ─── Cards Grid ─── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    max-width: 920px;
+    width: 100%;
+    padding: 0 20px;
+    margin-top: -10px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--cyan);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--cyan-dim);
+    transform: translateY(-2px);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 1.8em;
+    margin-bottom: 2px;
+  }
+  .card-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-bright);
+  }
+  .card-desc {
+    font-size: 0.88em;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .card-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7em;
+    color: var(--cyan-dim);
+    letter-spacing: 1px;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  /* ─── Currencies Strip ─── */
+  .currencies {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 40px 0 10px;
+    padding: 0 20px;
+  }
+  .cur {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78em;
+    padding: 5px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+  }
+
+  /* ─── Quote ─── */
+  .quote {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 600px;
+  }
+  .quote p {
+    font-size: 1.2em;
+    font-weight: 300;
+    color: var(--text-dim);
+    font-style: italic;
+    letter-spacing: 0.5px;
+  }
+  .quote span {
+    color: var(--cyan);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    text-align: center;
+    padding: 30px 20px 40px;
+    color: var(--text-dim);
+    font-size: 0.78em;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    max-width: 920px;
+    margin-top: 20px;
+  }
+  footer .copy { color: var(--cyan-dim); }
+  footer .disclaimer {
+    margin-top: 12px;
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: #404868;
+  }
+
+  /* ─── Mobile ─── */
+  @media (max-width: 640px) {
+    .logo-text { font-size: 2em; letter-spacing: 4px; }
+    .cards { grid-template-columns: 1fr; }
+    .hero { padding: 40px 16px 35px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="logo-text">MATTRIX 8x</div>
+  <div class="logo-sub">Forex Basket Trading System</div>
+  <div class="tagline">Buy the strong. Sell the weak. <em>Trade the best pair.</em></div>
+  <div class="badge-row">
+    <span class="badge mt5">METATRADER 5</span>
+    <span class="badge">v2.00 BETA</span>
+    <span class="badge">EXPIRES 2026.05.31</span>
+  </div>
+</div>
+
+<div class="currencies">
+  <span class="cur">EUR</span>
+  <span class="cur">GBP</span>
+  <span class="cur">AUD</span>
+  <span class="cur">NZD</span>
+  <span class="cur">USD</span>
+  <span class="cur">CAD</span>
+  <span class="cur">CHF</span>
+  <span class="cur">JPY</span>
+</div>
+
+<div class="cards">
+
+  <a class="card" href="DISCORD_LINK_HERE" target="_blank">
+    <div class="card-icon">💬</div>
+    <div class="card-title">Discord Community</div>
+    <div class="card-desc">Join Forex Basket Traders (F.B.T) — scores, discussions, support, and live analysis.</div>
+    <div class="card-tag">COMMUNITY → JOIN SERVER</div>
+  </a>
+
+  <a class="card" href="manual.html">
+    <div class="card-icon">📖</div>
+    <div class="card-title">User Manual</div>
+    <div class="card-desc">Complete guide: installation, dashboard, settings, manual & auto trading, risk management.</div>
+    <div class="card-tag">DOCUMENTATION → READ</div>
+  </a>
+
+  <a class="card" href="changelog.html">
+    <div class="card-icon">📋</div>
+    <div class="card-title">Changelog</div>
+    <div class="card-desc">Version history, new features, bug fixes, and what's coming next.</div>
+    <div class="card-tag">UPDATES → v2.00</div>
+  </a>
+
+  <a class="card" href="DISCORD_LINK_HERE" target="_blank">
+    <div class="card-icon">🐛</div>
+    <div class="card-title">Report a Bug</div>
+    <div class="card-desc">Found an issue? Post in #bug-reports with a screenshot of the Experts tab.</div>
+    <div class="card-tag">DISCORD → #BUG-REPORTS</div>
+  </a>
+
+  <a class="card" href="DISCORD_LINK_HERE" target="_blank">
+    <div class="card-icon">❓</div>
+    <div class="card-title">FAQ</div>
+    <div class="card-desc">Frequently asked questions about scoring, trading, COT data, and system setup.</div>
+    <div class="card-tag">DISCORD → #FRAGEN-ANTWORTEN</div>
+  </a>
+
+  <a class="card" href="DISCORD_LINK_HERE" target="_blank">
+    <div class="card-icon">📊</div>
+    <div class="card-title">Daily Scores</div>
+    <div class="card-desc">Current MATTRIX scores, analysis, and trade setups shared by the community.</div>
+    <div class="card-tag">DISCORD → #SCORES</div>
+  </a>
+
+</div>
+
+<div class="quote">
+  <p>"The score tells you the direction. The chart confirms the entry."</p>
+  <p style="margin-top: 12px;"><span>IN CHART VERITAS</span></p>
+</div>
+
+<footer>
+  <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
+  <div class="disclaimer">
+    This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability.
+    Forex trading carries a high level of risk. Do not invest money you cannot afford to lose.
+    See Discord #disclaimer for full terms.
+  </div>
+</footer>
+
+</body>
+</html>
