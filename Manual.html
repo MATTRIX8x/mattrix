@@ -434,8 +434,7 @@
     <table>
       <tr><th>Element</th><th>Description</th></tr>
       <tr><td>MATTRIX v2.00</td><td>Version identifier</td></tr>
-      <tr><td>Lot mode</td><td>Shows current $/pip or lot size setting</td></tr>
-      <tr><td>Date/Time</td><td>Local time (your PC clock)</td></tr>
+      <tr><td>Date/Time</td><td>Broker server time (not local PC time)</td></tr>
       <tr><td>P/L</td><td>Total portfolio profit/loss with trade count</td></tr>
     </table>
 
@@ -449,7 +448,7 @@
       <tr><td><span class="key">PipD</span></td><td>Daily pips (from today's open)</td><td>Green = up, Red = down</td></tr>
       <tr><td><span class="key">PipS</span></td><td>Session pips (from last pip reset)</td><td>Green = up, Red = down</td></tr>
       <tr><td><span class="key">PipE</span></td><td>Event pips (active only during Session 4 events)</td><td>Gold = up, Orange = down, Dash = no event</td></tr>
-      <tr><td><span class="key">PStr</span></td><td>Pip Strength: base currency pips minus quote currency pips</td><td>Green &gt;5, Red &lt;-5, Gray neutral</td></tr>
+      <tr><td><span class="key">BStr</span></td><td>Basket Strength: base currency pips minus quote currency pips</td><td>Green &gt;5, Red &lt;-5, Gray neutral</td></tr>
       <tr><td><span class="key">Scr</span></td><td>Score differential: base score minus quote score</td><td>Green ≥4, Red ≤-4, Gray neutral</td></tr>
       <tr><td><span class="key">Gap</span></td><td>Momentum gap indicator</td><td>Green = bullish, Red = bearish</td></tr>
       <tr><td><span class="key">ADR%</span></td><td>How much of the average daily range is consumed</td><td>Green &lt;50%, Yellow 50-80%, Red &gt;80%</td></tr>
@@ -469,12 +468,18 @@
     <h3>Info Panel</h3>
     <table>
       <tr><th>Row</th><th>Content</th><th>Update</th></tr>
-      <tr><td>1</td><td>BAL, EQU, Δ (equity-balance), Margin Level %</td><td>Live</td></tr>
+      <tr><td>1</td><td>BAL, EQU, Δ (equity-balance), LOT (lot mode e.g. USD0.10/pip)</td><td>Live + Settings</td></tr>
       <tr><td>2</td><td>Portfolio TP, Portfolio SL, Pair TP, Pair SL</td><td>From settings</td></tr>
       <tr><td>3</td><td>Profit Locks L1–L4 (format: trigger→floor)</td><td>Settings + active lock highlighted green</td></tr>
       <tr><td>4</td><td>Trail status, active Session, Cycles counter, DD%</td><td>Live</td></tr>
     </table>
-    <p>The info panel can be hidden/shown with the <span class="key">Hide Info</span> button below it.</p>
+    <p><strong>Trail status</strong> shows four states: <span style="color:#555">OFF</span> (disabled), <span style="color:#666">WAIT</span> (no lock reached), <span style="color:#cc0">LOCK USD50</span> (lock active, trail waiting for last lock), <span style="color:#0f0">USD50</span> (trailing active, floor rises with profit).</p>
+    <p><strong>Hide Info / Show Info:</strong> Hides the Info Panel and LotB/LotS columns — useful when sharing screens or recording. All analytical data (scores, pips, signals, OrdB, OrdS, P/L) remains visible. Header P/L and all column headers stay visible.</p>
+    <p><strong>Commission:</strong> All P/L values include estimated roundturn commission (entry commission × 2). A trade closed at exact entry price shows a small negative P/L reflecting the true trading cost. Locks and Portfolio TP/SL also trigger based on net profit after commission.</p>
+
+    <div class="info-box" style="border-left-color: var(--accent);">
+      <strong>Broker Time:</strong> All times in MATTRIX use broker server time (<code>TimeCurrent()</code>). The header displays "Broker" instead of "Local". Session times, pip resets, and event windows are all in broker time. Defaults are calibrated for EET brokers (UTC+2 winter / UTC+3 summer) such as IC Markets and Pepperstone. If your broker uses a different timezone, adjust session and reset times accordingly. DST changes are handled automatically by the broker — no manual adjustment needed.
+    </div>
 
     <h3>Dashboard Sorting</h3>
     <p>When enabled (<span class="key">Sort pairs = true</span>), the 28 pairs are sorted by the selected column with the strongest on top. Sorting refreshes every N seconds (configurable) to avoid visual jumping. All button clicks remain correctly mapped to the displayed pair.</p>
@@ -544,10 +549,10 @@
 
     <h3>Sessions</h3>
     <table>
-      <tr><th>Session</th><th>Default</th><th>Time (Local)</th><th>Description</th></tr>
-      <tr><td>S1 (Asia)</td><td><span class="val">OFF</span></td><td>00:00–08:59</td><td>Low liquidity, disabled for safety</td></tr>
-      <tr><td>S2 (London)</td><td><span class="val">ON</span></td><td>09:00–13:59</td><td>European session</td></tr>
-      <tr><td>S3 (NYC Overlap)</td><td><span class="val">ON</span></td><td>14:00–18:00</td><td>Highest liquidity window</td></tr>
+      <tr><th>Session</th><th>Default</th><th>Time (Broker)</th><th>Description</th></tr>
+      <tr><td>S1 (Asia)</td><td><span class="val">OFF</span></td><td>01:00–09:59</td><td>Low liquidity, disabled for safety</td></tr>
+      <tr><td>S2 (London)</td><td><span class="val">ON</span></td><td>10:00–14:59</td><td>European session</td></tr>
+      <tr><td>S3 (NYC Overlap)</td><td><span class="val">ON</span></td><td>15:00–19:00</td><td>Highest liquidity window</td></tr>
       <tr><td>S4 (Event)</td><td><span class="val">OFF</span></td><td>Manual</td><td>For NFP, CPI, and other high-impact events</td></tr>
     </table>
     <p><span class="key">StopProfit</span> and <span class="key">StopLoss</span> (default: 1 each) control how many profitable/losing portfolio cycles are allowed per session before auto-trading stops.</p>
@@ -556,7 +561,7 @@
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
       <tr><td><span class="key">Sort pairs</span></td><td><span class="val">OFF</span></td><td>Sort 28 pairs by selected column (strongest on top)</td></tr>
-      <tr><td><span class="key">Sort by</span></td><td><span class="val">0 (PStr)</span></td><td>0=PStr, 1=Score, 2=PipS, 3=P/L</td></tr>
+      <tr><td><span class="key">Sort by</span></td><td><span class="val">0 (BStr)</span></td><td>0=BStr, 1=Score, 2=PipS, 3=P/L</td></tr>
       <tr><td><span class="key">Sort refresh</span></td><td><span class="val">3 sec</span></td><td>How often the sort order updates (prevents visual jumping)</td></tr>
     </table>
 
@@ -582,7 +587,7 @@
     <p>Open the EA settings (F7) and enter COT scores for each currency (-4 to +4, unique, no zeros, sum = 0). The Score and PipStrength columns in the dashboard update immediately. Use the Claude AI prompt (Discord FAQ #2a) to generate a score proposal, then verify against your charts.</p>
 
     <h3>Step 2: Read the Dashboard</h3>
-    <p>Look for pairs where multiple columns align: high <span class="key">PStr</span>, strong <span class="key">Scr</span> differential, low <span class="key">ADR%</span>, and acceptable <span class="key">Sprd</span>. A green <span class="key">BUY</span> or red <span class="key">SELL</span> signal indicator appears when all active filters agree.</p>
+    <p>Look for pairs where multiple columns align: high <span class="key">BStr</span>, strong <span class="key">Scr</span> differential, low <span class="key">ADR%</span>, and acceptable <span class="key">Sprd</span>. A green <span class="key">BUY</span> or red <span class="key">SELL</span> signal indicator appears when all active filters agree.</p>
 
     <h3>Step 3: Open the Chart</h3>
     <p>Click on any <span class="key">pair name</span> in the dashboard to open that pair's chart with your configured template and timeframe. Click on a <span class="key">currency label</span> (EUR, GBP, ...) in the basket buttons to open the synthetic currency index chart (#EUR, #GBP, etc.).</p>
@@ -741,6 +746,7 @@
 
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
+  <div style="margin-top:6px;"><a href="https://mattrix8x.github.io/mattrix/" style="color:var(--cyan-dim)">MATTRIX Home</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
   <div style="margin-top:6px;">MATTRIX v2.00 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
