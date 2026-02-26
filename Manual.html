@@ -363,6 +363,7 @@
   <a href="#manual">Manual Trading</a>
   <a href="#auto">Auto Trading</a>
   <a href="#risk">Risk Management</a>
+  <a href="#killswitch">Kill Switch</a>
   <a href="#troubleshoot">Troubleshooting</a>
 </nav>
 
@@ -414,7 +415,22 @@
     </table>
 
     <div class="box warn">
-      <strong>Security:</strong> Only compiled <code>.ex5</code> files are distributed. Source code is never shared. Do not distribute files to anyone outside the beta group.
+      <strong>Security:</strong> Only compiled <code>.ex5</code> files are distributed. Source code is never shared. Do not distribute files or keys to anyone outside the beta group.
+    </div>
+
+    <h3>Access Levels</h3>
+    <p>MATTRIX uses a key-based access system. Your key determines what you can do. Keys are distributed personally — never share them.</p>
+    <table>
+      <tr><th>Level</th><th>Account</th><th>Restrictions</th><th>Who</th></tr>
+      <tr><td><span class="key">TESTER</span></td><td>Demo only</td><td>None on demo</td><td>All beta testers</td></tr>
+      <tr><td><span class="key">ALPHA</span></td><td>Demo + Live</td><td>Max $1.00/pip, max 0.07 lot</td><td>Promoted testers</td></tr>
+      <tr><td><span class="key">PRO</span></td><td>Demo + Live</td><td>No restrictions</td><td>Experienced traders</td></tr>
+    </table>
+    <div class="box info">
+      <strong>TESTER key on a live account?</strong> The EA will refuse to start and display a message explaining which access level is needed. This is a safety measure — live trading requires proven demo experience first.
+    </div>
+    <div class="box info">
+      <strong>ALPHA limits are hardcoded.</strong> Even if you enter higher values in the settings, the EA silently caps $/pip and lot size to the allowed maximum. The dashboard shows <span class="key">[CAP]</span> next to the LOT display when capping is active. An Alert notification also fires on startup.
     </div>
   </div>
 </div>
@@ -468,10 +484,11 @@
     <h3>Info Panel</h3>
     <table>
       <tr><th>Row</th><th>Content</th><th>Update</th></tr>
-      <tr><td>1</td><td>BAL, EQU, Δ (equity-balance), LOT (lot mode e.g. USD0.10/pip)</td><td>Live + Settings</td></tr>
+      <tr><td>1</td><td>BAL, EQU, Δ (equity-balance), LOT (lot mode e.g. USD0.10/pip, shows <span class="key">[CAP]</span> if Alpha limits apply)</td><td>Live + Settings</td></tr>
       <tr><td>2</td><td>Portfolio TP, Portfolio SL, Pair TP, Pair SL</td><td>From settings</td></tr>
       <tr><td>3</td><td>Profit Locks L1–L4 (format: trigger→floor)</td><td>Settings + active lock highlighted green</td></tr>
       <tr><td>4</td><td>Trail status, active Session, Cycles counter, DD%</td><td>Live</td></tr>
+      <tr><td>5</td><td>Daily Kill Switch: live daily P/L, trigger thresholds, status (DAILY P/L / SL WARN / HARD KILL / TP KILL)</td><td>Live (only visible when Kill Switch is enabled)</td></tr>
     </table>
     <p><strong>Trail status</strong> shows four states: <span style="color:#555">OFF</span> (disabled), <span style="color:#666">WAIT</span> (no lock reached), <span style="color:#cc0">LOCK USD50</span> (lock active, trail waiting for last lock), <span style="color:#0f0">USD50</span> (trailing active, floor rises with profit).</p>
     <p><strong>Hide Info / Show Info:</strong> Hides the Info Panel and LotB/LotS columns — useful when sharing screens or recording. All analytical data (scores, pips, signals, OrdB, OrdS, P/L) remains visible. Header P/L and all column headers stay visible.</p>
@@ -505,7 +522,7 @@
       <tr><td><span class="key">PipD</span></td><td><span class="val">OFF</span></td><td>Daily pip threshold</td></tr>
       <tr><td><span class="key">PipS</span></td><td><span class="val">OFF</span></td><td>Session pip threshold</td></tr>
       <tr><td><span class="key">PipE</span></td><td><span class="val">OFF</span></td><td>Event pip threshold (Session 4)</td></tr>
-      <tr><td><span class="key">PipStrength</span></td><td><span class="val">ON</span> Buy 80 / Sell -80</td><td>Minimum pip strength differential to trigger trade</td></tr>
+      <tr><td><span class="key">BasketStrength</span></td><td><span class="val">ON</span> Buy 80 / Sell -80</td><td>Minimum basket strength differential to trigger trade</td></tr>
       <tr><td><span class="key">Score</span></td><td><span class="val">ON</span> Buy 4 / Sell -4</td><td>Minimum score differential — only trades the strongest setups</td></tr>
       <tr><td><span class="key">Gap</span></td><td><span class="val">OFF</span></td><td>Momentum gap filter</td></tr>
       <tr><td><span class="key">ADR%</span></td><td><span class="val">ON</span> Max 75%</td><td>Prevents entries when daily range is nearly exhausted</td></tr>
@@ -557,6 +574,22 @@
     </table>
     <p><span class="key">StopProfit</span> and <span class="key">StopLoss</span> (default: 1 each) control how many profitable/losing portfolio cycles are allowed per session before auto-trading stops.</p>
 
+    <h3>Daily Kill Switch</h3>
+    <p>Account-level daily risk control. Monitors equity vs. day-start balance (includes floating P/L and commissions). Resets at midnight broker time.</p>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">KillSwitch</span></td><td><span class="val">OFF</span></td><td>Master enable/disable for all Kill Switch functions</td></tr>
+      <tr><td><span class="key">KillTP</span></td><td><span class="val">0</span> (off)</td><td>Daily TP Soft Kill in $ — stops auto trading when daily profit reaches this</td></tr>
+      <tr><td><span class="key">KillSLWarn</span></td><td><span class="val">0</span> (off)</td><td>Daily SL Warning in $ — stops auto trading as early alert</td></tr>
+      <tr><td><span class="key">KillSLHard</span></td><td><span class="val">0</span> (off)</td><td>Daily SL Hard Kill in $ — stops auto trading AND closes all positions</td></tr>
+    </table>
+    <div class="box info">
+      <strong>Recommended starting values:</strong> For a $100k account: KillTP $3,000, KillSLWarn $500, KillSLHard $1,000. For prop firm challenges: adjust based on Max Daily Loss rules (see Risk Management section).
+    </div>
+    <div class="box warn">
+      <strong>Pyramiding is blocked</strong> when any Kill Switch trigger is active. No new pyramid entries are allowed until the next day reset, even if the Warning (not Hard Kill) was triggered.
+    </div>
+
     <h3>Display</h3>
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
@@ -584,7 +617,7 @@
     </div>
 
     <h3>Step 1: Enter Your Scores</h3>
-    <p>Open the EA settings (F7) and enter COT scores for each currency (-4 to +4, unique, no zeros, sum = 0). The Score and PipStrength columns in the dashboard update immediately. Use the Claude AI prompt (Discord FAQ #2a) to generate a score proposal, then verify against your charts.</p>
+    <p>Open the EA settings (F7) and enter COT scores for each currency (-4 to +4, unique, no zeros, sum = 0). The Score and BasketStrength columns in the dashboard update immediately. Use the Claude AI prompt (Discord FAQ #2a) to generate a score proposal, then verify against your charts.</p>
 
     <h3>Step 2: Read the Dashboard</h3>
     <p>Look for pairs where multiple columns align: high <span class="key">BStr</span>, strong <span class="key">Scr</span> differential, low <span class="key">ADR%</span>, and acceptable <span class="key">Sprd</span>. A green <span class="key">BUY</span> or red <span class="key">SELL</span> signal indicator appears when all active filters agree.</p>
@@ -643,10 +676,11 @@
 
     <p>The execution flow on each tick:</p>
     <div class="step"><span class="step-num">1</span><div>Update market data (prices, spreads, pip calculations)</div></div>
-    <div class="step"><span class="step-num">2</span><div>Calculate signals (evaluate all filters per pair)</div></div>
-    <div class="step"><span class="step-num">3</span><div>Execute signals (open trades where filters agree)</div></div>
-    <div class="step"><span class="step-num">4</span><div>Check risk management (locks, portfolio TP/SL)</div></div>
-    <div class="step"><span class="step-num">5</span><div>Update dashboard (display only, after all trading is done)</div></div>
+    <div class="step"><span class="step-num">2</span><div>Check Daily Kill Switch (if enabled — may block all further trading)</div></div>
+    <div class="step"><span class="step-num">3</span><div>Calculate signals (evaluate all filters per pair)</div></div>
+    <div class="step"><span class="step-num">4</span><div>Execute signals (open trades where filters agree)</div></div>
+    <div class="step"><span class="step-num">5</span><div>Check risk management (locks, portfolio TP/SL)</div></div>
+    <div class="step"><span class="step-num">6</span><div>Update dashboard (display only, after all trading is done)</div></div>
 
     <div class="box success">
       <strong>Trade execution happens before dashboard updates.</strong> Display latency never affects order timing. Signal to execution: approximately 3–8 milliseconds.
@@ -672,7 +706,21 @@
   </div>
   <div class="section-content">
 
-    <h3>Three Layers of Protection</h3>
+    <h3>Four Layers of Protection</h3>
+
+    <p><strong>Layer 0 — Daily Kill Switch (Account Level):</strong> Monitors your total daily P/L (realized + floating) against configurable thresholds. Resets automatically at midnight (broker time). Three independent triggers protect your account:</p>
+    <table>
+      <tr><th>Trigger</th><th>Condition</th><th>Action</th></tr>
+      <tr><td><span class="key">TP Soft Kill</span></td><td>Daily P/L ≥ target</td><td>Auto trading stops, open positions stay (take your profit, stop trading)</td></tr>
+      <tr><td><span class="key">SL Warning</span></td><td>Daily P/L ≤ −warning</td><td>Auto trading stops, open positions stay (early alert, manage manually)</td></tr>
+      <tr><td><span class="key">SL Hard Kill</span></td><td>Daily P/L ≤ −limit</td><td>Auto trading stops + <strong>all positions closed immediately</strong> (day is over)</td></tr>
+    </table>
+    <div class="box warn">
+      <strong>Prop firm accounts:</strong> Set SL Hard Kill well below your broker's Max Daily Loss limit. Example for a $200k FTMO account (MDL $6,000): Hard Kill at $1,000 gives you 6 bad days before breaching the MDL. The TP Kill at $2,000 prevents Best Day Rule violations.
+    </div>
+    <div class="box info">
+      <strong>Dashboard display:</strong> When the Kill Switch is enabled, the info panel shows your live daily P/L with color-coded status. Green = normal, Yellow = approaching warning, Orange = SL Warning triggered, Red = SL Hard Kill triggered, Blue = TP Kill reached. Push notifications and alerts fire on each trigger.
+    </div>
 
     <p><strong>Layer 1 — Pair Level:</strong> Each individual trade has a <span class="key">PipSL</span> safety stop (default 50 pips). This is the last line of defense — it prevents any single trade from running away.</p>
 
@@ -701,11 +749,68 @@
 </div>
 
 <!-- ═══════════════════════════════════════════ -->
-<!-- 7. TROUBLESHOOTING -->
+<!-- 7. DAILY KILL SWITCH -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="killswitch">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">7</span>
+    <h2>Daily Kill Switch</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Purpose</h3>
+    <p>The Daily Kill Switch is an account-level safety mechanism that prevents catastrophic daily losses. While Portfolio TP/SL and Profit Locks operate per trading cycle, the Kill Switch monitors your <strong>entire day</strong> — all sessions, all cycles, all trades combined.</p>
+
+    <div class="box danger">
+      <strong>This feature was designed for prop firm challenges</strong> where a single bad day can breach the Max Daily Loss (MDL) and end your account. But it's equally valuable for personal accounts — protecting your capital from emotional over-trading after losses.
+    </div>
+
+    <h3>Three Trigger Levels</h3>
+    <table>
+      <tr><th>Level</th><th>Condition</th><th>Action</th><th>Dashboard</th></tr>
+      <tr><td><span style="color:var(--yellow)">● TP Soft Kill</span></td><td>Daily P/L ≥ KillTP</td><td>Stops auto-trading, positions stay open</td><td><span class="key">TP KILL</span> in blue</td></tr>
+      <tr><td><span style="color:var(--orange)">● SL Warning</span></td><td>Daily P/L ≤ -KillSLWarn</td><td>Stops auto-trading, positions stay open</td><td><span class="key">SL WARN</span> in orange</td></tr>
+      <tr><td><span style="color:var(--red)">● SL Hard Kill</span></td><td>Daily P/L ≤ -KillSLHard</td><td>Stops auto-trading <strong>AND closes all positions</strong></td><td><span class="key">HARD KILL</span> in red</td></tr>
+    </table>
+
+    <h3>How Daily P/L is Calculated</h3>
+    <p>At midnight broker time, the Kill Switch records your <strong>account balance</strong> as the day-start reference. On every tick, it calculates: <code>Daily P/L = Current Equity − Day-Start Balance</code>. This includes all floating P/L and commissions — exactly what your broker (or prop firm) sees.</p>
+
+    <h3>Behavior Details</h3>
+    <p>Each trigger fires <strong>once per day</strong>. After firing, it does not repeat — no alert spam. The TP Soft Kill and SL Warning only block new trade openings; your existing positions continue to run and can still be managed manually. The SL Hard Kill is the nuclear option — it closes everything immediately and the trading day is over.</p>
+    <p>When any Kill Switch trigger is active, <strong>pyramiding is also blocked</strong> — you cannot add to existing positions.</p>
+    <p>All triggers reset automatically at midnight broker time (day change).</p>
+
+    <h3>Notifications</h3>
+    <p>When a trigger fires, you receive four simultaneous notifications:</p>
+    <div class="step"><span class="step-num">1</span><div><strong>Dashboard:</strong> Kill Switch row changes color and shows status text</div></div>
+    <div class="step"><span class="step-num">2</span><div><strong>Alert + Sound:</strong> Pop-up alert with details</div></div>
+    <div class="step"><span class="step-num">3</span><div><strong>Push Notification:</strong> To your mobile MT5 app (if configured)</div></div>
+    <div class="step"><span class="step-num">4</span><div><strong>Journal:</strong> Full details in Experts tab for audit trail</div></div>
+
+    <h3>Recommended Settings</h3>
+    <table>
+      <tr><th>Account</th><th>KillSLWarn</th><th>KillSLHard</th><th>KillTP</th><th>Rationale</th></tr>
+      <tr><td>FTMO $200k (MDL $6k)</td><td>$500</td><td>$1,000</td><td>$2,000</td><td>6 bad days before MDL breach, TP prevents Best Day Rule issues</td></tr>
+      <tr><td>FTMO $100k (MDL $3k)</td><td>$250</td><td>$500</td><td>$1,000</td><td>Same ratio, scaled to account</td></tr>
+      <tr><td>Personal $100k (1% rule)</td><td>$500</td><td>$1,000</td><td>$3,000</td><td>Conservative daily risk, 3:1 reward-risk</td></tr>
+      <tr><td>Personal $10k (1% rule)</td><td>$50</td><td>$100</td><td>$300</td><td>Scaled for smaller capital</td></tr>
+    </table>
+
+    <div class="box success">
+      <strong>Pro tip:</strong> The Kill Switch works alongside all other risk layers. Portfolio SL might close a bad cycle at -$250, and the Kill Switch catches the cumulative damage if multiple cycles go wrong in the same day. Think of it as your daily insurance policy.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 8. TROUBLESHOOTING -->
 <!-- ═══════════════════════════════════════════ -->
 <div class="section" id="troubleshoot">
   <div class="section-header" onclick="toggleSection(this)">
-    <span class="num">7</span>
+    <span class="num">8</span>
     <h2>Troubleshooting</h2>
     <span class="arrow">▶</span>
   </div>
@@ -716,6 +821,8 @@
       <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
       <tr><td>"Invalid Beta Key"</td><td>Wrong or empty key</td><td>Enter correct key in Settings → Beta Key</td></tr>
       <tr><td>"Beta Key expired"</td><td>Date past expiry</td><td>Contact Matt for updated version</td></tr>
+      <tr><td>"Demo Only"</td><td>Tester key used on live account</td><td>You need Alpha or PRO access for live trading — contact Matt to upgrade</td></tr>
+      <tr><td>"ALPHA CAP" alert on startup</td><td>Settings exceed Alpha limits</td><td>Normal behavior — $/pip and lot are capped automatically. Upgrade to PRO for no restrictions</td></tr>
       <tr><td>"Symbol not found"</td><td>Pairs missing in Market Watch</td><td>Right-click Market Watch → Show All</td></tr>
     </table>
 
@@ -727,6 +834,7 @@
       <tr><td>Filters</td><td>Score filter at ±4 is very strict — only the strongest setups trigger</td></tr>
       <tr><td>Spreads</td><td>High spreads (weekends, news) block all entries</td></tr>
       <tr><td>Cycles</td><td>If Cycles shows 1/1W or 1/1L, auto trading has paused — use RESET EA</td></tr>
+      <tr><td>Kill Switch</td><td>If Kill Switch is enabled and a trigger fired (SL WARN, HARD KILL, or TP KILL), auto trading is blocked until next day reset</td></tr>
       <tr><td>COT Scores</td><td>All zeros = no score differential = no signals</td></tr>
     </table>
 
