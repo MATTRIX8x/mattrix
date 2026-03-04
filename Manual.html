@@ -461,7 +461,7 @@
       <tr><td><span class="key">Pair</span></td><td>Currency pair name (clickable → opens chart)</td><td>Green BG = BUY signal, Red BG = SELL signal</td></tr>
       <tr><td><span class="key">Sprd</span></td><td>Current spread in pips</td><td>Orange normal, Red if exceeds MaxSpread</td></tr>
       <tr><td><span class="key">PipW</span></td><td>Weekly pips (from Monday open)</td><td>Green = up, Red = down</td></tr>
-      <tr><td><span class="key">PipD</span></td><td>Daily pips (from today's open)</td><td>Green = up, Red = down</td></tr>
+      <tr><td><span class="key">PipD</span></td><td>Daily pips (from 00:00 broker time, M1-based — consistent across all brokers)</td><td>Green = up, Red = down</td></tr>
       <tr><td><span class="key">PipS</span></td><td>Session pips (from last pip reset)</td><td>Green = up, Red = down</td></tr>
       <tr><td><span class="key">PipE</span></td><td>Event pips (active only during Session 4 events)</td><td>Gold = up, Orange = down, Dash = no event</td></tr>
       <tr><td><span class="key">BStr</span></td><td>Basket Strength: base currency pips minus quote currency pips</td><td>Green &gt;5, Red &lt;-5, Gray neutral</td></tr>
@@ -492,10 +492,13 @@
     </table>
     <p><strong>Trail status</strong> shows four states: <span style="color:#555">OFF</span> (disabled), <span style="color:#666">WAIT</span> (no lock reached), <span style="color:#cc0">LOCK USD50</span> (lock active, trail waiting for last lock), <span style="color:#0f0">USD50</span> (trailing active, floor rises with profit).</p>
     <p><strong>Hide Info / Show Info:</strong> Hides the Info Panel and LotB/LotS columns — useful when sharing screens or recording. All analytical data (scores, pips, signals, OrdB, OrdS, P/L) remains visible. Header P/L and all column headers stay visible.</p>
-    <p><strong>Commission:</strong> All P/L values include estimated roundturn commission (entry commission × 2). A trade closed at exact entry price shows a small negative P/L reflecting the true trading cost. Locks and Portfolio TP/SL also trigger based on net profit after commission.</p>
+    <p><strong>Commission:</strong> All P/L values include estimated roundturn commission (entry commission × 2, retrieved from deal history). A trade closed at exact entry price shows a small negative P/L reflecting the true trading cost. Locks, Portfolio TP/SL, Kill Switch, and all dashboard P/L values are calculated after commission — what you see is what you net.</p>
 
     <div class="info-box" style="border-left-color: var(--accent);">
       <strong>Broker Time:</strong> All times in MATTRIX use broker server time (<code>TimeCurrent()</code>). The header displays "Broker" instead of "Local". Session times, pip resets, and event windows are all in broker time. Defaults are calibrated for EET brokers (UTC+2 winter / UTC+3 summer) such as IC Markets and Pepperstone. If your broker uses a different timezone, adjust session and reset times accordingly. DST changes are handled automatically by the broker — no manual adjustment needed.
+    </div>
+    <div class="info-box" style="border-left-color: var(--cyan-dim);">
+      <strong>Deferred Initialization:</strong> When MT5 starts, the EA defers loading of session/week/day reference prices to the first timer tick. This ensures M1 history is fully synchronized before pip calculations begin. PipD uses the M1-bar open at 00:00 broker time (not the D1 candle open, which varies by broker). In Session 1, PipD and PipS are always identical — both reference 00:00.
     </div>
 
     <h3>Dashboard Sorting</h3>
@@ -549,9 +552,17 @@
       <tr><th>Setting</th><th>Default</th><th>Level</th><th>Description</th></tr>
       <tr><td><span class="key">PortfolioTP</span></td><td><span class="val">0</span> (off)</td><td>Portfolio ($)</td><td>Close all when portfolio profit reaches this</td></tr>
       <tr><td><span class="key">PortfolioSL</span></td><td><span class="val">0</span> (off)</td><td>Portfolio ($)</td><td>Close all when portfolio loss reaches this</td></tr>
-      <tr><td><span class="key">PipTP</span></td><td><span class="val">0</span> (off)</td><td>Pair (pips)</td><td>Take profit per individual trade</td></tr>
-      <tr><td><span class="key">PipSL</span></td><td><span class="val">50</span></td><td>Pair (pips)</td><td>Safety stop-loss per individual trade</td></tr>
+      <tr><td><span class="key">PipTP</span></td><td><span class="val">0</span> (off)</td><td>Pair (pips)</td><td>Take profit per individual trade (broker-side order)</td></tr>
+      <tr><td><span class="key">PipSL</span></td><td><span class="val">50</span></td><td>Pair (pips)</td><td>Safety stop-loss per individual trade (broker-side order)</td></tr>
+      <tr><td><span class="key">AdrTP</span></td><td><span class="val">0</span> (off)</td><td>Pair (% of ADR)</td><td>ADR-based TP: e.g. 50 = TP at 50% of 10-day ADR from entry price. Only used when PipTP = 0</td></tr>
+      <tr><td><span class="key">AdrSL</span></td><td><span class="val">0</span> (off)</td><td>Pair (% of ADR)</td><td>ADR-based SL: e.g. 30 = SL at 30% of 10-day ADR from entry price. Only used when PipSL = 0</td></tr>
     </table>
+    <div class="box info">
+      <strong>Priority:</strong> PipTP/PipSL always take priority over AdrTP/AdrSL. To use ADR-based levels, set the Pip version to 0. Both TP and SL are placed as <strong>broker-side orders</strong> — they remain active even if the EA or MT5 crashes. Each pyramided position gets its own SL/TP calculated from its individual entry price.
+    </div>
+    <div class="box warn">
+      <strong>TP-Hit Session Block:</strong> When any position on a pair is closed by TP (broker-side), that pair is <strong>blocked for new entries and new pyramids</strong> for the rest of the current session. Existing positions on the pair continue to run until their own TP/SL or session end. The block resets automatically when a new session starts. This prevents the EA from re-entering a pair that has already reached its target — take the win and move on.
+    </div>
 
     <h3>Profit Locks</h3>
     <p>Locks protect your profit at the portfolio level. When portfolio profit reaches the "At" value, the profit floor is set to the "Lock" value. If profit falls back to the floor, all trades are closed.</p>
@@ -639,7 +650,18 @@
     <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
 
     <h3>Pyramiding</h3>
-    <p>When <span class="key">UsePyramid = ON</span>, you can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). When OFF (default), one trade per pair maximum. For beta testing, pyramiding is disabled — observe single entries first.</p>
+    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals.</p>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">MinProfitToAdd</span></td><td><span class="val">8.0</span></td><td>ALL existing positions must be at least X pips in profit before adding</td></tr>
+      <tr><td><span class="key">BreakEvenBeforeAdd</span></td><td><span class="val">ON</span></td><td>Move existing positions to breakeven before opening a new pyramid</td></tr>
+      <tr><td><span class="key">BEBufferPips</span></td><td><span class="val">1.0</span></td><td>Buffer above entry price for BE move (covers spread)</td></tr>
+      <tr><td><span class="key">OnlyAddProfit</span></td><td><span class="val">ON</span></td><td>Only add when existing positions are profitable (used when MinProfitToAdd = 0)</td></tr>
+    </table>
+    <p><strong>Pyramid flow:</strong> Trade 1 opens → grows to +8 pips → BE-move shifts Trade 1 SL to entry+1 pip → Trade 2 opens with fresh SL/TP → both run independently. This satisfies prop firm rules that require existing risk to be neutralized before adding positions.</p>
+    <div class="box info">
+      <strong>Manual pyramiding:</strong> The BUY/SELL buttons also respect <span class="key">MinProfitToAdd</span>, <span class="key">BreakEvenBeforeAdd</span>, and <span class="key">MaxTradesPerPair</span>. Anti-hedging always applies (no BUY if SELL is open and vice versa). However, manual buttons do NOT respect the TP-Hit Session Block — you can always manually re-enter a pair if you see a setup in the chart.
+    </div>
 
     <h3>Closing Positions</h3>
     <table>
@@ -775,7 +797,17 @@
     </table>
 
     <h3>How Daily P/L is Calculated</h3>
-    <p>At midnight broker time, the Kill Switch records your <strong>account balance</strong> as the day-start reference. On every tick, it calculates: <code>Daily P/L = Current Equity − Day-Start Balance</code>. This includes all floating P/L and commissions — exactly what your broker (or prop firm) sees.</p>
+    <p>At midnight broker time, the Kill Switch records your <strong>account balance</strong> as the day-start reference and saves it to a <strong>GlobalVariable</strong> (persistent storage that survives EA restarts, recompiles, MT5 crashes, and even PC reboots). On every tick, it calculates: <code>Daily P/L = Current Equity − Day-Start Balance</code>. This includes all floating P/L and commissions — exactly what your broker (or prop firm) sees.</p>
+
+    <h3>Persistence &amp; Safety</h3>
+    <p>The day-start balance is stored as <code>MATTRIX_KillDayBal_{MagicNumber}</code> in MT5 GlobalVariables. This means:</p>
+    <div class="step"><span class="step-num">1</span><div><strong>EA restart / recompile / F7 changes:</strong> Daily P/L continues correctly from the midnight reference — no reset to zero</div></div>
+    <div class="step"><span class="step-num">2</span><div><strong>MT5 or PC restart:</strong> GlobalVariables persist to disk — daily P/L is restored on next startup</div></div>
+    <div class="step"><span class="step-num">3</span><div><strong>Multiple EAs:</strong> Each Magic Number has its own GlobalVariable — no cross-talk between instances</div></div>
+    <div class="step"><span class="step-num">4</span><div><strong>Sanity check:</strong> If the stored balance differs more than 50% from the current account balance (e.g. wrong account, corrupted data), the EA discards the stored value and uses the current balance as a safe fallback</div></div>
+    <div class="box warn">
+      <strong>Manual override:</strong> If the Kill Switch shows an incorrect Daily P/L, you can fix it via Tools → Global Variables (F3) in MT5. Find <code>MATTRIX_KillDayBal_{MagicNumber}</code> and either correct the value or delete it — the EA will record a fresh balance on next startup.
+    </div>
 
     <h3>Behavior Details</h3>
     <p>Each trigger fires <strong>once per day</strong>. After firing, it does not repeat — no alert spam. The TP Soft Kill and SL Warning only block new trade openings; your existing positions continue to run and can still be managed manually. The SL Hard Kill is the nuclear option — it closes everything immediately and the trading day is over.</p>
@@ -836,7 +868,19 @@
       <tr><td>Cycles</td><td>If Cycles shows 1/1W or 1/1L, auto trading has paused — use RESET EA</td></tr>
       <tr><td>Kill Switch</td><td>If Kill Switch is enabled and a trigger fired (SL WARN, HARD KILL, or TP KILL), auto trading is blocked until next day reset</td></tr>
       <tr><td>COT Scores</td><td>All zeros = no score differential = no signals</td></tr>
+      <tr><td>TP-Hit Block</td><td>If a pair was closed by TP this session, it is blocked until the next session starts — check Experts tab for "[MATTRIX] TP hit detected" messages</td></tr>
     </table>
+
+    <h3>Daily P/L Shows Wrong Value</h3>
+    <table>
+      <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+      <tr><td>Daily P/L resets to 0 after F7</td><td>Old EA version (pre-GlobalVariable fix)</td><td>Update to latest EA — Kill Switch state now persists across restarts</td></tr>
+      <tr><td>Daily P/L shows +$100k or similar</td><td>GlobalVariable from different account (e.g. FTMO value on ICM)</td><td>Tools → Global Variables (F3) → delete <code>MATTRIX_KillDayBal_{magic}</code> → restart EA</td></tr>
+      <tr><td>Balance shows 0.00</td><td>Demo account disconnected or expired</td><td>Check MT5 connection — right-click account → Login</td></tr>
+    </table>
+
+    <h3>PipD ≠ PipS in Session 1</h3>
+    <p>Both should be identical in Session 1 because they both reference 00:00. If they differ, the EA was loaded before M1 history was synchronized. The deferred initialization (v2.00+) fixes this automatically. If you still see differences, restart the EA — check Experts tab for "Deferred init — session/week/day bids loaded from M1 history" message with "28/28 from history".</p>
 
     <h3>Dashboard Missing or Cut Off</h3>
     <p>Adjust <span class="key">Dashboard X/Y origin</span> in settings. On smaller screens, move origin closer to (10, 50). The dashboard requires approximately 1250px width and 600px height for full display.</p>
