@@ -56,9 +56,28 @@
 
 <div class="version">
   <div class="version-header">
+    <span class="version-num">v2.01</span>
+    <span class="version-date">March 2026</span>
+    <span class="version-tag tag-current">CURRENT</span>
+  </div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>ADR-based TP/SL — dynamic pair-level targets calculated from 10-day Average Daily Range (AdrTP / AdrSL)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>TP-Hit Session Block — after a pair is closed by TP, no new entries or pyramids on that pair until next session</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Kill Switch persistence — daily P/L reference survives EA restart, recompile, MT5 crash, and PC reboot via GlobalVariables</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Kill Switch sanity check — discards stored balance if >50% deviation from current account (prevents cross-account false triggers)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Deferred bid initialization — session/week/day reference prices load after M1 history sync, not during OnInit</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>PipD now uses M1-based 00:00 broker time reference instead of D1 candle open — consistent across all brokers</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>PipD = PipS in Session 1 guaranteed (both reference 00:00 via same M1 lookup)</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>First-tick pip reset finds most recent reset time regardless of EA start time (not limited to 5-min window)</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Kill Switch no longer resets on F7/Compile — ReInit preserves day-start balance</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Pyramiding blocked by TP-Hit Session Block (both auto-trade and CheckPyramiding paths)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Manual buttons remain unaffected by TP-Hit Block — manual traders can always re-enter if chart confirms</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Updated User Manual — new sections for ADR TP/SL, pyramiding flow, Kill Switch persistence, deferred init, troubleshooting</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
     <span class="version-num">v2.00</span>
     <span class="version-date">February 2026</span>
-    <span class="version-tag tag-current">CURRENT</span>
   </div>
   <div class="change"><span class="change-type type-new">NEW</span><span>Complete MT5 Expert Advisor — all analysis and trading in one platform</span></div>
   <div class="change"><span class="change-type type-new">NEW</span><span>28-pair dashboard with 11 data columns and real-time updates</span></div>
