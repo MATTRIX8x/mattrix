@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX v2.00 — User Manual</title>
+<title>MATTRIX v2.01 — User Manual</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -350,7 +350,7 @@
 <body>
 
 <header>
-  <h1>MATTRIX v2.00</h1>
+  <h1>MATTRIX v2.01</h1>
   <div class="subtitle">User Manual — Forex Basket Trading System</div>
   <div class="version">BETA RELEASE — EXPIRES 2026.05.31</div>
   <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicator + Synthetic Charts</div>
@@ -399,7 +399,7 @@
     </div>
     <div class="step">
       <span class="step-num">3</span>
-      <div>Attach <code>MATTRIX_SyntheticCharts.ex5</code> to a second chart for synthetic currency index charts (#EUR, #GBP, ... #RON, #ROFF). Attach <code>MATTRIX_RONROFF.ex5</code> indicator to any chart for the RON/ROFF strength display.</div>
+      <div>Attach <code>MATTRIX_SyntheticCharts.ex5</code> to a second chart for synthetic currency index charts (#EUR, #GBP, ... #RON, #ROFF) and the FBT INDEX charts (#FIX_A, #FIX_B, #FIX). Attach <code>MATTRIX_RONROFF.ex5</code> indicator to any chart for the RON/ROFF strength display.</div>
     </div>
 
     <div class="box success">
@@ -410,7 +410,7 @@
     <table>
       <tr><th>File</th><th>Type</th><th>Copy To</th><th>Purpose</th></tr>
       <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard</td></tr>
-      <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF charts</td></tr>
+      <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF + #FIX charts (13 symbols)</td></tr>
       <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF strength display</td></tr>
     </table>
 
@@ -449,7 +449,7 @@
     <h3>Header Bar</h3>
     <table>
       <tr><th>Element</th><th>Description</th></tr>
-      <tr><td>MATTRIX v2.00</td><td>Version identifier</td></tr>
+      <tr><td>MATTRIX v2.01</td><td>Version identifier</td></tr>
       <tr><td>Date/Time</td><td>Broker server time (not local PC time)</td></tr>
       <tr><td>P/L</td><td>Total portfolio profit/loss with trade count</td></tr>
     </table>
@@ -476,10 +476,11 @@
     </table>
 
     <h3>MATTRIX Score Panel (Right Side)</h3>
-    <p>Shows all 8 currencies ranked by their MATTRIX Score, strongest on top. Each row displays the rank, currency name, score (with ▲▼ visual bars), COT score, session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums.</p>
+    <p>Shows all 8 currencies ranked by their MATTRIX Score, strongest on top. Each row displays the rank, currency name, score (with ▲▼ visual bars), COT score, session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums, and the FIX row showing the sum of all 28 pairs (FBT INDEX).</p>
 
     <h3>Basket Buttons (Footer)</h3>
-    <p>Currency basket buttons for EUR, GBP, AUD, NZD, USD, CAD, CHF, JPY — each with BUY, SELL, CLOSE. Plus RON and ROFF basket buttons. Spread is shown per basket; buttons are grayed out when basket spread is too high.</p>
+    <p>Currency basket buttons for EUR, GBP, AUD, NZD, USD, CAD, CHF, JPY — each with BUY, SELL, CLOSE. Plus RON and ROFF basket buttons (8 pairs each). Spread is shown per basket; buttons are grayed out when basket spread is too high.</p>
+    <p>The <span class="key" style="color:var(--yellow)">FIX</span> button (gold) trades all 28 pairs simultaneously — the FBT INDEX. This represents the full RiskON cascade (EUR > GBP > AUD > NZD > USD > CAD > CHF > JPY). BUY = all 28 pairs long, SELL = all 28 pairs short. FIX requires a <strong>two-click confirmation</strong>: first click shows "SURE?" in yellow, second click within 3 seconds executes. Total spread of all 28 pairs is displayed; buttons are blocked when total spread exceeds 3.5× MaxBasketSprd.</p>
 
     <h3>Info Panel</h3>
     <table>
@@ -636,12 +637,12 @@
     <h3>Step 3: Open the Chart</h3>
     <p>Click on any <span class="key">pair name</span> in the dashboard to open that pair's chart with your configured template and timeframe. Click on a <span class="key">currency label</span> (EUR, GBP, ...) in the basket buttons to open the synthetic currency index chart (#EUR, #GBP, etc.).</p>
     <div class="box info">
-      <strong>Note:</strong> Synthetic charts (#EUR–#JPY, #RON, #ROFF) require the <code>MATTRIX_SyntheticCharts.ex5</code> EA to be running on a separate chart. Without it, the custom symbols don't exist and the chart won't open.
+      <strong>Note:</strong> Synthetic charts (#EUR–#JPY, #RON, #ROFF, #FIX) require the <code>MATTRIX_SyntheticCharts.ex5</code> EA to be running on a separate chart. Without it, the custom symbols don't exist and the chart won't open.
     </div>
 
     <h3>Step 4: Execute</h3>
     <p><strong>Per-pair trading:</strong> Click <span class="key">BUY</span> or <span class="key">SELL</span> on any pair row. The trade opens immediately with your configured lot size or $/pip setting.</p>
-    <p><strong>Basket trading:</strong> Click <span class="key">BUY</span> on a currency label (e.g. EUR) to buy all 7 pairs where EUR is the base. Click <span class="key">SELL</span> for the inverse. RON and ROFF baskets trade 8 pairs each.</p>
+    <p><strong>Basket trading:</strong> Click <span class="key">BUY</span> on a currency label (e.g. EUR) to buy all 7 pairs where EUR is the base. Click <span class="key">SELL</span> for the inverse. RON and ROFF baskets trade 8 pairs each. The <span class="key" style="color:var(--yellow)">FIX</span> basket trades all 28 pairs — two-click confirmation required.</p>
 
     <h3>Spread Protection</h3>
     <p>The EA automatically guards every entry with spread checks. Per-pair buttons are <strong>grayed out and disabled</strong> when the pair's spread exceeds <span class="key">MaxSpread</span>. Basket buttons are grayed out when the basket's combined spread exceeds <span class="key">MaxBasketSprd</span>. You cannot override this — it protects you from expensive entries.</p>
@@ -838,6 +839,52 @@
 </div>
 
 <!-- ═══════════════════════════════════════════ -->
+<!-- 7b. FIX INDEX (FBT INDEX) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="fix">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">7b</span>
+    <h2>FIX Index (FBT INDEX)</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Concept</h3>
+    <p>The FIX Index represents all 28 major forex pairs traded simultaneously in one direction. It follows the RiskON cascade: <strong>EUR > GBP > AUD > NZD > USD > CAD > CHF > JPY</strong>. When you BUY the FIX, every pair where the base currency ranks higher than the quote currency is bought — which happens to be all 28 pairs in their standard notation.</p>
+    <p>The #FIX synthetic chart shows the arithmetic sum of all 28 pair prices (JPY pairs divided by 100 for scale normalization). When #FIX rises, the natural currency hierarchy is strengthening (Risk-On). When it falls, the hierarchy is breaking down (Risk-Off).</p>
+
+    <h3>Synthetic Charts</h3>
+    <p>Three custom symbols are created by the SyntheticCharts EA:</p>
+    <table>
+      <tr><th>Symbol</th><th>Content</th><th>Purpose</th></tr>
+      <tr><td><span class="key">#FIX_A</span></td><td>Sum of 14 pairs (EUR 7 + GBP 6 + AUDCAD)</td><td>Building block — avoids formula length limit</td></tr>
+      <tr><td><span class="key">#FIX_B</span></td><td>Sum of remaining 14 pairs</td><td>Building block</td></tr>
+      <tr><td><span class="key">#FIX</span></td><td>#FIX_A + #FIX_B</td><td>Complete FBT INDEX — all 28 pairs</td></tr>
+    </table>
+
+    <h3>Dashboard Integration</h3>
+    <p>The gold-colored <span class="key" style="color:var(--yellow)">FIX</span> block in the basket area provides:</p>
+    <table>
+      <tr><th>Element</th><th>Description</th></tr>
+      <tr><td>FIX label</td><td>Click to open #FIX synthetic chart</td></tr>
+      <tr><td>Spread display</td><td>Total spread of all 28 pairs (e.g. "6.6p")</td></tr>
+      <tr><td>BUY / SELL</td><td>Two-click confirmation: first click → "SURE?" (yellow), second click within 3 sec → execute. All trades use SafeOpen (anti-hedge, pyramid rules, BE-move, spread check)</td></tr>
+      <tr><td>CLOSE</td><td>Closes all positions (equivalent to CLOSE ALL)</td></tr>
+      <tr><td>Score Panel row</td><td>FIX line shows Sess/Today/W2D pip sums for all 28 pairs combined</td></tr>
+    </table>
+
+    <div class="box warn">
+      <strong>28× Spread Warning:</strong> Opening all 28 pairs at once incurs significant spread cost. At an average of 0.3 pips per pair, that's roughly 8.4 pips total. The spread guard blocks FIX trades when total spread exceeds 3.5× your MaxBasketSprd setting. Only trade FIX during low-spread sessions (London/NYC overlap).
+    </div>
+
+    <div class="box info">
+      <strong>Trading Application:</strong> Use the #FIX chart with support/resistance levels to identify RiskON/RiskOFF sentiment shifts. A bounce off a #FIX support level = market returning to risk appetite = BUY FIX. A break below = risk-off acceleration = SELL FIX. Combine with RON/ROFF indicator for confirmation.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
 <!-- 8. TROUBLESHOOTING -->
 <!-- ═══════════════════════════════════════════ -->
 <div class="section" id="troubleshoot">
@@ -899,7 +946,7 @@
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:6px;"><a href="https://mattrix8x.github.io/mattrix/" style="color:var(--cyan-dim)">MATTRIX Home</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.00 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;">MATTRIX v2.01 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>
