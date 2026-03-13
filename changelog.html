@@ -72,6 +72,17 @@
   <div class="change"><span class="change-type type-chg">CHG</span><span>Pyramiding blocked by TP-Hit Session Block (both auto-trade and CheckPyramiding paths)</span></div>
   <div class="change"><span class="change-type type-chg">CHG</span><span>Manual buttons remain unaffected by TP-Hit Block — manual traders can always re-enter if chart confirms</span></div>
   <div class="change"><span class="change-type type-chg">CHG</span><span>Updated User Manual — new sections for ADR TP/SL, pyramiding flow, Kill Switch persistence, deferred init, troubleshooting</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>FIX Index (FBT INDEX) — all 28 pairs as one synthetic chart (#FIX = #FIX_A + #FIX_B), measures overall FX market risk appetite</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>FIX dashboard trading block — BUY/SELL/CLOSE buttons with total spread display, placed next to ROFF</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>FIX score panel row — Sess/Today/W2D pip sums for all 28 pairs combined, below ROFF(inv)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>FIX two-click safety — "SURE?" confirmation required before executing 28 trades (3-second timeout, cross-reset between BUY/SELL)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>FIX spread guard — blocks execution when total spread exceeds 3.5× MaxBasketSprd threshold</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>SyntheticCharts EA: 3 new custom symbols (#FIX_A, #FIX_B, #FIX) with full M1 history and live tick updates</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>MATTRIX Basket Health indicator — Coherence, Momentum, Volatility Pulse with REVERSAL/EXTREME arrows and alerts</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Build version numbering (v2.01b13) — visible in dashboard header for deployment verification</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>W2D/PipD/PipS forward-search — uses exact=true with forward scan (up to 120 min) to prevent Friday-close fallback on brokers without Monday 00:00 M1 bar</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>RONROFF indicator — weekend gap handling prevents chart jumps; uses previous bar value instead of EMPTY_VALUE for continuous display</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>BuyAllPairs/SellAllPairs now use SafeOpenBuy/SafeOpenSell — full anti-hedge, pyramid, BE-move, and spread protection for FIX trades</span></div>
 </div>
 
 <div class="version">
