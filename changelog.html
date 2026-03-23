@@ -56,9 +56,46 @@
 
 <div class="version">
   <div class="version-header">
+    <span class="version-num">v2.01b20</span>
+    <span class="version-date">March 23, 2026</span>
+    <span class="version-tag tag-current">CURRENT</span>
+  </div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Pending Basket Orders — set price levels on synthetic charts (#EUR–#JPY, #RON, #ROFF, #FIX), EA triggers basket execution when level is reached</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Pending Panel in dashboard — 11 rows (Big8 + RON + ROFF + FIX) with live BID, DIR/TYPE toggles, ARM/DISARM, GO status, and cancel (✕)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Pre-ARM safety check — rejects arming if trigger condition is already met (prevents accidental immediate execution)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Basket-level execution (BasketOpenBuy/Sell) — bypasses per-pair spread check for basket trades. Only basket spread is checked before execution. Anti-hedge, MaxTradesPerPair, MinProfitToAdd, and BE-move remain active</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Pending GO feedback — BUY/SELL button shows fill count (e.g. "26/28") for 30 seconds after execution, with color-coded background (green = complete, amber = partial)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Pending alerts — Alert popup + Push notification on every Pending GO trigger</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>CloseAll retry loop — after async bulk close, verifies all positions closed and retries up to 3× (500ms intervals) for positions that failed due to requotes during spikes</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>BE-Move continuous check: changed from buyCount > 0 to buyCount >= 2 — prevents single positions from receiving BE-SL (caused immediate stopout via spread on non-pyramided positions)</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Pending: DIR/TYPE change while ARMED auto-disarms to prevent accidental immediate trigger when switching between STOP/LIM</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Pending: Level field locked (readonly) while ARMED — must disarm before editing</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Pending: ENTER in level field no longer auto-arms — requires explicit ARM click</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Pending: Fresh BID fetched at ARM time (not cached value) for accurate pre-ARM safety check</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>FIX button feedback protected from FIX confirm-timeout and spread-guard color resets in UpdateDashboard</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Pending orders execute independently of session — treated as manual trader decision (only Kill Switch blocks)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Pending status text: FILL → GO (reflects active execution, not completion)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>All basket execution paths (manual BUY/SELL, Pending, FIX, RON, ROFF) now use BasketOpen — no per-pair spread rejection, only basket-level spread guard before loop</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>OpenBuy/OpenSell in TradeManager accept skipSpread parameter (default false) — BasketOpen passes true, SafeOpen unchanged</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>BasketSignal v1.10: History gate in OnCalculate — blocks all drawing until pair histories are fully loaded (fixes arrows disappearing on MT5 cold start)</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>BasketBreakout v1.10: Same history gate fix — diamonds no longer vanish after cold restart</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Both indicators: non-repaint confirmed — all signals use closed-bar data only (Bar 1+, never Bar 0), permanent objects never repositioned</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
+    <span class="version-num">v2.01b18</span>
+    <span class="version-date">March 20, 2026</span>
+  </div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>TP Kill: Balance→Equity consistent for daily P/L calculation</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Continuous BE check every tick (fixes missed BE moves on fast pyramiding when broker min distance not yet met)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>GMT+3 session times: S1=02:00, S2=11:00, S3=15:00 (NY open until EU DST 30.03)</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
     <span class="version-num">v2.01</span>
     <span class="version-date">March 2026</span>
-    <span class="version-tag tag-current">CURRENT</span>
   </div>
   <div class="change"><span class="change-type type-new">NEW</span><span>ADR-based TP/SL — dynamic pair-level targets calculated from 10-day Average Daily Range (AdrTP / AdrSL)</span></div>
   <div class="change"><span class="change-type type-new">NEW</span><span>TP-Hit Session Block — after a pair is closed by TP, no new entries or pyramids on that pair until next session</span></div>
@@ -82,7 +119,7 @@
   <div class="change"><span class="change-type type-new">NEW</span><span>Build version numbering (v2.01b13) — visible in dashboard header for deployment verification</span></div>
   <div class="change"><span class="change-type type-fix">FIX</span><span>W2D/PipD/PipS forward-search — uses exact=true with forward scan (up to 120 min) to prevent Friday-close fallback on brokers without Monday 00:00 M1 bar</span></div>
   <div class="change"><span class="change-type type-fix">FIX</span><span>RONROFF indicator — weekend gap handling prevents chart jumps; uses previous bar value instead of EMPTY_VALUE for continuous display</span></div>
-  <div class="change"><span class="change-type type-chg">CHG</span><span>BuyAllPairs/SellAllPairs now use SafeOpenBuy/SafeOpenSell — full anti-hedge, pyramid, BE-move, and spread protection for FIX trades</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>BuyAllPairs/SellAllPairs now use BasketOpenBuy/BasketOpenSell — basket-level spread only (no per-pair spread check), with anti-hedge, pyramid, and BE-move protection for FIX trades</span></div>
 </div>
 
 <div class="version">

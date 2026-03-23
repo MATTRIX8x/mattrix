@@ -361,9 +361,11 @@
   <a href="#dashboard">Dashboard</a>
   <a href="#settings">Settings</a>
   <a href="#manual">Manual Trading</a>
+  <a href="#pending">Pending Baskets</a>
   <a href="#auto">Auto Trading</a>
   <a href="#risk">Risk Management</a>
   <a href="#killswitch">Kill Switch</a>
+  <a href="#fix">FIX Index</a>
   <a href="#troubleshoot">Troubleshooting</a>
 </nav>
 
@@ -391,7 +393,7 @@
 
     <div class="step">
       <span class="step-num">1</span>
-      <div>Copy <code>MATTRIX_v2.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Copy <code>MATTRIX_SyntheticCharts.ex5</code> to <span class="path">MQL5\Experts</span>. Copy <code>MATTRIX_RONROFF.ex5</code> to <span class="path">MQL5\Indicators</span>. That's it — three files, no source code needed.</div>
+      <div>Copy <code>MATTRIX_v2.ex5</code> and <code>MATTRIX_SyntheticCharts.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Copy <code>MATTRIX_BasketSignal.ex5</code>, <code>MATTRIX_BasketBreakout.ex5</code>, <code>MATTRIX_DayLevels.ex5</code>, and <code>MATTRIX_RONROFF.ex5</code> to <span class="path">MQL5\Indicators</span>. Copy your <code>.set</code> file to <span class="path">MQL5\Profiles\Templates</span>.</div>
     </div>
     <div class="step">
       <span class="step-num">2</span>
@@ -409,9 +411,13 @@
     <h3>Delivered Files</h3>
     <table>
       <tr><th>File</th><th>Type</th><th>Copy To</th><th>Purpose</th></tr>
-      <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard</td></tr>
+      <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard + Pending Baskets</td></tr>
       <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF + #FIX charts (13 symbols)</td></tr>
+      <tr><td><code>MATTRIX_BasketSignal.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Reversal + Extreme entry arrows on synthetic charts</td></tr>
+      <tr><td><code>MATTRIX_BasketBreakout.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Session breakout diamonds on synthetic charts</td></tr>
+      <tr><td><code>MATTRIX_DayLevels.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Yesterday High/Low, Today range, ADR% on synthetic charts</td></tr>
       <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF strength display</td></tr>
+      <tr><td><code>*.set</code></td><td>Settings</td><td><span class="path">MQL5\Profiles\Templates</span></td><td>Broker-specific EA settings presets</td></tr>
     </table>
 
     <div class="box warn">
@@ -644,8 +650,12 @@
     <p><strong>Per-pair trading:</strong> Click <span class="key">BUY</span> or <span class="key">SELL</span> on any pair row. The trade opens immediately with your configured lot size or $/pip setting.</p>
     <p><strong>Basket trading:</strong> Click <span class="key">BUY</span> on a currency label (e.g. EUR) to buy all 7 pairs where EUR is the base. Click <span class="key">SELL</span> for the inverse. RON and ROFF baskets trade 8 pairs each. The <span class="key" style="color:var(--yellow)">FIX</span> basket trades all 28 pairs — two-click confirmation required.</p>
 
-    <h3>Spread Protection</h3>
-    <p>The EA automatically guards every entry with spread checks. Per-pair buttons are <strong>grayed out and disabled</strong> when the pair's spread exceeds <span class="key">MaxSpread</span>. Basket buttons are grayed out when the basket's combined spread exceeds <span class="key">MaxBasketSprd</span>. You cannot override this — it protects you from expensive entries.</p>
+    <h3>Spread Protection — Two Levels</h3>
+    <p><strong>Pair-level (AUTO signals + individual pair BUY/SELL):</strong> Each pair's spread is checked against <span class="key">MaxSpread</span>. If spread exceeds the limit, the pair button is grayed out and the trade is blocked.</p>
+    <p><strong>Basket-level (basket BUY/SELL buttons + Pending Baskets):</strong> Only the basket's combined spread is checked against <span class="key">MaxBasketSprd</span>. Individual pair spreads are ignored — a pair with 3 pips spread is compensated by a pair with 0.5 pips. RON/ROFF allows +1 pip above threshold. FIX allows 3.5× threshold. If the basket spread is too high, the basket button is grayed out.</p>
+    <div class="box info">
+      <strong>Why two levels?</strong> When you trade a basket, you want the complete basket — not 5 out of 7 pairs because two had momentarily high spreads. The basket spread captures the aggregate cost, which is what matters for the geometry of the trade.
+    </div>
 
     <h3>No Hedging</h3>
     <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
@@ -679,6 +689,74 @@
 
     <h3>AUTO ON / AUTO OFF</h3>
     <p>Shown in the bottom-right corner with DEMO or LIVE indicator. This reflects the <span class="key">AutoTrade</span> setting (F7). When OFF, the EA displays signals but does not execute trades automatically — manual buttons still work. Change via Settings (F7), not by clicking.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 4b. PENDING BASKET ORDERS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="pending">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">4b</span>
+    <h2>Pending Basket Orders</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Concept</h3>
+    <p>Pending Basket Orders let you set a price level on any synthetic chart and have the EA automatically execute the full basket when the level is reached. This combines the precision of chart-based analysis with the speed of automated execution — you define "where", the EA handles "when".</p>
+    <p>Available for all 11 baskets: <span class="key">EUR</span> <span class="key">GBP</span> <span class="key">AUD</span> <span class="key">NZD</span> <span class="key">USD</span> <span class="key">CAD</span> <span class="key">CHF</span> <span class="key">JPY</span> <span class="key" style="color:var(--yellow)">RON</span> <span class="key" style="color:var(--yellow)">ROFF</span> <span class="key" style="color:var(--yellow)">FIX</span></p>
+
+    <h3>Pending Panel</h3>
+    <p>Located below the MATTRIX Score Panel on the right side of the dashboard. Shows all 11 baskets with live BID prices from the synthetic charts. The <span class="key">HIDE</span> / <span class="key">PEND</span> button toggles visibility.</p>
+    <table>
+      <tr><th>Column</th><th>Description</th></tr>
+      <tr><td><span class="key">BSKT</span></td><td>Basket name (EUR–JPY in cyan, RON/ROFF/FIX in amber)</td></tr>
+      <tr><td><span class="key">DIR</span></td><td>Direction — click to toggle BUY / SELL</td></tr>
+      <tr><td><span class="key">TYPE</span></td><td>Order type — click to toggle STOP / LIM</td></tr>
+      <tr><td><span class="key">LEVEL</span></td><td>Trigger price — type value and press ENTER</td></tr>
+      <tr><td><span class="key">BID</span></td><td>Current synthetic chart price (live, 5 digits)</td></tr>
+      <tr><td><span class="key">DIST</span></td><td>Distance from current BID to trigger level</td></tr>
+      <tr><td><span class="key">ST</span></td><td>Status: ARM (waiting) / GO (triggered) / --- (inactive)</td></tr>
+      <tr><td><span class="key">✕</span></td><td>Cancel — removes the pending order</td></tr>
+    </table>
+
+    <h3>Order Types</h3>
+    <table>
+      <tr><th>Type</th><th>Trigger</th><th>Use Case</th></tr>
+      <tr><td><span class="key" style="color:var(--green)">BUY STOP</span></td><td>BID ≥ Level</td><td>Buy when price rises to level (breakout)</td></tr>
+      <tr><td><span class="key" style="color:var(--red)">SELL STOP</span></td><td>BID ≤ Level</td><td>Sell when price falls to level (breakdown)</td></tr>
+      <tr><td><span class="key" style="color:var(--green)">BUY LIMIT</span></td><td>BID ≤ Level</td><td>Buy when price falls to level (support bounce)</td></tr>
+      <tr><td><span class="key" style="color:var(--red)">SELL LIMIT</span></td><td>BID ≥ Level</td><td>Sell when price rises to level (resistance rejection)</td></tr>
+    </table>
+
+    <h3>Setup Workflow</h3>
+    <div class="step"><span class="step-num">1</span><div>Click <span class="key">DIR</span> to select BUY or SELL</div></div>
+    <div class="step"><span class="step-num">2</span><div>Click <span class="key">TYPE</span> to select STOP or LIM</div></div>
+    <div class="step"><span class="step-num">3</span><div>Type the trigger price in the <span class="key">LEVEL</span> field, press ENTER</div></div>
+    <div class="step"><span class="step-num">4</span><div>Click <span class="key">ARM</span> to activate — status changes to ARM (orange)</div></div>
+    <p>To disarm: click ARM again. To cancel completely: click ✕.</p>
+
+    <h3>Execution</h3>
+    <p>When the trigger price is reached, the EA executes the basket immediately. The status changes to <span style="color:var(--green)">GO</span> and the corresponding BUY/SELL button in the footer shows the fill count (e.g. "7/7" or "26/28") for 30 seconds. An alert popup and push notification are sent.</p>
+
+    <div class="box info">
+      <strong>Basket-level execution:</strong> Pending orders use basket-level spread checking — only the total basket spread matters, not individual pair spreads. All other safety checks remain active: anti-hedge, MaxTradesPerPair, MinProfitToAdd for pyramiding, and BE-move.
+    </div>
+
+    <div class="box warn">
+      <strong>Session independent:</strong> Pending orders execute regardless of whether a trading session is active. They are treated as deliberate manual decisions. Only the Kill Switch (Hard Kill or TP Kill) can block a pending trigger.
+    </div>
+
+    <h3>Safety Features</h3>
+    <table>
+      <tr><th>Feature</th><th>Description</th></tr>
+      <tr><td>Pre-ARM check</td><td>Rejects arming if the trigger condition is already met (prevents accidental immediate execution)</td></tr>
+      <tr><td>Auto-disarm on change</td><td>Changing DIR or TYPE while armed automatically disarms — must re-ARM after changes</td></tr>
+      <tr><td>Level locked while armed</td><td>LEVEL field is read-only during ARM — disarm first to edit</td></tr>
+      <tr><td>One execution only</td><td>Each pending order fires once, then resets after 60 seconds</td></tr>
+    </table>
 
   </div>
 </div>
@@ -868,7 +946,7 @@
       <tr><th>Element</th><th>Description</th></tr>
       <tr><td>FIX label</td><td>Click to open #FIX synthetic chart</td></tr>
       <tr><td>Spread display</td><td>Total spread of all 28 pairs (e.g. "6.6p")</td></tr>
-      <tr><td>BUY / SELL</td><td>Two-click confirmation: first click → "SURE?" (yellow), second click within 3 sec → execute. All trades use SafeOpen (anti-hedge, pyramid rules, BE-move, spread check)</td></tr>
+      <tr><td>BUY / SELL</td><td>Two-click confirmation: first click → "SURE?" (yellow), second click within 3 sec → execute. All trades use BasketOpen (anti-hedge, pyramid rules, BE-move — no per-pair spread check, only basket-level spread guard)</td></tr>
       <tr><td>CLOSE</td><td>Closes all positions (equivalent to CLOSE ALL)</td></tr>
       <tr><td>Score Panel row</td><td>FIX line shows Sess/Today/W2D pip sums for all 28 pairs combined</td></tr>
     </table>
@@ -946,7 +1024,7 @@
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:6px;"><a href="https://mattrix8x.github.io/mattrix/" style="color:var(--cyan-dim)">MATTRIX Home</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.01 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;">MATTRIX v2.01b20 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>
