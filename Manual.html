@@ -661,7 +661,7 @@
     <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
 
     <h3>Pyramiding</h3>
-    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals.</p>
+    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is <strong>filter-independent and session-independent</strong> — it triggers based on profit and spread only, regardless of whether a trading session is active. If the market keeps running in your direction overnight, pyramiding continues to add positions as long as the profit conditions are met.</p>
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
       <tr><td><span class="key">MinProfitToAdd</span></td><td><span class="val">8.0</span></td><td>ALL existing positions must be at least X pips in profit before adding</td></tr>
@@ -788,7 +788,10 @@
     </div>
 
     <h3>Session Control</h3>
-    <p>Auto trading only operates during active sessions. Outside session hours, the EA displays data but does not trade. When a session ends and <span class="key">CloseAllSession</span> is enabled, all open positions are closed automatically.</p>
+    <p>Auto trading (new signal entries) only operates during active sessions. Outside session hours, the EA displays data but does not open new auto trades. When a session ends and <span class="key">CloseAllSession</span> is enabled, all open positions are closed automatically.</p>
+    <div class="box info">
+      <strong>Session-independent features:</strong> The following features operate 24/7, regardless of whether a session is active: <strong>Pyramiding</strong> (adds to winning positions based on profit), <strong>Pending Basket Orders</strong> (triggers when price level is reached), <strong>Manual BUY/SELL buttons</strong> (always clickable), and <strong>all risk management</strong> (Portfolio TP/SL, Profit Locks, Kill Switch, BE-moves).
+    </div>
 
     <h3>Cycle Limits</h3>
     <p><span class="key">StopProfit = 1</span> means: after one profitable portfolio cycle (all trades closed with net profit), auto trading pauses until next session or RESET EA. Same logic for <span class="key">StopLoss</span>. Set to 0 for unlimited cycles.</p>
