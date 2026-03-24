@@ -987,10 +987,25 @@
     </table>
 
     <h3>No Trades Opening</h3>
+
+    <div class="box danger">
+      <strong>MT5 has THREE AutoTrading switches — all must be enabled:</strong>
+    </div>
+    <table>
+      <tr><th>Level</th><th>Where</th><th>How to Check</th></tr>
+      <tr><td><span class="key">1. Platform Options</span></td><td>Tools → Options → Expert Advisors tab</td><td>"Allow automated trading" must be checked ✅</td></tr>
+      <tr><td><span class="key">2. Toolbar Button</span></td><td>Top toolbar → "Algo Trading" button</td><td>Must show green icon ✅ (red = disabled). Click to toggle.</td></tr>
+      <tr><td><span class="key">3. Per-EA Setting</span></td><td>Right-click chart → Expert List → Common tab</td><td>"Allow Algo Trading" must be checked ✅ for the MATTRIX EA</td></tr>
+    </table>
+    <div class="box warn">
+      <strong>Error 10027 "auto trading disabled by client"</strong> in the Experts tab means one of these three switches is off. MT5's own trade windows and manual orders work normally even when EA trading is blocked — so everything looks fine until the EA tries to open a trade.
+    </div>
+
+    <p>If all three switches are enabled and trades still don't open, check these additional causes:</p>
     <table>
       <tr><th>Check</th><th>What to Look For</th></tr>
-      <tr><td>AUTO ON/OFF</td><td>Must show AUTO ON for auto-trading</td></tr>
-      <tr><td>Session</td><td>Info panel must show active session (S1/S2/S3), not OFF</td></tr>
+      <tr><td>AUTO ON/OFF</td><td>Must show AUTO ON for auto-trading (our EA-internal switch, separate from MT5)</td></tr>
+      <tr><td>Session</td><td>Info panel must show active session (S1/S2/S3), not OFF — auto signals only fire inside sessions</td></tr>
       <tr><td>Filters</td><td>Score filter at ±4 is very strict — only the strongest setups trigger</td></tr>
       <tr><td>Spreads</td><td>High spreads (weekends, news) block all entries</td></tr>
       <tr><td>Cycles</td><td>If Cycles shows 1/1W or 1/1L, auto trading has paused — use RESET EA</td></tr>
