@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX v2.01b21 — User Manual</title>
+<title>MATTRIX v2.01 — User Manual</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -753,6 +753,21 @@
 
     <h3>Persistence</h3>
     <p>CLS orders are stored in MT5 GlobalVariables and survive F7 settings changes, EA restarts, and PC reboots. BUY/SELL pending orders survive F7 but are cleared on EA restart (safety — market conditions may have changed). All data is cleared when the EA is removed from the chart.</p>
+
+    <h3>Multiple Pending Baskets</h3>
+    <p>You can arm multiple baskets simultaneously (e.g. EUR BUY + GBP BUY + AUD BUY). When they trigger, the EA processes them one per tick in sequence. On each execution, all standard safety checks apply per pair:</p>
+    <table>
+      <tr><th>Safety Check</th><th>Effect</th></tr>
+      <tr><td>Anti-Hedge</td><td>Blocks BUY if SELL is already open on the same pair (and vice versa)</td></tr>
+      <tr><td>MaxTradesPerPair</td><td>Blocks entry if pair already has the maximum number of positions</td></tr>
+      <tr><td>MaxExposure</td><td>Blocks entry if a currency already appears in the maximum number of trades</td></tr>
+      <tr><td>MaxTotalTrades</td><td>Blocks all new entries once the global position limit is reached</td></tr>
+    </table>
+    <p>Overlapping pairs between baskets are automatically handled. For example, EURGBP appears in both EUR and GBP baskets — the first basket opens the position, the second basket's attempt on EURGBP is blocked by anti-hedge. This is correct behavior.</p>
+
+    <div class="box danger">
+      <strong>Important — Multiple Basket Risk:</strong> The safety checks described above are configurable via F7 settings. If you disable anti-hedge, set MaxExposure to 0 (unlimited), or increase MaxTradesPerPair, multiple pending baskets can open overlapping and conflicting positions — potentially resulting in excessive margin usage, uncontrolled hedging, and significant losses. <strong>The default settings are deliberately conservative. Changing them is entirely at your own risk.</strong> Always test on a demo account before modifying safety parameters, especially when using multiple pending basket orders.
+    </div>
 
   </div>
 </div>
