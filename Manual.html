@@ -352,8 +352,8 @@
 <header>
   <h1>MATTRIX v2.01</h1>
   <div class="subtitle">User Manual — Forex Basket Trading System</div>
-  <div class="version">BETA RELEASE — EXPIRES 2026.05.31</div>
-  <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicator + Synthetic Charts</div>
+  <div class="version">v2.01b21 BETA — EXPIRES 2026.05.31</div>
+  <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicators + Synthetic Charts</div>
 </header>
 
 <nav>
@@ -362,10 +362,13 @@
   <a href="#settings">Settings</a>
   <a href="#manual">Manual Trading</a>
   <a href="#pending">Pending Baskets</a>
+  <a href="#clsmanage">CLS Basket Management</a>
+  <a href="#pyramid">Smart Pyramid</a>
   <a href="#auto">Auto Trading</a>
   <a href="#risk">Risk Management</a>
   <a href="#killswitch">Kill Switch</a>
   <a href="#fix">FIX Index</a>
+  <a href="#indicators">Indicators</a>
   <a href="#troubleshoot">Troubleshooting</a>
 </nav>
 
@@ -393,7 +396,7 @@
 
     <div class="step">
       <span class="step-num">1</span>
-      <div>Copy <code>MATTRIX_v2.ex5</code> and <code>MATTRIX_SyntheticCharts.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Copy <code>MATTRIX_BasketSignal.ex5</code>, <code>MATTRIX_BasketBreakout.ex5</code>, <code>MATTRIX_DayLevels.ex5</code>, and <code>MATTRIX_RONROFF.ex5</code> to <span class="path">MQL5\Indicators</span>. Copy your <code>.set</code> file to <span class="path">MQL5\Profiles\Templates</span>.</div>
+      <div>Copy <code>MATTRIX_v2.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Copy <code>MATTRIX_SyntheticCharts.ex5</code> to <span class="path">MQL5\Experts</span>. Copy <code>MATTRIX_RONROFF.ex5</code> to <span class="path">MQL5\Indicators</span>. That's it — three files, no source code needed.</div>
     </div>
     <div class="step">
       <span class="step-num">2</span>
@@ -411,13 +414,9 @@
     <h3>Delivered Files</h3>
     <table>
       <tr><th>File</th><th>Type</th><th>Copy To</th><th>Purpose</th></tr>
-      <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard + Pending Baskets</td></tr>
+      <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard</td></tr>
       <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF + #FIX charts (13 symbols)</td></tr>
-      <tr><td><code>MATTRIX_BasketSignal.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Reversal + Extreme entry arrows on synthetic charts</td></tr>
-      <tr><td><code>MATTRIX_BasketBreakout.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Session breakout diamonds on synthetic charts</td></tr>
-      <tr><td><code>MATTRIX_DayLevels.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Yesterday High/Low, Today range, ADR% on synthetic charts</td></tr>
       <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF strength display</td></tr>
-      <tr><td><code>*.set</code></td><td>Settings</td><td><span class="path">MQL5\Profiles\Templates</span></td><td>Broker-specific EA settings presets</td></tr>
     </table>
 
     <div class="box warn">
@@ -586,8 +585,8 @@
     <table>
       <tr><th>Session</th><th>Default</th><th>Time (Broker)</th><th>Description</th></tr>
       <tr><td>S1 (Asia)</td><td><span class="val">OFF</span></td><td>01:00–09:59</td><td>Low liquidity, disabled for safety</td></tr>
-      <tr><td>S2 (London)</td><td><span class="val">ON</span></td><td>10:00–14:59</td><td>European session</td></tr>
-      <tr><td>S3 (NYC Overlap)</td><td><span class="val">ON</span></td><td>15:00–19:00</td><td>Highest liquidity window</td></tr>
+      <tr><td>S2 (London)</td><td><span class="val">ON</span></td><td>11:00–16:59</td><td>European session</td></tr>
+      <tr><td>S3 (NYC Overlap)</td><td><span class="val">ON</span></td><td>16:00–20:00</td><td>Highest liquidity window (EU DST: 16:00, Winter: 15:00)</td></tr>
       <tr><td>S4 (Event)</td><td><span class="val">OFF</span></td><td>Manual</td><td>For NFP, CPI, and other high-impact events</td></tr>
     </table>
     <p><span class="key">StopProfit</span> and <span class="key">StopLoss</span> (default: 1 each) control how many profitable/losing portfolio cycles are allowed per session before auto-trading stops.</p>
@@ -650,18 +649,14 @@
     <p><strong>Per-pair trading:</strong> Click <span class="key">BUY</span> or <span class="key">SELL</span> on any pair row. The trade opens immediately with your configured lot size or $/pip setting.</p>
     <p><strong>Basket trading:</strong> Click <span class="key">BUY</span> on a currency label (e.g. EUR) to buy all 7 pairs where EUR is the base. Click <span class="key">SELL</span> for the inverse. RON and ROFF baskets trade 8 pairs each. The <span class="key" style="color:var(--yellow)">FIX</span> basket trades all 28 pairs — two-click confirmation required.</p>
 
-    <h3>Spread Protection — Two Levels</h3>
-    <p><strong>Pair-level (AUTO signals + individual pair BUY/SELL):</strong> Each pair's spread is checked against <span class="key">MaxSpread</span>. If spread exceeds the limit, the pair button is grayed out and the trade is blocked.</p>
-    <p><strong>Basket-level (basket BUY/SELL buttons + Pending Baskets):</strong> Only the basket's combined spread is checked against <span class="key">MaxBasketSprd</span>. Individual pair spreads are ignored — a pair with 3 pips spread is compensated by a pair with 0.5 pips. RON/ROFF allows +1 pip above threshold. FIX allows 3.5× threshold. If the basket spread is too high, the basket button is grayed out.</p>
-    <div class="box info">
-      <strong>Why two levels?</strong> When you trade a basket, you want the complete basket — not 5 out of 7 pairs because two had momentarily high spreads. The basket spread captures the aggregate cost, which is what matters for the geometry of the trade.
-    </div>
+    <h3>Spread Protection</h3>
+    <p>The EA automatically guards every entry with spread checks. Per-pair buttons are <strong>grayed out and disabled</strong> when the pair's spread exceeds <span class="key">MaxSpread</span>. Basket buttons are grayed out when the basket's combined spread exceeds <span class="key">MaxBasketSprd</span>. You cannot override this — it protects you from expensive entries.</p>
 
     <h3>No Hedging</h3>
     <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
 
     <h3>Pyramiding</h3>
-    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is <strong>filter-independent and session-independent</strong> — it triggers based on profit and spread only, regardless of whether a trading session is active. If the market keeps running in your direction overnight, pyramiding continues to add positions as long as the profit conditions are met.</p>
+    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals.</p>
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
       <tr><td><span class="key">MinProfitToAdd</span></td><td><span class="val">8.0</span></td><td>ALL existing positions must be at least X pips in profit before adding</td></tr>
@@ -709,20 +704,20 @@
     <p>Available for all 11 baskets: <span class="key">EUR</span> <span class="key">GBP</span> <span class="key">AUD</span> <span class="key">NZD</span> <span class="key">USD</span> <span class="key">CAD</span> <span class="key">CHF</span> <span class="key">JPY</span> <span class="key" style="color:var(--yellow)">RON</span> <span class="key" style="color:var(--yellow)">ROFF</span> <span class="key" style="color:var(--yellow)">FIX</span></p>
 
     <h3>Pending Panel</h3>
-    <p>Located below the MATTRIX Score Panel on the right side of the dashboard. Shows all 11 baskets with live BID prices from the synthetic charts. The <span class="key">HIDE</span> / <span class="key">PEND</span> button toggles visibility.</p>
+    <p>Located below the MATTRIX Score Panel on the right side of the dashboard. Shows all 11 baskets with live BID prices from the synthetic charts.</p>
     <table>
       <tr><th>Column</th><th>Description</th></tr>
-      <tr><td><span class="key">BSKT</span></td><td>Basket name (EUR–JPY in cyan, RON/ROFF/FIX in amber)</td></tr>
-      <tr><td><span class="key">DIR</span></td><td>Direction — click to toggle BUY / SELL</td></tr>
-      <tr><td><span class="key">TYPE</span></td><td>Order type — click to toggle STOP / LIM</td></tr>
+      <tr><td><span class="key">BSKT</span></td><td>Basket name — green background = long basket open, red = short, dark = no basket</td></tr>
+      <tr><td><span class="key">DIR</span></td><td>Direction — click to toggle BUY → SELL → CLS (close) → BUY</td></tr>
+      <tr><td><span class="key">TYPE</span></td><td>Order type — STOP/LIM for BUY/SELL, ▼/▲ for CLS</td></tr>
       <tr><td><span class="key">LEVEL</span></td><td>Trigger price — type value and press ENTER</td></tr>
-      <tr><td><span class="key">BID</span></td><td>Current synthetic chart price (live, 5 digits)</td></tr>
+      <tr><td><span class="key">BID</span></td><td>Current synthetic chart price (live)</td></tr>
       <tr><td><span class="key">DIST</span></td><td>Distance from current BID to trigger level</td></tr>
       <tr><td><span class="key">ST</span></td><td>Status: ARM (waiting) / GO (triggered) / --- (inactive)</td></tr>
       <tr><td><span class="key">✕</span></td><td>Cancel — removes the pending order</td></tr>
     </table>
 
-    <h3>Order Types</h3>
+    <h3>Order Types (BUY/SELL)</h3>
     <table>
       <tr><th>Type</th><th>Trigger</th><th>Use Case</th></tr>
       <tr><td><span class="key" style="color:var(--green)">BUY STOP</span></td><td>BID ≥ Level</td><td>Buy when price rises to level (breakout)</td></tr>
@@ -736,13 +731,12 @@
     <div class="step"><span class="step-num">2</span><div>Click <span class="key">TYPE</span> to select STOP or LIM</div></div>
     <div class="step"><span class="step-num">3</span><div>Type the trigger price in the <span class="key">LEVEL</span> field, press ENTER</div></div>
     <div class="step"><span class="step-num">4</span><div>Click <span class="key">ARM</span> to activate — status changes to ARM (orange)</div></div>
-    <p>To disarm: click ARM again. To cancel completely: click ✕.</p>
 
     <h3>Execution</h3>
-    <p>When the trigger price is reached, the EA executes the basket immediately. The status changes to <span style="color:var(--green)">GO</span> and the corresponding BUY/SELL button in the footer shows the fill count (e.g. "7/7" or "26/28") for 30 seconds. An alert popup and push notification are sent.</p>
+    <p>When the trigger price is reached, the EA executes the basket immediately using async bulk execution (same speed as Close All). An alert popup and push notification are sent. The BUY/SELL button shows the fill count (e.g. "7/7") for 30 seconds.</p>
 
     <div class="box info">
-      <strong>Basket-level execution:</strong> Pending orders use basket-level spread checking — only the total basket spread matters, not individual pair spreads. All other safety checks remain active: anti-hedge, MaxTradesPerPair, MinProfitToAdd for pyramiding, and BE-move.
+      <strong>Basket-level execution:</strong> Pending orders use basket-level spread checking — only the total basket spread matters, not individual pair spreads. All other safety checks remain active: anti-hedge, MaxTradesPerPair, MinProfitToAdd, and BE-move.
     </div>
 
     <div class="box warn">
@@ -752,10 +746,123 @@
     <h3>Safety Features</h3>
     <table>
       <tr><th>Feature</th><th>Description</th></tr>
-      <tr><td>Pre-ARM check</td><td>Rejects arming if the trigger condition is already met (prevents accidental immediate execution)</td></tr>
+      <tr><td>Pre-ARM check</td><td>Rejects arming if the trigger condition is already met (prevents accidental immediate execution). Disabled for CLS orders.</td></tr>
       <tr><td>Auto-disarm on change</td><td>Changing DIR or TYPE while armed automatically disarms — must re-ARM after changes</td></tr>
       <tr><td>Level locked while armed</td><td>LEVEL field is read-only during ARM — disarm first to edit</td></tr>
-      <tr><td>One execution only</td><td>Each pending order fires once, then resets after 60 seconds</td></tr>
+    </table>
+
+    <h3>Persistence</h3>
+    <p>CLS orders are stored in MT5 GlobalVariables and survive F7 settings changes, EA restarts, and PC reboots. BUY/SELL pending orders survive F7 but are cleared on EA restart (safety — market conditions may have changed). All data is cleared when the EA is removed from the chart.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 4c. CLS BASKET MANAGEMENT -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="clsmanage">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">4c</span>
+    <h2>CLS — Basket Close Management</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Concept</h3>
+    <p>CLS (Close) is a pending close order for an open basket. Set a price level on the synthetic chart, and the EA automatically closes all positions in that basket when the level is reached. This is your basket-level SL/TP — managed visually in the chart.</p>
+
+    <h3>CLS Direction</h3>
+    <p>Click DIR until you see <span class="key" style="color:var(--yellow)">CLS</span> (gold), then click TYPE to choose the direction:</p>
+    <table>
+      <tr><th>Type</th><th>Symbol</th><th>Trigger</th><th>Use Case</th></tr>
+      <tr><td>CLS ▼</td><td style="color:var(--red);font-size:1.2em">▼</td><td>BID falls to level</td><td>SL for long basket, TP for short basket</td></tr>
+      <tr><td>CLS ▲</td><td style="color:var(--green);font-size:1.2em">▲</td><td>BID rises to level</td><td>SL for short basket, TP for long basket</td></tr>
+    </table>
+    <div class="box info">
+      <strong>Direction rule:</strong> The arrows indicate price direction, not trade direction. ▼ = "close when price goes DOWN to this level". ▲ = "close when price goes UP to this level". Whether that's your SL or TP depends on your basket direction.
+    </div>
+
+    <h3>Auto Basket SL/TP</h3>
+    <p>When enabled in settings (F7), the EA automatically sets a CLS order after every basket execution — both manual clicks and pending triggers.</p>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">Auto Basket SL (%)</span></td><td><span class="val">0</span> (off)</td><td>Automatic CLS as % distance from entry price. Shows in Pending Panel.</td></tr>
+      <tr><td><span class="key">Auto Basket TP (%)</span></td><td><span class="val">0</span> (off)</td><td>Automatic TP as % from entry. Monitored internally, visible as chart line.</td></tr>
+    </table>
+    <p><strong>Example:</strong> EUR BUY @ 1.37000 with Auto SL = 0.2%, Auto TP = 0.5%:</p>
+    <p>Panel shows: <span class="key" style="color:var(--yellow)">CLS</span> <span style="color:var(--red)">▼</span> @ 1.36726 (SL, 0.2% below entry). Internally monitored: TP @ 1.37685 (0.5% above entry). First trigger wins — SL or TP, whichever is reached first.</p>
+
+    <h3>Chart Lines</h3>
+    <p>The BasketSignal indicator reads the CLS levels from GlobalVariables and draws interactive lines directly on the synthetic chart:</p>
+    <table>
+      <tr><th>Line</th><th>Color</th><th>Style</th><th>Meaning</th></tr>
+      <tr><td>SL Line</td><td style="color:#c83c3c">Red</td><td>Dashed</td><td>CLS SL level from Pending Panel</td></tr>
+      <tr><td>TP Line</td><td style="color:#3cb43c">Green</td><td>Dashed</td><td>Auto-TP level (internal)</td></tr>
+      <tr><td>Entry Line</td><td style="color:#00b4dc">Cyan / Orange</td><td>Dash-dot-dot</td><td>Pending BUY/SELL entry level</td></tr>
+    </table>
+
+    <h3>Bidirectional Sync</h3>
+    <p>All chart lines are <strong>draggable</strong>. When you drag a line to a new price, the BasketSignal writes the new level back to a GlobalVariable. The EA reads the change on the next tick and updates the Pending Panel automatically.</p>
+    <div class="box success">
+      <strong>Visual basket management:</strong> You see support/resistance in the #EUR chart, drag the red SL line to a key support level, and the EA immediately adjusts its close trigger. No need to type numbers in the Pending Panel — just drag the line where you want it.
+    </div>
+
+    <div class="box warn">
+      <strong>BasketSignal setting:</strong> The <span class="key">EA Magic Number</span> input in BasketSignal must match your EA's Magic Number (default: 1111) for the chart lines to appear and synchronize.
+    </div>
+
+    <h3>CLS Execution</h3>
+    <p>When a CLS trigger fires, the EA uses <strong>async bulk close</strong> — all pairs in the basket are closed simultaneously in one burst (same mechanism as the Close All button). Alert + push notification are sent. The CLS is <strong>not blocked</strong> by the Kill Switch — closing positions is always allowed.</p>
+
+    <h3>Manual Override</h3>
+    <p>You can disarm any auto-CLS and set your own level. Click the ARM button to disarm, change the level, re-arm. The auto-CLS will not overwrite an existing armed CLS on the same slot.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 4d. SMART PYRAMID ENGINE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="pyramid">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">4d</span>
+    <h2>Smart Pyramid Engine</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Overview</h3>
+    <p>The Smart Pyramid Engine (PyramidMode=1) automatically calculates the minimum profit required before adding a new position, based on market conditions. It replaces the fixed <span class="key">MinProfitToAdd</span> with a dynamic formula.</p>
+
+    <h3>Settings</h3>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">Pyramid Mode</span></td><td><span class="val">0</span></td><td>0 = FIXED (manual MinProfitToAdd), 1 = SMART (dynamic)</td></tr>
+      <tr><td><span class="key">Pyramid Style</span></td><td><span class="val">1</span></td><td>0 = Conservative, 1 = Moderate, 2 = Aggressive</td></tr>
+    </table>
+
+    <h3>Formula</h3>
+    <p><code>Required Profit = Base × LevelFactor ÷ GapBoost</code></p>
+    <p>Where:</p>
+    <table>
+      <tr><th>Component</th><th>Description</th></tr>
+      <tr><td>Base</td><td>MinProfitToAdd setting (your baseline)</td></tr>
+      <tr><td>LevelFactor</td><td>Decreases with each pyramid level: L0=1.00, L1=0.85, L2=0.75, L3=0.65, L5+=0.55 (Moderate)</td></tr>
+      <tr><td>GapBoost</td><td>1 + |Gap| × 0.5 when |Gap| > 0.05 — stronger momentum = lower threshold</td></tr>
+      <tr><td>Floor</td><td>Minimum 2.0 pips — never goes below this</td></tr>
+    </table>
+    <p><strong>Gap direction filter:</strong> BUY requires Gap > +0.05, SELL requires Gap < -0.05. If the gap points against your trade direction, pyramiding is blocked regardless of profit.</p>
+
+    <div class="box info">
+      <strong>Session independent:</strong> Smart Pyramid runs 24/5 — it is not restricted to active sessions. This allows overnight positions to be pyramided when conditions are right.
+    </div>
+
+    <h3>Style Comparison</h3>
+    <table>
+      <tr><th>Style</th><th>L0</th><th>L1</th><th>L2</th><th>L3+</th><th>Risk</th></tr>
+      <tr><td>Conservative</td><td>1.00</td><td>0.90</td><td>0.80</td><td>0.70</td><td>Low</td></tr>
+      <tr><td>Moderate</td><td>1.00</td><td>0.85</td><td>0.75</td><td>0.55</td><td>Medium</td></tr>
+      <tr><td>Aggressive</td><td>1.00</td><td>0.75</td><td>0.60</td><td>0.45</td><td>High</td></tr>
     </table>
 
   </div>
@@ -788,10 +895,7 @@
     </div>
 
     <h3>Session Control</h3>
-    <p>Auto trading (new signal entries) only operates during active sessions. Outside session hours, the EA displays data but does not open new auto trades. When a session ends and <span class="key">CloseAllSession</span> is enabled, all open positions are closed automatically.</p>
-    <div class="box info">
-      <strong>Session-independent features:</strong> The following features operate 24/7, regardless of whether a session is active: <strong>Pyramiding</strong> (adds to winning positions based on profit), <strong>Pending Basket Orders</strong> (triggers when price level is reached), <strong>Manual BUY/SELL buttons</strong> (always clickable), and <strong>all risk management</strong> (Portfolio TP/SL, Profit Locks, Kill Switch, BE-moves).
-    </div>
+    <p>Auto trading only operates during active sessions. Outside session hours, the EA displays data but does not trade. When a session ends and <span class="key">CloseAllSession</span> is enabled, all open positions are closed automatically.</p>
 
     <h3>Cycle Limits</h3>
     <p><span class="key">StopProfit = 1</span> means: after one profitable portfolio cycle (all trades closed with net profit), auto trading pauses until next session or RESET EA. Same logic for <span class="key">StopLoss</span>. Set to 0 for unlimited cycles.</p>
@@ -949,7 +1053,7 @@
       <tr><th>Element</th><th>Description</th></tr>
       <tr><td>FIX label</td><td>Click to open #FIX synthetic chart</td></tr>
       <tr><td>Spread display</td><td>Total spread of all 28 pairs (e.g. "6.6p")</td></tr>
-      <tr><td>BUY / SELL</td><td>Two-click confirmation: first click → "SURE?" (yellow), second click within 3 sec → execute. All trades use BasketOpen (anti-hedge, pyramid rules, BE-move — no per-pair spread check, only basket-level spread guard)</td></tr>
+      <tr><td>BUY / SELL</td><td>Two-click confirmation: first click → "SURE?" (yellow), second click within 3 sec → execute. All trades use SafeOpen (anti-hedge, pyramid rules, BE-move, spread check)</td></tr>
       <tr><td>CLOSE</td><td>Closes all positions (equivalent to CLOSE ALL)</td></tr>
       <tr><td>Score Panel row</td><td>FIX line shows Sess/Today/W2D pip sums for all 28 pairs combined</td></tr>
     </table>
@@ -966,7 +1070,62 @@
 </div>
 
 <!-- ═══════════════════════════════════════════ -->
-<!-- 8. TROUBLESHOOTING -->
+<!-- 9. INDICATORS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="indicators">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">9</span>
+    <h2>Indicators</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>BasketSignal (v1.11)</h3>
+    <p>Attach to any synthetic chart (#EUR, #GBP, etc.). Displays entry signals, pair breakdown, and CLS chart lines.</p>
+    <table>
+      <tr><th>Feature</th><th>Description</th></tr>
+      <tr><td>Reversal arrows (▲/▼)</td><td>Triangle signals when momentum reverses with high coherence</td></tr>
+      <tr><td>Extreme arrows (↑/↓)</td><td>Arrow signals when momentum crosses extreme threshold and reverts</td></tr>
+      <tr><td>Pre-signal blink</td><td>Signal text blinks [R] or [E] when Bar 0 meets conditions (not yet confirmed)</td></tr>
+      <tr><td>Pair breakdown panel</td><td>Shows all pairs in the basket with individual pip values and direction arrows</td></tr>
+      <tr><td>Σ pips display</td><td>Large number showing total pip sum (open-to-close for current bar, close-to-close for history)</td></tr>
+      <tr><td>Coherence display</td><td>Shows how many pairs agree on direction (e.g. 6/7 = STRONG)</td></tr>
+      <tr><td>CLS chart lines</td><td>Red SL line + Green TP line + Cyan/Orange entry line — draggable, bidirectional sync with EA</td></tr>
+    </table>
+    <div class="box info">
+      <strong>EA Magic Number:</strong> Set the <span class="key">EA Magic Number</span> input to match your EA's Magic Number (default: 1111). This enables the CLS chart lines to synchronize with the Pending Panel.
+    </div>
+
+    <h3>BasketBreakout (v1.11)</h3>
+    <p>Attach to any synthetic chart. Draws session breakout diamonds (★) when the basket moves significantly from the session open.</p>
+    <table>
+      <tr><th>Feature</th><th>Description</th></tr>
+      <tr><td>Session diamonds</td><td>Green ★ = bullish breakout, Red ★ = bearish breakout</td></tr>
+      <tr><td>Session lines</td><td>Vertical lines marking session boundaries</td></tr>
+      <tr><td>Per-bar ATR</td><td>Non-repainting: each bar uses its own historical ATR, not the current global ATR</td></tr>
+      <tr><td>One signal per session</td><td>Maximum one diamond per session per day — no duplicates</td></tr>
+    </table>
+    <div class="box info">
+      <strong>Non-repainting:</strong> Diamonds survive timeframe changes and chart switching. Once placed, they never move or disappear. This was fixed in v1.11 — earlier versions had repainting issues on TF change.
+    </div>
+
+    <h3>DayLevels (v1.06)</h3>
+    <p>Attach to any synthetic chart. Shows Yesterday High/Low, Today High/Low, and ADR% as price-anchored objects.</p>
+    <table>
+      <tr><th>Element</th><th>Description</th></tr>
+      <tr><td>YH / YL</td><td>Yesterday High / Low — horizontal lines</td></tr>
+      <tr><td>TH / TL</td><td>Today High / Low — filled rectangle for today's range</td></tr>
+      <tr><td>ADR%</td><td>Color-coded: Green &lt;50%, Yellow 50-80%, Red &gt;80%</td></tr>
+    </table>
+
+    <h3>RONROFF (v1.01)</h3>
+    <p>Displays RON/ROFF strength on any chart. Uses a cache-based architecture (5000 bars) for stable performance across timeframe switches.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 10. TROUBLESHOOTING -->
 <!-- ═══════════════════════════════════════════ -->
 <div class="section" id="troubleshoot">
   <div class="section-header" onclick="toggleSection(this)">
@@ -987,25 +1146,10 @@
     </table>
 
     <h3>No Trades Opening</h3>
-
-    <div class="box danger">
-      <strong>MT5 has THREE AutoTrading switches — all must be enabled:</strong>
-    </div>
-    <table>
-      <tr><th>Level</th><th>Where</th><th>How to Check</th></tr>
-      <tr><td><span class="key">1. Platform Options</span></td><td>Tools → Options → Expert Advisors tab</td><td>"Allow automated trading" must be checked ✅</td></tr>
-      <tr><td><span class="key">2. Toolbar Button</span></td><td>Top toolbar → "Algo Trading" button</td><td>Must show green icon ✅ (red = disabled). Click to toggle.</td></tr>
-      <tr><td><span class="key">3. Per-EA Setting</span></td><td>Right-click chart → Expert List → Common tab</td><td>"Allow Algo Trading" must be checked ✅ for the MATTRIX EA</td></tr>
-    </table>
-    <div class="box warn">
-      <strong>Error 10027 "auto trading disabled by client"</strong> in the Experts tab means one of these three switches is off. MT5's own trade windows and manual orders work normally even when EA trading is blocked — so everything looks fine until the EA tries to open a trade.
-    </div>
-
-    <p>If all three switches are enabled and trades still don't open, check these additional causes:</p>
     <table>
       <tr><th>Check</th><th>What to Look For</th></tr>
-      <tr><td>AUTO ON/OFF</td><td>Must show AUTO ON for auto-trading (our EA-internal switch, separate from MT5)</td></tr>
-      <tr><td>Session</td><td>Info panel must show active session (S1/S2/S3), not OFF — auto signals only fire inside sessions</td></tr>
+      <tr><td>AUTO ON/OFF</td><td>Must show AUTO ON for auto-trading</td></tr>
+      <tr><td>Session</td><td>Info panel must show active session (S1/S2/S3), not OFF</td></tr>
       <tr><td>Filters</td><td>Score filter at ±4 is very strict — only the strongest setups trigger</td></tr>
       <tr><td>Spreads</td><td>High spreads (weekends, news) block all entries</td></tr>
       <tr><td>Cycles</td><td>If Cycles shows 1/1W or 1/1L, auto trading has paused — use RESET EA</td></tr>
@@ -1031,6 +1175,18 @@
     <h3>Synthetic Charts Empty</h3>
     <p><code>MATTRIX_SyntheticCharts.ex5</code> must be running on a separate chart. History is built on the first tick after attaching — wait for market hours. Check Experts tab for "10/10 synthetic symbols ready".</p>
 
+    <h3>Dashboard Text Sizes Wrong (DPI Scaling)</h3>
+    <p>On laptops with Windows display scaling above 100% (e.g. 125%), MT5 objects may render at wrong sizes — text overlaps, buttons misaligned, fonts too large or too small.</p>
+    <div class="step"><span class="step-num">1</span><div>Right-click <code>terminal64.exe</code> → Properties</div></div>
+    <div class="step"><span class="step-num">2</span><div>Tab <strong>Compatibility</strong></div></div>
+    <div class="step"><span class="step-num">3</span><div>Click <strong>Change high DPI settings</strong></div></div>
+    <div class="step"><span class="step-num">4</span><div>Check <strong>Override high DPI scaling behavior</strong></div></div>
+    <div class="step"><span class="step-num">5</span><div>Dropdown: select <strong>Application</strong></div></div>
+    <div class="step"><span class="step-num">6</span><div>OK → OK → Restart MT5</div></div>
+
+    <h3>Arrows Duplicate on Chart Switch</h3>
+    <p>If BasketSignal arrows multiply when switching between charts or timeframes, update to v1.11. Earlier versions deleted and recreated all arrows on each TF change, causing duplicates during history loading. v1.11 preserves existing arrows across TF changes.</p>
+
     <h3>Getting Help</h3>
     <p>Post in the Discord <span class="key">#bug-reports</span> channel with a screenshot of the Experts tab (Ctrl+T → Experts) and your issue description. Include your broker name and account type (demo/live).</p>
 
@@ -1041,8 +1197,8 @@
 
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
-  <div style="margin-top:6px;"><a href="https://mattrix8x.github.io/mattrix/" style="color:var(--cyan-dim)">MATTRIX Home</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.01b20 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;"><a href="https://mattrix8x.com" style="color:var(--cyan-dim)">mattrix8x.com</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
+  <div style="margin-top:6px;">MATTRIX v2.01b21 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>
