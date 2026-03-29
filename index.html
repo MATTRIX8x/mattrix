@@ -5,7 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MATTRIX 8x — Decision Follows Structure</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+  /* Self-hosted fonts — no external requests (DSGVO compliant) */
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url('fonts/JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url('fonts/JetBrainsMono-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: url('fonts/JetBrainsMono-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Outfit';
+    src: url('fonts/outfit-v15-latin-300.woff2') format('woff2');
+    font-weight: 300; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Outfit';
+    src: url('fonts/outfit-v15-latin-regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Outfit';
+    src: url('fonts/outfit-v15-latin-500.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Outfit';
+    src: url('fonts/outfit-v15-latin-600.woff2') format('woff2');
+    font-weight: 600; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Outfit';
+    src: url('fonts/outfit-v15-latin-700.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
 
   :root {
     --bg-deep: #060911;
@@ -311,11 +351,11 @@
 </div>
 
 <footer>
-  <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
+  <div class="copy">&copy; 2026 Matthias Scholz &mdash; FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:8px; font-size:0.95em;">
-    <a href="impressum.html" style="color:var(--cyan-dim); text-decoration:none; letter-spacing:0.5px;">Impressum & Disclaimer</a>
+    <a href="impressum.html" style="color:var(--cyan-dim); text-decoration:none; letter-spacing:0.5px;">Impressum &amp; Disclaimer</a>
     <span style="color:#303858; margin:0 8px;">|</span>
-    <a href="mailto:matt@mattrix8x.com" style="color:var(--cyan-dim); text-decoration:none;">matt@mattrix8x.com</a>
+    <span id="ft-em"></span>
   </div>
   <div style="margin-top:6px; font-size:0.8em; color:#557;">Originally inspired by the Dashboard Power Meter concept shared by Edition GVC on ForexFactory (2019).</div>
   <div class="disclaimer">
@@ -324,6 +364,9 @@
     Not financial advice. See <a href="impressum.html" style="color:#404868;">full disclaimer</a>.
   </div>
 </footer>
+<script>
+(function(){var a='matt';var b='mattrix8x';var c='.com';var e=a+'@'+b+c;var el=document.getElementById('ft-em');if(el){el.innerHTML='<a href="mai'+'lto:'+e+'" style="color:#008c91;text-decoration:none;">'+e+'</a>';}})();
+</script>
 
 </body>
 </html>
