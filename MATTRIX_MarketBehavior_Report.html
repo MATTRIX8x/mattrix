@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATTRIX 8x — Market Behavior Report</title>
+<style>
+  @font-face { font-family: 'JetBrains Mono'; src: url('fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'JetBrains Mono'; src: url('fonts/JetBrainsMono-Bold.woff2') format('woff2'); font-weight: 700; }
+  @font-face { font-family: 'Outfit'; src: url('fonts/Outfit-Regular.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Outfit'; src: url('fonts/Outfit-SemiBold.woff2') format('woff2'); font-weight: 600; }
+  @font-face { font-family: 'Outfit'; src: url('fonts/Outfit-Bold.woff2') format('woff2'); font-weight: 700; }
+  @font-face { font-family: 'Outfit'; src: url('fonts/Outfit-ExtraBold.woff2') format('woff2'); font-weight: 800; }
+
+  :root {
+    --bg: #06080f; --surface: #0d1117; --surface2: #151d2b; --surface3: #1c2640;
+    --border: #253046; --border-accent: #3a4a6b;
+    --text: #e2e8f0; --text-dim: #64748b; --text-muted: #475569;
+    --gold: #f59e0b; --gold-dim: #92601c; --green: #22c55e; --green-dim: #166534;
+    --red: #ef4444; --red-dim: #991b1b; --blue: #3b82f6; --cyan: #06b6d4;
+    --magenta: #d946ef; --orange: #f97316;
+    --mono: 'JetBrains Mono', monospace; --sans: 'Outfit', system-ui, sans-serif;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.6; }
+
+  .container { max-width:1100px; margin:0 auto; padding:40px 24px 60px; }
+
+  /* HERO */
+  .hero { text-align:center; padding:60px 0 48px; position:relative; }
+  .hero::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:200px; height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .hero h1 { font-size:2.4rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:8px; }
+  .hero h1 span { color:var(--gold); }
+  .hero .subtitle { font-size:1rem; color:var(--text-dim); margin-bottom:6px; }
+  .hero .meta { font-size:0.78rem; color:var(--text-muted); font-family:var(--mono); }
+
+  /* SECTION */
+  .section { margin-top:56px; }
+  .section-num { font-family:var(--mono); font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:4px; }
+  .section h2 { font-size:1.5rem; font-weight:700; margin-bottom:6px; }
+  .section h2 span { color:var(--gold); }
+  .section .lead { color:var(--text-dim); font-size:0.92rem; margin-bottom:24px; max-width:680px; }
+
+  h3 { font-size:1.05rem; font-weight:600; color:var(--cyan); margin:28px 0 10px; }
+
+  /* INSIGHT BOX */
+  .insight { background:var(--surface2); border-left:3px solid var(--gold); padding:14px 18px; margin:18px 0; border-radius:0 6px 6px 0; font-size:0.88rem; line-height:1.55; }
+  .insight strong { color:var(--gold); }
+  .insight.green { border-left-color:var(--green); }
+  .insight.red { border-left-color:var(--red); }
+  .insight.blue { border-left-color:var(--blue); }
+
+  /* KEY FINDINGS */
+  .findings { display:grid; gap:12px; margin:20px 0; }
+  .finding { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; display:flex; gap:16px; align-items:flex-start; }
+  .finding-num { font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--gold); min-width:32px; line-height:1; }
+  .finding-text { font-size:0.9rem; }
+  .finding-text strong { color:var(--text); }
+  .finding-text span { color:var(--text-dim); }
+
+  /* TABLES */
+  .table-wrap { overflow-x:auto; margin:16px 0; }
+  table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+  table th { background:var(--surface2); color:var(--text-dim); text-align:left; padding:8px 10px; font-weight:600; border-bottom:2px solid var(--border); font-family:var(--mono); font-size:0.75rem; letter-spacing:0.03em; }
+  table td { padding:7px 10px; border-bottom:1px solid var(--border); font-family:var(--mono); }
+  table tr:hover { background:var(--surface); }
+  .pos { color:var(--green); font-weight:700; } .neg { color:var(--red); } .hl { color:var(--gold); font-weight:700; }
+  .dim { color:var(--text-dim); }
+
+  /* HEATMAP */
+  .heatmap { border-collapse:collapse; font-size:0.72rem; }
+  .heatmap th, .heatmap td { padding:5px 8px; text-align:center; border:1px solid var(--border); white-space:nowrap; }
+  .heatmap th { background:var(--surface2); color:var(--text-dim); }
+
+  /* CARDS */
+  .cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin:16px 0; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .card-title { font-weight:700; font-size:0.92rem; margin-bottom:8px; }
+  .card .row { display:flex; justify-content:space-between; font-size:0.82rem; margin:3px 0; }
+  .card .row .lbl { color:var(--text-dim); }
+  .card .row .val { font-family:var(--mono); font-weight:700; }
+  .card.featured { border-color:var(--gold); }
+
+  /* BADGE */
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; font-family:var(--mono); }
+  .badge-green { background:var(--green-dim); color:var(--green); }
+  .badge-red { background:var(--red-dim); color:var(--red); }
+  .badge-gold { background:var(--gold-dim); color:var(--gold); }
+
+  /* BIG STAT */
+  .stat-row { display:flex; gap:16px; margin:16px 0; flex-wrap:wrap; }
+  .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; flex:1; min-width:160px; text-align:center; }
+  .stat-box .num { font-family:var(--mono); font-size:2rem; font-weight:700; }
+  .stat-box .label { font-size:0.75rem; color:var(--text-dim); margin-top:2px; }
+
+  /* DIVIDER */
+  hr { border:none; height:1px; background:var(--border); margin:48px 0; }
+
+  /* TOC */
+  .toc { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin:28px 0; }
+  .toc-title { font-weight:700; font-size:0.85rem; color:var(--gold); margin-bottom:10px; letter-spacing:0.05em; }
+  .toc a { display:block; color:var(--text-dim); text-decoration:none; font-size:0.85rem; padding:3px 0; transition:color 0.2s; }
+  .toc a:hover { color:var(--gold); }
+  .toc a span { font-family:var(--mono); color:var(--text-muted); margin-right:8px; font-size:0.75rem; }
+
+  .footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--border); text-align:center; }
+  .footer p { color:var(--text-muted); font-size:0.75rem; }
+  .footer .brand { color:var(--gold); font-weight:700; font-size:0.85rem; margin-bottom:4px; }
+
+  @media print {
+    body { background:#fff; color:#111; }
+    .card, .stat-box, .insight, .toc, .finding { border-color:#ccc; }
+    .hero::before { display:none; }
+  }
+  @media (max-width:640px) {
+    .container { padding:20px 14px 40px; }
+    .hero h1 { font-size:1.6rem; }
+    .stat-row { flex-direction:column; }
+    .cards { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <h1>MATTRIX 8x <span>Market Behavior Report</span></h1>
+  <p class="subtitle">Statistical Analysis of Currency Basket Behavior Across Sessions, Days & Weeks</p>
+  <p class="meta">520 days (2 years) · 8 Big8 Baskets · 104 weeks · H4/H6/H12/D1 · M15 Breakout</p>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="toc">
+  <div class="toc-title">CONTENTS</div>
+  <a href="#exec"><span>01</span> Executive Summary — Five Key Findings</a>
+  <a href="#hierarchy"><span>02</span> Strategy Hierarchy — What Works, What Doesn't</a>
+  <a href="#sessions"><span>03</span> Session Transitions — The 50/50 Truth</a>
+  <a href="#cot"><span>04</span> The COT Insider Pattern — Smart Money Tuesdays</a>
+  <a href="#initial"><span>05</span> The Initial Candle — Earliest Weekly Predictor</a>
+  <a href="#weekly"><span>06</span> Weekly Rhythm — Reversal Friday & EUR Wednesday</a>
+  <a href="#breakout"><span>07</span> M15 Breakout Map — Where the Edge Lives</a>
+  <a href="#smatrend"><span>08</span> SMATrend Optimization — First Profitable Indicator</a>
+</div>
+
+<!-- ===== 01 EXECUTIVE SUMMARY ===== -->
+<div class="section" id="exec">
+  <div class="section-num">Section 01</div>
+  <h2>Executive <span>Summary</span></h2>
+  <p class="lead">Five discoveries from 2 years of MATTRIX basket data that change how we think about weekly currency cycles.</p>
+
+  <div class="findings">
+    <div class="finding">
+      <div class="finding-num">1</div>
+      <div class="finding-text"><strong>Tuesday + Wednesday predict the week with 73% accuracy.</strong><br><span>Across all 8 baskets, the combined Tue/Wed direction matches the full weekly direction in nearly 3 out of 4 cases. JPY reaches 86%, NZD 81%. This is statistically significant over 104 weeks.</span></div>
+    </div>
+    <div class="finding">
+      <div class="finding-num">2</div>
+      <div class="finding-text"><strong>Session transitions are pure 50/50 — no intraday trend continuation edge.</strong><br><span>Tokyo→London: 48.8% continuation. London→NY: 50.5%. NY→Tokyo: 47.8%. The magnitude of continuations and reversals is also equal. Intraday session-to-session prediction is a coin flip.</span></div>
+    </div>
+    <div class="finding">
+      <div class="finding-num">3</div>
+      <div class="finding-text"><strong>Friday is the universal reversal day.</strong><br><span>55.3% of Fridays reverse the week-so-far trend. NZD, USD, and JPY reverse the Monday direction on Friday in 62–65% of cases. Position-squaring before the weekend is measurable.</span></div>
+    </div>
+    <div class="finding">
+      <div class="finding-num">4</div>
+      <div class="finding-text"><strong>The "Initial Candle" exists — and it's on Monday.</strong><br><span>Already the first Monday D1 candle predicts the weekly direction with 63% accuracy. On H4 level, the Monday 08:00–12:00 candle (London open) is the earliest reliable predictor at 58%.</span></div>
+    </div>
+    <div class="finding">
+      <div class="finding-num">5</div>
+      <div class="finding-text"><strong>EUR and GBP have zero M15 breakout edge — USD, CHF, JPY dominate.</strong><br><span>Across 760 slot-symbol combinations, not a single EUR or GBP M15 slot is profitable. The edge concentrates in 6 specific time-basket pairs, all in NY Overlap or Pre-London sessions.</span></div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 02 STRATEGY HIERARCHY ===== -->
+<div class="section" id="hierarchy">
+  <div class="section-num">Section 02</div>
+  <h2>Strategy <span>Hierarchy</span></h2>
+  <p class="lead">Every strategy tested, ranked by expectancy. Honest results — most approaches don't work.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Strategy</th><th>Exp</th><th>WR</th><th>Signals</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>M2 News BO</td><td class="pos">+2.25</td><td>82%</td><td>Selective</td><td><span class="badge badge-gold">★ BEST</span></td></tr>
+      <tr><td>M5 Breakout</td><td class="pos">+1.01</td><td>48%</td><td>~6,400</td><td><span class="badge badge-green">DAILY DRIVER</span></td></tr>
+      <tr><td>M15 NY BO (CHF 16:15)</td><td class="pos">+0.25</td><td>20%</td><td>183</td><td><span class="badge badge-green">SELECTIVE</span></td></tr>
+      <tr><td>H1 Mean Reversion</td><td class="pos">+0.24</td><td>51%</td><td>—</td><td>Session transitions</td></tr>
+      <tr><td>M15 NY BO (USD 15:15)</td><td class="pos">+0.22</td><td>17%</td><td>184</td><td><span class="badge badge-green">SELECTIVE</span></td></tr>
+      <tr><td>SMATrend TREND</td><td class="pos">+0.18</td><td>44%</td><td>20,535</td><td>Confirmed (optimizer)</td></tr>
+      <tr><td>SMATrend REV</td><td class="dim">+0.02</td><td>58%</td><td>115</td><td class="dim">Insufficient data</td></tr>
+      <tr><td>M15 Breakout (avg)</td><td class="neg">−0.13</td><td>—</td><td>760 slots</td><td class="neg">Not tradeable on avg</td></tr>
+      <tr><td>BasketSignal Auto</td><td class="neg">−0.48</td><td>21%</td><td>—</td><td><span class="badge badge-red">✗ NOT TRADEABLE</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="insight green">
+    <strong>Key insight:</strong> Only 3 of 9 tested strategy categories are consistently profitable. The MATTRIX approach of systematic backtesting and honest rejection is itself the edge — most retail traders never test their signals.
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 03 SESSION TRANSITIONS ===== -->
+<div class="section" id="sessions">
+  <div class="section-num">Section 03</div>
+  <h2>Session <span>Transitions</span></h2>
+  <p class="lead">Does the Tokyo trend continue into London? Does London predict New York? 260 days of data reveal the answer.</p>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="num" style="color:var(--text-dim)">48.8%</div><div class="label">Tokyo → London Continuation</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--text-dim)">50.5%</div><div class="label">London → NY Continuation</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--text-dim)">47.8%</div><div class="label">NY → Tokyo Continuation</div></div>
+  </div>
+
+  <div class="insight red">
+    <strong>Verdict: Pure coin flip.</strong> Not only is the direction 50/50, but the magnitude of continuation vs. reversal moves is also equal (Cont/Rev ratio 0.91–1.10). There is no intraday session-to-session trend prediction edge in any basket.
+  </div>
+
+  <h3>All-Day Trend Analysis</h3>
+  <div class="stat-row">
+    <div class="stat-box"><div class="num" style="color:var(--green)">25.1%</div><div class="label">Full-day continuation<br>(all 3 sessions same dir)</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--red)">25.0%</div><div class="label">Full-day reversal<br>(all 3 sessions reverse)</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--text-dim)">49.9%</div><div class="label">Mixed days<br>(no consistent pattern)</div></div>
+  </div>
+
+  <div class="insight">
+    <strong>Implication:</strong> Trading session continuations is futile. The profitable strategies (M2 News BO, M5 Breakout) succeed because they trade the <em>breakout itself</em>, not a prediction of its direction. React, don't predict.
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 04 COT INSIDER PATTERN ===== -->
+<div class="section" id="cot">
+  <div class="section-num">Section 04</div>
+  <h2>The COT <span>Insider Pattern</span></h2>
+  <p class="lead">CFTC collects positioning data on Tuesday close but publishes it Friday 15:30 ET. The question: do institutions front-run their own positions?</p>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="num pos">73%</div><div class="label">Tue+Wed direction<br>= Full week direction</div></div>
+    <div class="stat-box"><div class="num pos">109%</div><div class="label">Tuesday magnitude<br>vs Monday (baseline)</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--orange)">54%</div><div class="label">Friday REVERSES<br>Tue+Wed direction</div></div>
+  </div>
+
+  <h3>Week Prediction Accuracy: Tuesday + Wednesday</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Basket</th><th>Tue+Wed = Week?</th><th>Significance</th></tr></thead>
+    <tbody>
+      <tr><td>#JPY</td><td class="pos">86.1%</td><td class="hl">★★★</td></tr>
+      <tr><td>#NZD</td><td class="pos">81.1%</td><td class="hl">★★★</td></tr>
+      <tr><td>#EUR</td><td class="pos">73.0%</td><td class="hl">★★</td></tr>
+      <tr><td>#AUD</td><td class="pos">73.0%</td><td class="hl">★★</td></tr>
+      <tr><td>#USD</td><td class="pos">73.0%</td><td class="hl">★★</td></tr>
+      <tr><td>#CAD</td><td class="pos">67.6%</td><td class="hl">★</td></tr>
+      <tr><td>#GBP</td><td>64.9%</td><td>★</td></tr>
+      <tr><td>#CHF</td><td>64.9%</td><td>★</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Momentum After Strong Weeks (Top 25% by magnitude)</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Basket</th><th>Continuation %</th><th>Interpretation</th></tr></thead>
+    <tbody>
+      <tr><td>#EUR</td><td class="pos">80%</td><td>Strong trending behavior — momentum persists</td></tr>
+      <tr><td>#CHF</td><td>60%</td><td>Moderate continuation</td></tr>
+      <tr><td>#JPY</td><td>60%</td><td>Moderate continuation</td></tr>
+      <tr><td>#GBP</td><td class="dim">50%</td><td>Coin flip</td></tr>
+      <tr><td>#NZD</td><td class="neg">40%</td><td>Mean-reversion tendency</td></tr>
+      <tr><td>#AUD</td><td class="neg">30%</td><td>Strong snap-back after extremes</td></tr>
+      <tr><td>#USD</td><td class="neg">30%</td><td>Strong snap-back after extremes</td></tr>
+      <tr><td>#CAD</td><td class="neg">20%</td><td>Strongest mean-reversion</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Where Does Smart Money Trade on Tuesday?</h3>
+  <div class="insight blue">
+    <strong>London Session dominates.</strong> On Tuesdays, 5 of 8 baskets (EUR, GBP, USD, CAD, CHF) have their largest moves in the London session. This aligns with institutional positioning during the London/NY overlap window — the most liquid period for FX.
+  </div>
+
+  <div class="insight">
+    <strong>The Weekly Cycle:</strong> Monday = orientation · <strong>Tuesday = institutional positioning</strong> · <strong>Wednesday = confirmation</strong> · Thursday = holding · <strong>Friday = profit-taking / reversal</strong>
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 05 INITIAL CANDLE ===== -->
+<div class="section" id="initial">
+  <div class="section-num">Section 05</div>
+  <h2>The Initial <span>Candle</span></h2>
+  <p class="lead">What is the earliest candle in the trading week that reliably predicts the full weekly direction? Tested across H4, H6, H12, and D1 timeframes.</p>
+
+  <h3>Earliest High-Prediction Candle per Timeframe</h3>
+  <div class="cards">
+    <div class="card featured">
+      <div class="card-title" style="color:var(--gold)">D1 — Monday</div>
+      <div class="row"><span class="lbl">Prediction</span><span class="val pos">63%</span></div>
+      <div class="row"><span class="lbl">First candle</span><span class="val">Monday close</span></div>
+      <div class="row"><span class="lbl">Samples</span><span class="val">~75/basket</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">H12 — Monday AM</div>
+      <div class="row"><span class="lbl">Prediction</span><span class="val pos">60%</span></div>
+      <div class="row"><span class="lbl">Time</span><span class="val">Mon 00:00–12:00</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">H6 — Monday #1</div>
+      <div class="row"><span class="lbl">Prediction</span><span class="val pos">59%</span></div>
+      <div class="row"><span class="lbl">Time</span><span class="val">Mon 06:00–12:00</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">H4 — Monday #2</div>
+      <div class="row"><span class="lbl">Prediction</span><span class="val">58%</span></div>
+      <div class="row"><span class="lbl">Time</span><span class="val">Mon 08:00–12:00</span></div>
+    </div>
+  </div>
+
+  <h3>D1 Weekly Prediction — Per Basket × Day</h3>
+  <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:10px;">Percentage of times the daily candle body direction matches the full weekly direction</p>
+
+  <div class="table-wrap">
+  <table class="heatmap" id="d1Heatmap">
+    <thead><tr><th>Basket</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+
+  <h3>H4 "Killer Candles" — Best Predictor per Basket</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Basket</th><th>Best H4</th><th>Time</th><th>Prediction</th><th>Insight</th></tr></thead>
+    <tbody>
+      <tr><td class="hl">#EUR</td><td>Wed H4#0</td><td>Wed 00:00–04:00</td><td class="pos">73.6%</td><td>Asia session — after Tue positioning</td></tr>
+      <tr><td>#CAD</td><td>Fri H4#4</td><td>Fri 16:00–20:00</td><td class="pos">71.0%</td><td>Late Friday confirms the week</td></tr>
+      <tr><td>#JPY</td><td>Tue H4#2</td><td>Tue 08:00–12:00</td><td class="pos">69.1%</td><td>Safe haven positions early</td></tr>
+      <tr><td>#USD</td><td>Wed H4#4</td><td>Wed 16:00–20:00</td><td class="pos">67.6%</td><td>NY session Wednesday</td></tr>
+      <tr><td>#GBP</td><td>Wed H4#0</td><td>Wed 00:00–04:00</td><td class="pos">66.7%</td><td>Same timing as EUR</td></tr>
+      <tr><td>#AUD</td><td>Wed H4#3</td><td>Wed 12:00–16:00</td><td class="pos">66.2%</td><td>London session Wednesday</td></tr>
+      <tr><td>#NZD</td><td>Thu H4#0</td><td>Thu 00:00–04:00</td><td class="pos">64.2%</td><td>Delayed reaction</td></tr>
+      <tr><td>#CHF</td><td>Tue H4#1</td><td>Tue 04:00–08:00</td><td class="pos">63.8%</td><td>Early Tuesday — safe haven</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="insight">
+    <strong>Pattern:</strong> Safe havens (CHF, JPY) show their hand on <strong>Tuesday morning</strong>. Majors (EUR, GBP, USD) confirm on <strong>Wednesday</strong>. Commodity currencies (AUD, NZD, CAD) are <strong>last to align</strong>. This sequencing reflects institutional positioning flow: safety first, then risk allocation.
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 06 WEEKLY RHYTHM ===== -->
+<div class="section" id="weekly">
+  <div class="section-num">Section 06</div>
+  <h2>Weekly <span>Rhythm</span></h2>
+  <p class="lead">Each day of the week has a distinct character. Friday reversal is universal; EUR Wednesday reversal is the strongest single basket-day pattern.</p>
+
+  <h3>Reversal Rates — Day vs. Week-So-Far</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Day</th><th>Cont%</th><th>Rev%</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Tuesday</td><td>50.7%</td><td>49.3%</td><td class="dim">Neutral</td></tr>
+      <tr><td>Wednesday</td><td>49.7%</td><td>50.3%</td><td class="dim">Neutral</td></tr>
+      <tr><td>Thursday</td><td>48.7%</td><td>51.3%</td><td class="dim">Neutral</td></tr>
+      <tr><td>Friday</td><td class="dim">44.7%</td><td class="pos">55.3%</td><td class="hl">← REVERSAL</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Day vs. Monday Direction — Per Basket</h3>
+  <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:10px;">% of times the day goes OPPOSITE to Monday's direction (>58% = ★)</p>
+
+  <div class="table-wrap">
+  <table class="heatmap" id="revHeatmap">
+    <thead><tr><th>Basket</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+
+  <div class="insight">
+    <strong>EUR Wednesday: 68% reversal</strong> vs. week-so-far — the strongest single basket-day pattern in the dataset. Nearly 7 out of 10 Wednesdays, EUR reverses its Mon+Tue trajectory. Combined with the COT insider pattern, this suggests institutional re-positioning mid-week.
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 07 BREAKOUT MAP ===== -->
+<div class="section" id="breakout">
+  <div class="section-num">Section 07</div>
+  <h2>M15 <span>Breakout Map</span></h2>
+  <p class="lead">760 slot-symbol combinations tested across 02:00–21:00 broker time. Only 6 are consistently profitable.</p>
+
+  <div class="cards">
+    <div class="card featured">
+      <div class="card-title"><span class="pos">▲</span> #CHF · 16:15 <span class="badge badge-green">TRADE</span></div>
+      <div class="row"><span class="lbl">Expectancy</span><span class="val pos">+0.25</span></div>
+      <div class="row"><span class="lbl">WR2 / BO Rate</span><span class="val">20% / 100%</span></div>
+      <div class="row"><span class="lbl">Session</span><span class="val hl">NY Overlap</span></div>
+    </div>
+    <div class="card featured">
+      <div class="card-title"><span class="pos">▲</span> #JPY · 16:15 <span class="badge badge-green">TRADE</span></div>
+      <div class="row"><span class="lbl">Expectancy</span><span class="val pos">+0.24</span></div>
+      <div class="row"><span class="lbl">WR2 / BO Rate</span><span class="val">19% / 100%</span></div>
+      <div class="row"><span class="lbl">Session</span><span class="val hl">NY Overlap</span></div>
+    </div>
+    <div class="card featured">
+      <div class="card-title"><span class="pos">▲</span> #USD · 15:15 <span class="badge badge-green">TRADE</span></div>
+      <div class="row"><span class="lbl">Expectancy</span><span class="val pos">+0.22</span></div>
+      <div class="row"><span class="lbl">WR2 / BO Rate</span><span class="val">17% / 99.5%</span></div>
+      <div class="row"><span class="lbl">Session</span><span class="val hl">NY Open</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pos">▲</span> #USD · 07:15 <span class="badge badge-green">TRADE</span></div>
+      <div class="row"><span class="lbl">Expectancy</span><span class="val pos">+0.21</span></div>
+      <div class="row"><span class="lbl">Session</span><span class="val">Pre-London</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pos">▲</span> #CAD · 15:15 <span class="badge badge-green">TRADE</span></div>
+      <div class="row"><span class="lbl">Expectancy</span><span class="val pos">+0.16</span></div>
+      <div class="row"><span class="lbl">Session</span><span class="val hl">NY Open</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="pos">▲</span> #NZD · 02:45 <span class="badge badge-green">TRADE</span></div>
+      <div class="row"><span class="lbl">Expectancy</span><span class="val pos">+0.12</span></div>
+      <div class="row"><span class="lbl">Session</span><span class="val">Asia Open</span></div>
+    </div>
+  </div>
+
+  <h3>P/L Estimation (Range Units)</h3>
+  <div class="stat-row">
+    <div class="stat-box"><div class="num pos">+1.20R</div><div class="label">Daily (6 trades)</div></div>
+    <div class="stat-box"><div class="num pos">+6.00R</div><div class="label">Weekly</div></div>
+    <div class="stat-box"><div class="num pos">+312R</div><div class="label">Annual</div></div>
+  </div>
+
+  <div class="insight red">
+    <strong>EUR and GBP: zero edge.</strong> Not a single M15 slot across the entire trading day is profitable for these two baskets. They are too volatile with too much intraday noise for M15 breakout strategies. Trade them with SMATrend or M5 BO instead.
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== 08 SMATREND ===== -->
+<div class="section" id="smatrend">
+  <div class="section-num">Section 08</div>
+  <h2>SMATrend <span>Optimization</span></h2>
+  <p class="lead">18 parameter combinations tested across 260 days. The first MATTRIX indicator with confirmed positive expectancy.</p>
+
+  <h3>Optimizer Results — TREND Signal (Top 5)</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>#</th><th>TF</th><th>SMA</th><th>Exh</th><th>Signals</th><th>Exp</th><th>WR2</th><th>PL Total</th></tr></thead>
+    <tbody>
+      <tr><td class="hl">1</td><td>M2</td><td>10/200</td><td>1.0</td><td>25,728</td><td class="pos">+0.18</td><td>44.3%</td><td class="pos">17,410R</td></tr>
+      <tr><td class="hl">2</td><td>M2</td><td>20/200</td><td>1.0</td><td>20,535</td><td class="pos">+0.18</td><td>44.1%</td><td class="pos">13,925R</td></tr>
+      <tr><td class="hl">3</td><td>M2</td><td>8/200</td><td>1.0</td><td>27,637</td><td class="pos">+0.17</td><td>44.2%</td><td class="pos">18,318R</td></tr>
+      <tr><td>4</td><td>M2</td><td>10/200</td><td>1.2</td><td>19,482</td><td class="pos">+0.16</td><td>43.4%</td><td class="pos">12,732R</td></tr>
+      <tr><td>5</td><td>M2</td><td>20/200</td><td>1.2</td><td>15,908</td><td class="pos">+0.16</td><td>43.3%</td><td class="pos">10,328R</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Key Findings</h3>
+  <div class="insight green">
+    <strong>All 18 combinations are profitable</strong> — the edge is robust across parameter changes. Exhaustion 1.0 outperforms 1.2 and 1.5 (less filtering = more profit). M2 dominates M5 (3–5× more signals at same Exp). SMA Fast period (8/10/20) barely matters — the edge comes from the SMA200 proximity filter, not the fast MA.
+  </div>
+
+  <h3>Production Settings (v2.01)</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">SMA Configuration</div>
+      <div class="row"><span class="lbl">Fast</span><span class="val">SMA 20</span></div>
+      <div class="row"><span class="lbl">Slow</span><span class="val">SMA 200</span></div>
+      <div class="row"><span class="lbl">Concept</span><span class="val hl">Velez 2/20/200</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Filters</div>
+      <div class="row"><span class="lbl">Exhaustion</span><span class="val">1.0 × ATR(5)</span></div>
+      <div class="row"><span class="lbl">TREND prox</span><span class="val">≤ 0.1%</span></div>
+      <div class="row"><span class="lbl">TREND max</span><span class="val">≤ 0.2%</span></div>
+      <div class="row"><span class="lbl">REV min</span><span class="val">≥ 0.3%</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rollover Filter (v2.01)</div>
+      <div class="row"><span class="lbl">Skip Zone</span><span class="val">23:00–01:00</span></div>
+      <div class="row"><span class="lbl">Impact</span><span class="val pos">H0: −0.48 → removed</span></div>
+      <div class="row"><span class="lbl">Exp lift</span><span class="val pos">+0.12 → +0.33</span></div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <p class="brand">MATTRIX 8x Currency Strength System</p>
+  <p>© Matthias Scholz · mattrix8x.com · Not financial advice.</p>
+  <p style="margin-top:6px;">Data: 520 days (H4/D1), 260 days (M15/SMATrend) · 8 Big8 Baskets · All times GMT+3 broker</p>
+  <p style="margin-top:4px;">Secret of Zero: 8 scores, −4 to +4, no zeros, no duplicates, sum = 0.</p>
+</div>
+
+</div><!-- container -->
+
+<script>
+// D1 Prediction Heatmap
+const d1Data = {
+  EUR:{Mon:65.3,Tue:65.3,Wed:69.4,Thu:65.3,Fri:63.0},
+  GBP:{Mon:60.0,Tue:65.3,Wed:59.7,Thu:72.2,Fri:58.1},
+  AUD:{Mon:63.8,Tue:59.4,Wed:69.1,Thu:70.1,Fri:66.7},
+  NZD:{Mon:65.2,Tue:63.8,Wed:65.7,Thu:64.2,Fri:66.7},
+  USD:{Mon:68.1,Tue:59.4,Wed:67.6,Thu:61.2,Fri:46.4},
+  CAD:{Mon:60.9,Tue:69.6,Wed:54.4,Thu:66.2,Fri:66.7},
+  CHF:{Mon:58.0,Tue:68.1,Wed:57.4,Thu:64.2,Fri:59.4},
+  JPY:{Mon:60.9,Tue:65.2,Wed:69.1,Thu:52.2,Fri:71.0}
+};
+
+const hm1 = document.querySelector('#d1Heatmap tbody');
+Object.entries(d1Data).forEach(([b, days]) => {
+  const tr = document.createElement('tr');
+  const tdB = document.createElement('td');
+  tdB.textContent = '#' + b;
+  tdB.style.fontWeight = '700';
+  tr.appendChild(tdB);
+  ['Mon','Tue','Wed','Thu','Fri'].forEach(d => {
+    const td = document.createElement('td');
+    const v = days[d];
+    td.textContent = v.toFixed(1) + '%';
+    const int = Math.min((v - 45) / 30, 1);
+    if(v >= 65) { td.style.background = 'rgba(34,197,94,0.35)'; td.style.color = '#22c55e'; td.style.fontWeight = '700'; }
+    else if(v >= 60) { td.style.background = 'rgba(34,197,94,0.15)'; td.style.color = '#86efac'; }
+    else if(v >= 55) { td.style.color = '#94a3b8'; }
+    else { td.style.background = 'rgba(239,68,68,0.15)'; td.style.color = '#fca5a5'; }
+    tr.appendChild(td);
+  });
+  hm1.appendChild(tr);
+});
+
+// Reversal Heatmap (day vs Monday)
+const revData = {
+  EUR:{Tue:49,Wed:59,Thu:37,Fri:59},
+  GBP:{Tue:49,Wed:43,Thu:41,Fri:42},
+  AUD:{Tue:51,Wed:35,Thu:60,Fri:49},
+  NZD:{Tue:59,Wed:57,Thu:54,Fri:65},
+  USD:{Tue:46,Wed:59,Thu:51,Fri:62},
+  CAD:{Tue:43,Wed:59,Thu:57,Fri:54},
+  CHF:{Tue:57,Wed:54,Thu:54,Fri:46},
+  JPY:{Tue:41,Wed:57,Thu:43,Fri:65}
+};
+
+const hm2 = document.querySelector('#revHeatmap tbody');
+Object.entries(revData).forEach(([b, days]) => {
+  const tr = document.createElement('tr');
+  const tdB = document.createElement('td');
+  tdB.textContent = '#' + b;
+  tdB.style.fontWeight = '700';
+  tr.appendChild(tdB);
+  ['Tue','Wed','Thu','Fri'].forEach(d => {
+    const td = document.createElement('td');
+    const v = days[d];
+    td.textContent = v + '%';
+    if(v >= 60) { td.style.background = 'rgba(239,68,68,0.35)'; td.style.color = '#ef4444'; td.style.fontWeight = '700'; }
+    else if(v >= 55) { td.style.background = 'rgba(239,68,68,0.15)'; td.style.color = '#fca5a5'; }
+    else if(v <= 40) { td.style.background = 'rgba(34,197,94,0.15)'; td.style.color = '#86efac'; }
+    else { td.style.color = '#94a3b8'; }
+    tr.appendChild(td);
+  });
+  hm2.appendChild(tr);
+});
+</script>
+
+</body>
+</html>
