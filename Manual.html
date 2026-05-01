@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX v2.01 — User Manual</title>
+<title>MATTRIX v2.01b23 — User Manual</title>
 <style>
   /* Self-hosted fonts — no external requests (DSGVO compliant) */
   @font-face {
@@ -456,7 +456,10 @@
       <tr><th>File</th><th>Type</th><th>Copy To</th><th>Purpose</th></tr>
       <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard</td></tr>
       <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF + #FIX charts (13 symbols)</td></tr>
-      <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF strength display</td></tr>
+      <tr><td><code>MATTRIX_BasketSignal.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Basket coherence, Σ pips, pair ranking on synthetic charts</td></tr>
+      <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF anti-correlation with pair ranking</td></tr>
+      <tr><td><code>MATTRIX_DayLevels.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Yesterday High/Low, Today High/Low, ADR% levels</td></tr>
+      <tr><td><code>MATTRIX_AutoRefresh.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Keeps synthetic chart indicators alive (drop on #basket charts)</td></tr>
     </table>
 
     <div class="box warn">
@@ -511,7 +514,8 @@
       <tr><td><span class="key">PipE</span></td><td>Event pips (active only during Session 4 events)</td><td>Gold = up, Orange = down, Dash = no event</td></tr>
       <tr><td><span class="key">BStr</span></td><td>Basket Strength: base currency pips minus quote currency pips</td><td>Green &gt;5, Red &lt;-5, Gray neutral</td></tr>
       <tr><td><span class="key">Scr</span></td><td>Score differential: base score minus quote score</td><td>Green ≥4, Red ≤-4, Gray neutral</td></tr>
-      <tr><td><span class="key">Gap</span></td><td>Momentum gap indicator</td><td>Green = bullish, Red = bearish</td></tr>
+      <tr><td><span class="key">COT</span></td><td>COT differential (base COT − quote COT)</td><td>Green ≥ 4, Red ≤ −4</td></tr>
+      <tr><td><span class="key">MTF</span></td><td>Multi-timeframe regime differential (SMA20/200 on M15/H1/H4/D1)</td><td>Green ≥ 3, Red ≤ −3, range −8 to +8</td></tr>
       <tr><td><span class="key">ADR%</span></td><td>How much of the average daily range is consumed</td><td>Green &lt;50%, Yellow 50-80%, Red &gt;80%</td></tr>
       <tr><td><span class="key">ADR</span></td><td>Average Daily Range in pips (14-day)</td><td>Yellow (info only)</td></tr>
       <tr><td><span class="key">BUY/SELL/CLOSE</span></td><td>Manual trade buttons per pair</td><td>Active or grayed when spread-blocked</td></tr>
@@ -521,7 +525,7 @@
     </table>
 
     <h3>MATTRIX Score Panel (Right Side)</h3>
-    <p>Shows all 8 currencies ranked by their MATTRIX Score, strongest on top. Each row displays the rank, currency name, score (with ▲▼ visual bars), COT score, session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums, and the FIX row showing the sum of all 28 pairs (FBT INDEX).</p>
+    <p>Shows all 8 currencies ranked by their MATTRIX Score, strongest on top. Each row displays the rank, currency name, score (with ▲▼ visual bars), COT score, MTF regime (−4 to +4, SMA20/200 alignment across M15/H1/H4/D1), session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums, and the FIX row showing the sum of all 28 pairs (FBT INDEX).</p>
 
     <h3>Basket Buttons (Footer)</h3>
     <p>Currency basket buttons for EUR, GBP, AUD, NZD, USD, CAD, CHF, JPY — each with BUY, SELL, CLOSE. Plus RON and ROFF basket buttons (8 pairs each). Spread is shown per basket; buttons are grayed out when basket spread is too high.</p>
@@ -548,7 +552,7 @@
     </div>
 
     <h3>Dashboard Sorting</h3>
-    <p>When enabled (<span class="key">Sort pairs = true</span>), the 28 pairs are sorted by the selected column with the strongest on top. Sorting refreshes every N seconds (configurable) to avoid visual jumping. All button clicks remain correctly mapped to the displayed pair.</p>
+    <p>When enabled (<span class="key">Sort pairs = true</span>), the 28 pairs are sorted by the selected column with the strongest on top. Available sort columns: 0=Spread, 1=PipW, 2=PipD, 3=PipS, 4=PipE, 5=BStr, 6=Score, 7=COT, 8=MTF, 9=ADR%. Sorting refreshes every N seconds (configurable) to avoid visual jumping. All button clicks remain correctly mapped to the displayed pair.</p>
   </div>
 </div>
 
@@ -573,13 +577,14 @@
       <tr><td><span class="key">PipE</span></td><td><span class="val">OFF</span></td><td>Event pip threshold (Session 4)</td></tr>
       <tr><td><span class="key">BasketStrength</span></td><td><span class="val">ON</span> Buy 80 / Sell -80</td><td>Minimum basket strength differential to trigger trade</td></tr>
       <tr><td><span class="key">Score</span></td><td><span class="val">ON</span> Buy 4 / Sell -4</td><td>Minimum score differential — only trades the strongest setups</td></tr>
-      <tr><td><span class="key">Gap</span></td><td><span class="val">OFF</span></td><td>Momentum gap filter</td></tr>
+      <tr><td><span class="key">COT</span></td><td><span class="val">OFF</span></td><td>COT differential filter (base COT − quote COT). SoZ validated — warns if scores are invalid</td></tr>
+      <tr><td><span class="key">MTF</span></td><td><span class="val">OFF</span></td><td>Multi-timeframe SMA20/200 regime filter. Checks alignment across M15/H1/H4/D1. Default thresholds: BUY ≥ 3, SELL ≤ −3</td></tr>
       <tr><td><span class="key">ADR%</span></td><td><span class="val">ON</span> Max 75%</td><td>Prevents entries when daily range is nearly exhausted</td></tr>
       <tr><td><span class="key">MaxExposure</span></td><td><span class="val">ON</span> Max 3</td><td>Maximum trades involving the same currency</td></tr>
     </table>
 
     <h3>COT Scores</h3>
-    <p>All COT scores default to <span class="val">0</span>. You must enter these manually based on the latest CFTC Commitment of Traders report. Use the Claude AI prompt (see FAQ #2a and #9a in Discord) to generate scores.</p>
+    <p>All COT scores default to <span class="val">0</span>. You must enter these manually based on the latest CFTC Commitment of Traders report. Use the Claude AI prompt (see FAQ #2a and #9a in Discord) to generate scores. The EA validates COT scores on load: sum must equal 0, no duplicates, no zeros, range −4 to +4. Invalid scores trigger a warning in the Expert tab and may block the COT filter.</p>
 
     <h3>Trade Management</h3>
     <table>
@@ -696,7 +701,7 @@
     <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
 
     <h3>Pyramiding</h3>
-    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals.</p>
+    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals. Default settings are optimized for Event Momentum trading: SMART mode, Aggressive style, MinProfit 6 pips, BE buffer 3 pips. <strong>Important:</strong> Only enable pyramiding during explosive event moves with your finger on CLOSE ALL. Never pyramid swing trades — see the Trading Playbook for details.</p>
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
       <tr><td><span class="key">MinProfitToAdd</span></td><td><span class="val">8.0</span></td><td>ALL existing positions must be at least X pips in profit before adding</td></tr>
@@ -723,7 +728,7 @@
     <p>Performs a soft reset: clears all Locks, resets Cycle counters, recalculates ADR, resets session/weekly pip references. <strong>Does not close any open trades.</strong> Use this after manually closing all positions to start a fresh analysis cycle.</p>
 
     <h3>AUTO ON / AUTO OFF</h3>
-    <p>Shown in the bottom-right corner with DEMO or LIVE indicator. This reflects the <span class="key">AutoTrade</span> setting (F7). When OFF, the EA displays signals but does not execute trades automatically — manual buttons still work. Change via Settings (F7), not by clicking.</p>
+    <p>Clickable toggle button in the bottom-right corner with DEMO or LIVE indicator. Click to switch between AUTO ON (trades automatically) and AUTO OFF (signals only, manual buttons still work). The state is persisted via GlobalVariable — survives F7 restart, recompile, and MT5 restart. CLOSE ALL, CLOSE PROFIT, and CLOSE LOSS automatically set AUTO OFF to prevent immediate re-entry. Kill Switch triggers also set AUTO OFF.</p>
 
   </div>
 </div>
@@ -935,7 +940,7 @@
   <div class="section-content">
 
     <h3>How Auto Trading Works</h3>
-    <p>When <span class="key">AutoTrade = ON</span> and the current time is within an active session, the EA evaluates all 28 pairs on every tick. If ALL active filters agree on a direction, the trade opens automatically.</p>
+    <p>When <span class="key">AUTO ON</span> (via dashboard button) and the current time is within an active session, the EA evaluates all 28 pairs on every tick. If ALL active filters agree on a direction, the trade opens automatically.</p>
 
     <p>The execution flow on each tick:</p>
     <div class="step"><span class="step-num">1</span><div>Update market data (prices, spreads, pip calculations)</div></div>

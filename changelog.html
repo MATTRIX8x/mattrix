@@ -96,9 +96,41 @@
 
 <div class="version">
   <div class="version-header">
+    <span class="version-num">v2.01b23</span>
+    <span class="version-date">May 1, 2026</span>
+    <span class="version-tag tag-current">CURRENT</span>
+  </div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>MTF Regime — multi-timeframe SMA20/200 trend alignment across M15/H1/H4/D1. Per-basket score (-4 to +4) displayed in Score Panel. Per-pair differential in dashboard MTF column</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>MTF Trigger Filter (Filter 7) — replaces Gap filter. Blocks trades when MTF differential below threshold (default: BUY ≥ 3, SELL ≤ -3). Backtested: 86% accuracy at |MTF| ≥ 5</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>COT Dashboard column — shows COT differential (base-quote) per pair in main grid. Color-coded: ≥4 green, ≤-4 red</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>COT Trigger Filter (Filter 6b) — filters trades by COT differential with SoZ validation. Invalid COT scores (sum ≠ 0, duplicates, zeros) trigger warning in Expert tab</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>AUTO ON/OFF via dashboard button — clickable toggle, state persisted in GlobalVariable (survives F7, restart, recompile). No more Settings dependency</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>CLOSE ALL / CLOSE PROFIT / CLOSE LOSS → AUTO OFF — prevents immediate re-entry after bulk close. State saved to GV</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>RESET EA now zeros PipE — sets all 28 event reference bids to current price. Enables the Event Momentum workflow (Playbook Strategy 2)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>MATTRIX_AutoRefresh indicator — standalone chart refresher for synthetic charts. Prevents RONROFF and other indicators from freezing on short timeframes</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>SMATrend PCT v2.01 — rollover skip filter (23:00-01:00 broker), cooldown-before-skip bug fix, production defaults (SMA20/200, Exh 1.0). Optimizer-confirmed over 18 combos × 8 baskets</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Hybrid Score Weights — MTF 35% + COT 25% + W2D 20% + Today 20% (Session removed). Four fallback modes when layers are inactive</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Dashboard sorting expanded — 10 columns sortable (0=Sprd, 1=PipW, 2=PipD, 3=PipS, 4=PipE, 5=BStr, 6=Scr, 7=COT, 8=MTF, 9=ADR%)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>SMATrend dashboard — bottom-right corner: Regime (BULLISH/BEARISH/HOLD), P:% (Price-SMA20), S:% (SMA20-SMA200), SCALP/EXTREME warnings</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>SyntheticCharts rollover spike filter — reject values &gt;0.5% deviation from last close during 23:55-00:05 broker time</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>SyntheticCharts HTF refresh — ChartSetSymbolPeriod replaces CustomRatesUpdate for higher timeframes. Triggers at M5 boundaries + 60s fallback</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>SyntheticCharts performance — timer 500ms→1000ms, history 90→30 days, RAM ~3GB (was 7.4GB)</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>RONROFF cache rebuild spam — "History cached" message no longer prints on every AutoRefresh cycle. Only logs once on first build</span></div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>Score Panel layout — Sess/Today/W2D values without ± signs (color indicates direction). Prevents column overflow with MTF column added</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Gap filter removed — replaced by MTF Regime filter (backtested, proven edge). Gap data still used internally by Smart Pyramid</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>MATTRIX 2x deprecated — settings hidden (sinput). Code preserved for compatibility but no longer accessible in UI</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>ADR column removed from dashboard — replaced by COT column. ADR% filter remains functional</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Dashboard column order: Sprd · PipW · PipD · PipS · PipE · BStr · Scr · COT · MTF · ADR%</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Default settings optimized for Event trading — PipE ON (3p), Score/BStr/ADR% OFF, Exposure=7, Pyramid defaults: SMART/Aggressive, MinProfit=6, BE buffer=3</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Unified Breakout Engine — InpStraddle* renamed to InpBreakout*, M2 TF added, "BO" text display, F7 resets boDay, CheckBreakoutAll() with 4 phases</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>BasketSignal/BasketBreakout defaults: all signals set to false (negative expectancy in backtest). Signals remain as visual alerts only</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Version bump: EA v2.01b23, SMATrend PCT v2.01, AutoRefresh v1.00, RONROFF v1.01</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
     <span class="version-num">v2.01b21</span>
     <span class="version-date">March 28, 2026</span>
-    <span class="version-tag tag-current">CURRENT</span>
   </div>
   <div class="change"><span class="change-type type-new">NEW</span><span>CLS Basket Close — pending close orders on synthetic charts. Set a price level, EA closes the entire basket when reached. Two modes: CLS ▼ (close when price drops) and CLS ▲ (close when price rises)</span></div>
   <div class="change"><span class="change-type type-new">NEW</span><span>Auto Basket SL — configurable % distance from entry (F7: Auto Basket SL). Automatically sets CLS ▼/▲ after every basket execution (manual click or pending trigger)</span></div>
