@@ -392,7 +392,7 @@
 <header>
   <h1>MATTRIX v2.01</h1>
   <div class="subtitle">User Manual — Forex Basket Trading System</div>
-  <div class="version">v2.01b23 BETA — EXPIRES 2026.05.31</div>
+  <div class="version">v2.01b21 BETA — EXPIRES 2026.05.31</div>
   <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicators + Synthetic Charts</div>
 </header>
 
@@ -402,6 +402,7 @@
   <a href="#settings">Settings</a>
   <a href="#manual">Manual Trading</a>
   <a href="#pending">Pending Baskets</a>
+  <a href="#breakout">Breakout Engine</a>
   <a href="#clsmanage">CLS Basket Management</a>
   <a href="#pyramid">Smart Pyramid</a>
   <a href="#auto">Auto Trading</a>
@@ -813,6 +814,61 @@
     <div class="box danger">
       <strong>Important — Multiple Basket Risk:</strong> The safety checks described above are configurable via F7 settings. If you disable anti-hedge, set MaxExposure to 0 (unlimited), or increase MaxTradesPerPair, multiple pending baskets can open overlapping and conflicting positions — potentially resulting in excessive margin usage, uncontrolled hedging, and significant losses. <strong>The default settings are deliberately conservative. Changing them is entirely at your own risk.</strong> Always test on a demo account before modifying safety parameters, especially when using multiple pending basket orders.
     </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 4b2. BREAKOUT ENGINE -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="breakout">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="num">4b+</span>
+    <h2>Breakout Engine</h2>
+    <span class="arrow">▶</span>
+  </div>
+  <div class="section-content">
+
+    <h3>Concept</h3>
+    <p>The Breakout Engine is an automated straddle system built into the Pending Panel. Instead of manually setting a BUY STOP or SELL STOP, you switch a basket to <span class="key" style="color:var(--yellow)">BO</span> mode — the EA then arms a straddle on the reference candle (High = BUY STOP, Low = SELL STOP) and triggers whichever side price breaks first.</p>
+
+    <h3>How It Works</h3>
+    <p>Each basket slot in the Pending Panel cycles through directions: <span class="key">BUY → SELL → CLS → BO → BUY</span>. When set to BO, the engine runs in 4 phases:</p>
+    <table>
+      <tr><th>Phase</th><th>State</th><th>What Happens</th></tr>
+      <tr><td><span class="key">1</span></td><td>Waiting for candle close</td><td>At the configured timeframe boundary (e.g. M2, M5, M15), the reference candle's High and Low are captured</td></tr>
+      <tr><td><span class="key">2</span></td><td>Armed</td><td>BUY STOP at candle High, SELL STOP at candle Low. Waiting for breakout</td></tr>
+      <tr><td><span class="key">3</span></td><td>Triggered</td><td>Price breaks High → BUY basket executed. Price breaks Low → SELL basket executed. OCO: opposite side cancelled</td></tr>
+      <tr><td><span class="key">4</span></td><td>Expired / Reset</td><td>If neither level is hit within <span class="key">InpBreakoutExpiry</span> minutes, the straddle is cancelled and re-arms on the next candle</td></tr>
+    </table>
+
+    <h3>Settings</h3>
+    <table>
+      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+      <tr><td><span class="key">InpBreakoutTF</span></td><td><span class="val">5</span></td><td>Timeframe in minutes for reference candle (2/5/15/30/60). M2 = prop firm 2-min rule compliant</td></tr>
+      <tr><td><span class="key">InpBreakoutExpiry</span></td><td><span class="val">120</span></td><td>Minutes until unfilled straddle expires and re-arms</td></tr>
+    </table>
+
+    <h3>Stale Breakout Guard</h3>
+    <p>If price has already moved beyond the reference candle's range when the straddle arms (e.g. gap open), Phase 1 detects this and skips directly to the next candle. This prevents false triggers on stale levels.</p>
+
+    <h3>Spread Guard</h3>
+    <p>The breakout trigger checks spread before execution. If spread is too wide (e.g. during rollover), the trigger retries on the next tick rather than entering with a poor fill.</p>
+
+    <h3>Use Cases</h3>
+    <table>
+      <tr><th>Scenario</th><th>Timeframe</th><th>How</th></tr>
+      <tr><td>M2 News Breakout</td><td>2 min</td><td>Arm BO on target basket 1–2 minutes before high-impact news. EA captures the first directional move. Backtested: +2.25 Exp, 82% WR</td></tr>
+      <tr><td>M5 Session Breakout</td><td>5 min</td><td>Arm at session open (S2/S3). Captures the initial directional move of the session. Backtested: +1.01 Exp, 48% WR</td></tr>
+      <tr><td>M15 NY Breakout</td><td>15 min</td><td>Selective: only CHF/JPY at 16:15 and USD/CAD at 15:15 show positive expectancy</td></tr>
+    </table>
+
+    <div class="box warn">
+      <strong>Important:</strong> The Breakout Engine arms and triggers independently of sessions — it runs 24/5 once BO mode is set. Always disarm (switch back to BUY or SELL) when you're done. F7 (Reset EA) resets the breakout day counter but keeps BO mode active.
+    </div>
+
+    <h3>FIX Breakout</h3>
+    <p>When the FIX basket is set to BO mode, the trigger executes <span class="key">BuyAllPairs()</span> or <span class="key">SellAllPairs()</span> — opening all 28 pairs simultaneously in one direction. This is the broadest possible market exposure and should only be used with extreme caution.</p>
 
   </div>
 </div>
@@ -1258,7 +1314,7 @@
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:6px;"><a href="https://mattrix8x.com" style="color:var(--cyan-dim)">mattrix8x.com</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.01b23 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;">MATTRIX v2.01b21 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>
