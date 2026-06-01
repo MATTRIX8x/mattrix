@@ -96,9 +96,20 @@
 
 <div class="version">
   <div class="version-header">
+    <span class="version-num">v2.01b24</span>
+    <span class="version-date">June 1, 2026</span>
+    <span class="version-tag tag-current">CURRENT</span>
+  </div>
+  <div class="change"><span class="change-type type-fix">FIX</span><span>TP line drag now correctly closes the basket — ATPLEVEL GV sync added to PendingBaskets close-monitor loop. Before this fix, only SL line drag triggered close; TP line drag updated the visual line but the EA never picked up the new level</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Pending close alerts now tag SL vs TP — alert message shows "PENDING CLOSE: EUR (SL hit)" or "(TP hit)" so the trigger reason is visible in the alert history</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>New beta passwords generated for the three access tiers (Tester, Alpha, PRO). Master key remains internal. Contact via Discord for the updated keys</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Expiry date extended to 2026.07.31</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
     <span class="version-num">v2.01b23</span>
     <span class="version-date">May 1, 2026</span>
-    <span class="version-tag tag-current">CURRENT</span>
   </div>
   <div class="change"><span class="change-type type-new">NEW</span><span>MTF Regime — multi-timeframe SMA20/200 trend alignment across M15/H1/H4/D1. Per-basket score (-4 to +4) displayed in Score Panel. Per-pair differential in dashboard MTF column</span></div>
   <div class="change"><span class="change-type type-new">NEW</span><span>MTF Trigger Filter (Filter 7) — replaces Gap filter. Blocks trades when MTF differential below threshold (default: BUY ≥ 3, SELL ≤ -3). Backtested: 86% accuracy at |MTF| ≥ 5</span></div>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX v2.01b23 — User Manual</title>
+<title>MATTRIX v2.01b24 — User Manual</title>
 <style>
   /* Self-hosted fonts — no external requests (DSGVO compliant) */
   @font-face {
@@ -392,7 +392,7 @@
 <header>
   <h1>MATTRIX v2.01</h1>
   <div class="subtitle">User Manual — Forex Basket Trading System</div>
-  <div class="version">v2.01b21 BETA — EXPIRES 2026.05.31</div>
+  <div class="version">v2.01b24 BETA — EXPIRES 2026.07.31</div>
   <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicators + Synthetic Charts</div>
 </header>
 
@@ -409,7 +409,7 @@
   <a href="#risk">Risk Management</a>
   <a href="#killswitch">Kill Switch</a>
   <a href="#fix">FIX Index</a>
-  <a href="#indicators">Indicators</a>
+  <a href="#indicators">Family</a>
   <a href="#troubleshoot">Troubleshooting</a>
 </nav>
 
@@ -437,31 +437,34 @@
 
     <div class="step">
       <span class="step-num">1</span>
-      <div>Copy <code>MATTRIX_v2.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Copy <code>MATTRIX_SyntheticCharts.ex5</code> to <span class="path">MQL5\Experts</span>. Copy <code>MATTRIX_RONROFF.ex5</code> to <span class="path">MQL5\Indicators</span>. That's it — three files, no source code needed.</div>
+      <div>Copy <code>MATTRIX_v2.ex5</code> to your <span class="path">MQL5\Experts</span> folder. Then install the companion tools from MQL5 (see <a href="#indicators">MATTRIX 8x Family</a> section below) — most are free. That's it, no source code needed.</div>
     </div>
     <div class="step">
       <span class="step-num">2</span>
-      <div>Open any major pair chart (e.g. BTCUSD or EURUSD). Drag the EA onto the chart. In the Inputs tab, enter your <span class="key">Beta Key</span>. Check "Allow Algo Trading".</div>
+      <div>Open any major pair chart (e.g. EURUSD). Drag the EA onto the chart. In the Inputs tab, enter your <span class="key">Beta Key</span>. Check "Allow Algo Trading".</div>
     </div>
     <div class="step">
       <span class="step-num">3</span>
-      <div>Attach <code>MATTRIX_SyntheticCharts.ex5</code> to a second chart for synthetic currency index charts (#EUR, #GBP, ... #RON, #ROFF) and the FBT INDEX charts (#FIX_A, #FIX_B, #FIX). Attach <code>MATTRIX_RONROFF.ex5</code> indicator to any chart for the RON/ROFF strength display.</div>
+      <div>Attach <code>MATTRIX_Synthetic_Chart.ex5</code> (free on MQL5) to a second chart — this creates the 11 synthetic currency baskets (#EUR..#JPY + #RON, #ROFF, #FIX). Attach indicators like <code>MATTRIX_BasketStrength</code> or <code>MATTRIX_RiskMeter</code> to those basket charts as needed.</div>
     </div>
 
     <div class="box success">
       <strong>First run:</strong> Start with a demo account and default settings. Observe for at least one full trading session before changing anything. The defaults are conservative and safe.
     </div>
 
-    <h3>Delivered Files</h3>
+    <h3>Delivered Files (Discord)</h3>
+    <p>The following files are distributed via the Forex Basket Traders Discord channel:</p>
     <table>
       <tr><th>File</th><th>Type</th><th>Copy To</th><th>Purpose</th></tr>
       <tr><td><code>MATTRIX_v2.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Main trading engine + dashboard</td></tr>
-      <tr><td><code>MATTRIX_SyntheticCharts.ex5</code></td><td>Expert Advisor</td><td><span class="path">MQL5\Experts</span></td><td>Builds #EUR–#JPY + #RON/#ROFF + #FIX charts (13 symbols)</td></tr>
-      <tr><td><code>MATTRIX_BasketSignal.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Basket coherence, Σ pips, pair ranking on synthetic charts</td></tr>
-      <tr><td><code>MATTRIX_RONROFF.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>RON/ROFF anti-correlation with pair ranking</td></tr>
-      <tr><td><code>MATTRIX_DayLevels.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Yesterday High/Low, Today High/Low, ADR% levels</td></tr>
-      <tr><td><code>MATTRIX_AutoRefresh.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Keeps synthetic chart indicators alive (drop on #basket charts)</td></tr>
+      <tr><td><code>MATTRIX_BasketStrength.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Discord-build of the Basket Strength indicator (with expiry, includes CLS line management)</td></tr>
+      <tr><td><code>MATTRIX_RiskMeter.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Discord-build of the Risk Meter indicator (with expiry)</td></tr>
+      <tr><td><code>MATTRIX_BasketBreakout.ex5</code></td><td>Indicator</td><td><span class="path">MQL5\Indicators</span></td><td>Session breakout diamonds on synthetic charts (Discord-only, not on MQL5)</td></tr>
     </table>
+
+    <div class="box info">
+      <strong>Companion tools from MQL5 Market:</strong> The remaining ecosystem tools — Synthetic Chart (free), Auto Refresh (free), Day Levels (free), Basket Viewer, Position Monitor, One Click Basket Trade — are downloaded directly from MQL5. See the <a href="#indicators">MATTRIX 8x Family</a> section below.
+    </div>
 
     <div class="box warn">
       <strong>Security:</strong> Only compiled <code>.ex5</code> files are distributed. Source code is never shared. Do not distribute files or keys to anyone outside the beta group.
@@ -688,7 +691,7 @@
     <h3>Step 3: Open the Chart</h3>
     <p>Click on any <span class="key">pair name</span> in the dashboard to open that pair's chart with your configured template and timeframe. Click on a <span class="key">currency label</span> (EUR, GBP, ...) in the basket buttons to open the synthetic currency index chart (#EUR, #GBP, etc.).</p>
     <div class="box info">
-      <strong>Note:</strong> Synthetic charts (#EUR–#JPY, #RON, #ROFF, #FIX) require the <code>MATTRIX_SyntheticCharts.ex5</code> EA to be running on a separate chart. Without it, the custom symbols don't exist and the chart won't open.
+      <strong>Note:</strong> Synthetic charts (#EUR–#JPY, #RON, #ROFF, #FIX) require the <strong>Synthetic Chart</strong> EA (free on MQL5) running on a separate chart. Without it, the custom symbols don't exist and the chart won't open.
     </div>
 
     <h3>Step 4: Execute</h3>
@@ -909,7 +912,7 @@
     <p>Panel shows: <span class="key" style="color:var(--yellow)">CLS</span> <span style="color:var(--red)">▼</span> @ 1.36726 (SL, 0.2% below entry). Internally monitored: TP @ 1.37685 (0.5% above entry). First trigger wins — SL or TP, whichever is reached first.</p>
 
     <h3>Chart Lines</h3>
-    <p>The BasketSignal indicator reads the CLS levels from GlobalVariables and draws interactive lines directly on the synthetic chart:</p>
+    <p>The Basket Strength indicator reads the CLS levels from GlobalVariables and draws interactive lines directly on the synthetic chart:</p>
     <table>
       <tr><th>Line</th><th>Color</th><th>Style</th><th>Meaning</th></tr>
       <tr><td>SL Line</td><td style="color:#c83c3c">Red</td><td>Dashed</td><td>CLS SL level from Pending Panel</td></tr>
@@ -918,13 +921,13 @@
     </table>
 
     <h3>Bidirectional Sync</h3>
-    <p>All chart lines are <strong>draggable</strong>. When you drag a line to a new price, the BasketSignal writes the new level back to a GlobalVariable. The EA reads the change on the next tick and updates the Pending Panel automatically.</p>
+    <p>All chart lines are <strong>draggable</strong>. When you drag a line to a new price, Basket Strength writes the new level back to a GlobalVariable. The EA reads the change on the next tick and updates the Pending Panel automatically.</p>
     <div class="box success">
       <strong>Visual basket management:</strong> You see support/resistance in the #EUR chart, drag the red SL line to a key support level, and the EA immediately adjusts its close trigger. No need to type numbers in the Pending Panel — just drag the line where you want it.
     </div>
 
     <div class="box warn">
-      <strong>BasketSignal setting:</strong> The <span class="key">EA Magic Number</span> input in BasketSignal must match your EA's Magic Number (default: 1111) for the chart lines to appear and synchronize.
+      <strong>Basket Strength setting:</strong> The <span class="key">EA Magic Number</span> input in Basket Strength must match your EA's Magic Number (default: 1111) for the chart lines to appear and synchronize.
     </div>
 
     <h3>CLS Execution</h3>
@@ -1191,51 +1194,56 @@
 <div class="section" id="indicators">
   <div class="section-header" onclick="toggleSection(this)">
     <span class="num">9</span>
-    <h2>Indicators</h2>
+    <h2>MATTRIX 8x Family</h2>
     <span class="arrow">▶</span>
   </div>
   <div class="section-content">
 
-    <h3>BasketSignal (v1.11)</h3>
-    <p>Attach to any synthetic chart (#EUR, #GBP, etc.). Displays entry signals, pair breakdown, and CLS chart lines.</p>
+    <p>The MATTRIX EA works alongside a family of dedicated indicators and utilities. Most are available free or paid on the MQL5 Market — refer to each listing for full feature details, screenshots, and input parameters.</p>
+
+    <h3>Foundation (free on MQL5)</h3>
     <table>
-      <tr><th>Feature</th><th>Description</th></tr>
-      <tr><td>Reversal arrows (▲/▼)</td><td>Triangle signals when momentum reverses with high coherence</td></tr>
-      <tr><td>Extreme arrows (↑/↓)</td><td>Arrow signals when momentum crosses extreme threshold and reverts</td></tr>
-      <tr><td>Pre-signal blink</td><td>Signal text blinks [R] or [E] when Bar 0 meets conditions (not yet confirmed)</td></tr>
-      <tr><td>Pair breakdown panel</td><td>Shows all pairs in the basket with individual pip values and direction arrows</td></tr>
-      <tr><td>Σ pips display</td><td>Large number showing total pip sum (open-to-close for current bar, close-to-close for history)</td></tr>
-      <tr><td>Coherence display</td><td>Shows how many pairs agree on direction (e.g. 6/7 = STRONG)</td></tr>
-      <tr><td>CLS chart lines</td><td>Red SL line + Green TP line + Cyan/Orange entry line — draggable, bidirectional sync with EA</td></tr>
+      <tr><th>Tool</th><th>Purpose</th><th>Link</th></tr>
+      <tr><td>Synthetic Chart</td><td>Creates the 11 custom symbols (#EUR..#JPY + #RON, #ROFF, #FIX) that the entire basket workflow depends on</td><td><a href="https://www.mql5.com/en/market/product/177905" target="_blank">MQL5 listing</a></td></tr>
+      <tr><td>Auto Refresh</td><td>Keeps custom symbol charts up to date — drop on any synthetic chart to prevent stale candles</td><td><a href="https://www.mql5.com/en/market/product/176191" target="_blank">MQL5 listing</a></td></tr>
+      <tr><td>Day Levels</td><td>Yesterday High/Low, Today High/Low, ADR% on any chart with color-coded overextension warning</td><td><a href="https://www.mql5.com/en/market/product/179533" target="_blank">MQL5 listing</a></td></tr>
     </table>
+
+    <h3>Analysis (paid on MQL5)</h3>
+    <table>
+      <tr><th>Tool</th><th>Purpose</th><th>Link</th></tr>
+      <tr><td>Basket Viewer</td><td>Live 8-currency strength dashboard with auto-ranking of top tradable pairs</td><td><a href="https://www.mql5.com/en/market/product/175595" target="_blank">MQL5 listing</a></td></tr>
+      <tr><td>Basket Strength</td><td>On-chart strength breakdown per basket with CLS line management (Entry, SL, TP). Drag-and-sync with MATTRIX EA via GlobalVariables. Replaces the previous BasketSignal.</td><td><a href="https://www.mql5.com/en/market/product/176196" target="_blank">MQL5 listing</a></td></tr>
+      <tr><td>Position Monitor</td><td>8x8 matrix dashboard of all open positions across the 28 majors</td><td><a href="https://www.mql5.com/en/market/product/178031" target="_blank">MQL5 listing</a></td></tr>
+      <tr><td>Risk Meter</td><td>Risk-On / Risk-Off sentiment indicator comparing #RON and #ROFF baskets with divergence histogram and reversal arrows. Replaces the previous RONROFF indicator.</td><td><a href="https://www.mql5.com/en/market/product/178043" target="_blank">MQL5 listing</a></td></tr>
+    </table>
+
+    <h3>Execution (paid on MQL5)</h3>
+    <table>
+      <tr><th>Tool</th><th>Purpose</th><th>Link</th></tr>
+      <tr><td>One Click Basket Trade</td><td>One-click basket entry and management for pair, BIG8, RON/ROFF and FIX baskets</td><td><a href="https://www.mql5.com/en/market/product/178117" target="_blank">MQL5 listing</a></td></tr>
+    </table>
+
     <div class="box info">
-      <strong>EA Magic Number:</strong> Set the <span class="key">EA Magic Number</span> input to match your EA's Magic Number (default: 1111). This enables the CLS chart lines to synchronize with the Pending Panel.
+      <strong>CLS chart lines:</strong> The Basket Strength indicator on MQL5 reads CLS levels (Entry, SL, TP) from EA GlobalVariables and draws them as draggable lines on synthetic basket charts. The <span class="key">EA Magic Number</span> input on the indicator must match your EA's Magic Number (default: 1111). For full integration details see the CLS Basket Management section above.
     </div>
 
-    <h3>BasketBreakout (v1.11)</h3>
-    <p>Attach to any synthetic chart. Draws session breakout diamonds (★) when the basket moves significantly from the session open.</p>
+    <h3>Discord-only Tools</h3>
+
+    <p>Tools not currently on MQL5 — distributed via the Forex Basket Traders Discord channel:</p>
+
+    <h4 style="margin: 18px 0 8px 0;">BasketBreakout (v1.11)</h4>
+    <p>Attach to any synthetic chart. Draws session breakout diamonds when the basket moves significantly from the session open.</p>
     <table>
       <tr><th>Feature</th><th>Description</th></tr>
-      <tr><td>Session diamonds</td><td>Green ★ = bullish breakout, Red ★ = bearish breakout</td></tr>
+      <tr><td>Session diamonds</td><td>Green diamond = bullish breakout, Red diamond = bearish breakout</td></tr>
       <tr><td>Session lines</td><td>Vertical lines marking session boundaries</td></tr>
       <tr><td>Per-bar ATR</td><td>Non-repainting: each bar uses its own historical ATR, not the current global ATR</td></tr>
       <tr><td>One signal per session</td><td>Maximum one diamond per session per day — no duplicates</td></tr>
     </table>
     <div class="box info">
-      <strong>Non-repainting:</strong> Diamonds survive timeframe changes and chart switching. Once placed, they never move or disappear. This was fixed in v1.11 — earlier versions had repainting issues on TF change.
+      <strong>Non-repainting:</strong> Diamonds survive timeframe changes and chart switching. Once placed, they never move or disappear.
     </div>
-
-    <h3>DayLevels (v1.06)</h3>
-    <p>Attach to any synthetic chart. Shows Yesterday High/Low, Today High/Low, and ADR% as price-anchored objects.</p>
-    <table>
-      <tr><th>Element</th><th>Description</th></tr>
-      <tr><td>YH / YL</td><td>Yesterday High / Low — horizontal lines</td></tr>
-      <tr><td>TH / TL</td><td>Today High / Low — filled rectangle for today's range</td></tr>
-      <tr><td>ADR%</td><td>Color-coded: Green &lt;50%, Yellow 50-80%, Red &gt;80%</td></tr>
-    </table>
-
-    <h3>RONROFF (v1.01)</h3>
-    <p>Displays RON/ROFF strength on any chart. Uses a cache-based architecture (5000 bars) for stable performance across timeframe switches.</p>
 
   </div>
 </div>
@@ -1289,7 +1297,7 @@
     <p>Adjust <span class="key">Dashboard X/Y origin</span> in settings. On smaller screens, move origin closer to (10, 50). The dashboard requires approximately 1250px width and 600px height for full display.</p>
 
     <h3>Synthetic Charts Empty</h3>
-    <p><code>MATTRIX_SyntheticCharts.ex5</code> must be running on a separate chart. History is built on the first tick after attaching — wait for market hours. Check Experts tab for "10/10 synthetic symbols ready".</p>
+    <p>The <strong>Synthetic Chart</strong> EA (free on MQL5) must be running on a separate chart. History is built on the first tick after attaching — wait for market hours. Check Experts tab for "11/11 synthetic symbols ready".</p>
 
     <h3>Dashboard Text Sizes Wrong (DPI Scaling)</h3>
     <p>On laptops with Windows display scaling above 100% (e.g. 125%), MT5 objects may render at wrong sizes — text overlaps, buttons misaligned, fonts too large or too small.</p>
@@ -1299,9 +1307,6 @@
     <div class="step"><span class="step-num">4</span><div>Check <strong>Override high DPI scaling behavior</strong></div></div>
     <div class="step"><span class="step-num">5</span><div>Dropdown: select <strong>Application</strong></div></div>
     <div class="step"><span class="step-num">6</span><div>OK → OK → Restart MT5</div></div>
-
-    <h3>Arrows Duplicate on Chart Switch</h3>
-    <p>If BasketSignal arrows multiply when switching between charts or timeframes, update to v1.11. Earlier versions deleted and recreated all arrows on each TF change, causing duplicates during history loading. v1.11 preserves existing arrows across TF changes.</p>
 
     <h3>Getting Help</h3>
     <p>Post in the Discord <span class="key">#bug-reports</span> channel with a screenshot of the Experts tab (Ctrl+T → Experts) and your issue description. Include your broker name and account type (demo/live).</p>
@@ -1314,7 +1319,7 @@
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:6px;"><a href="https://mattrix8x.com" style="color:var(--cyan-dim)">mattrix8x.com</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.01b21 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;">MATTRIX v2.01b24 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>
