@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX v2.01b24 — User Manual</title>
+<title>MATTRIX v2.02b25 — User Manual</title>
 <style>
   /* Self-hosted fonts — no external requests (DSGVO compliant) */
   @font-face {
@@ -390,9 +390,9 @@
 <body>
 
 <header>
-  <h1>MATTRIX v2.01</h1>
+  <h1>MATTRIX v2.02</h1>
   <div class="subtitle">User Manual — Forex Basket Trading System</div>
-  <div class="version">v2.01b24 BETA — EXPIRES 2026.07.31</div>
+  <div class="version">v2.02b25 BETA — EXPIRES 2026.07.31</div>
   <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicators + Synthetic Charts</div>
 </header>
 
@@ -501,10 +501,23 @@
     <h3>Header Bar</h3>
     <table>
       <tr><th>Element</th><th>Description</th></tr>
-      <tr><td>MATTRIX v2.01</td><td>Version identifier</td></tr>
+      <tr><td>MATTRIX v2.02</td><td>Version identifier</td></tr>
       <tr><td>Date/Time</td><td>Broker server time (not local PC time)</td></tr>
       <tr><td>P/L</td><td>Total portfolio profit/loss with trade count</td></tr>
     </table>
+
+    <h3>News Ticker</h3>
+    <p>A live economic-calendar strip runs along the top of the dashboard, above the header bar. It reads MetaTrader 5's built-in calendar for the Big8 currencies and shows what is coming up, so a scheduled release never catches you out.</p>
+    <table>
+      <tr><th>Element</th><th>Description</th></tr>
+      <tr><td>Warning box (left)</td><td>Always visible. Shows the next upcoming event with a live countdown. Turns red and pulses when the event is less than 30 minutes away (configurable)</td></tr>
+      <tr><td>Crawl</td><td>Scrolling list of upcoming events — time, currency, name, and an importance marker (<span class="key">!</span> high, <span class="key">-</span> moderate)</td></tr>
+      <tr><td><span class="key">[TOP]</span> / <span class="key">[BOT]</span></td><td>An event on the currently strongest currency is tagged [TOP], on the weakest [BOT] — linking calendar risk directly to your live strength ranking</td></tr>
+      <tr><td>Toggle (right)</td><td>Cycles three display modes: Crawl (scrolling) → Static (next events, no scroll) → Box-only (warning box alone)</td></tr>
+    </table>
+    <div class="box info">
+      <strong>Calendar source:</strong> The ticker uses MetaTrader's own calendar feed (not Forex Factory), so importance ratings can differ. It is live-only — no calendar data in the Strategy Tester — and needs the terminal connected. Look-ahead window and minimum importance are set in the <span class="key">News Ticker</span> input group (F7).
+    </div>
 
     <h3>Main Grid — 28 Pairs</h3>
     <p>Each row represents one currency pair with the following columns:</p>
@@ -517,9 +530,9 @@
       <tr><td><span class="key">PipS</span></td><td>Session pips (from last pip reset)</td><td>Green = up, Red = down</td></tr>
       <tr><td><span class="key">PipE</span></td><td>Event pips (active only during Session 4 events)</td><td>Gold = up, Orange = down, Dash = no event</td></tr>
       <tr><td><span class="key">BStr</span></td><td>Basket Strength: base currency pips minus quote currency pips</td><td>Green &gt;5, Red &lt;-5, Gray neutral</td></tr>
-      <tr><td><span class="key">Scr</span></td><td>Score differential: base score minus quote score</td><td>Green ≥4, Red ≤-4, Gray neutral</td></tr>
+      <tr><td><span class="key">Scr</span></td><td>Strength differential: base %-strength minus quote %-strength (continuous, replaces the old ±4 score)</td><td>Green = up, Red = down, Gray neutral</td></tr>
       <tr><td><span class="key">COT</span></td><td>COT differential (base COT − quote COT)</td><td>Green ≥ 4, Red ≤ −4</td></tr>
-      <tr><td><span class="key">MTF</span></td><td>Multi-timeframe regime differential (SMA20/200 on M15/H1/H4/D1)</td><td>Green ≥ 3, Red ≤ −3, range −8 to +8</td></tr>
+      <tr><td><span class="key">MTF</span></td><td>Retired in v2.02 — the column is blanked and MTF no longer feeds the Score (kept as an internal constant only)</td><td>—</td></tr>
       <tr><td><span class="key">ADR%</span></td><td>How much of the average daily range is consumed</td><td>Green &lt;50%, Yellow 50-80%, Red &gt;80%</td></tr>
       <tr><td><span class="key">ADR</span></td><td>Average Daily Range in pips (14-day)</td><td>Yellow (info only)</td></tr>
       <tr><td><span class="key">BUY/SELL/CLOSE</span></td><td>Manual trade buttons per pair</td><td>Active or grayed when spread-blocked</td></tr>
@@ -528,8 +541,11 @@
       <tr><td><span class="key">P/L</span></td><td>Profit/loss per pair (pips or $)</td><td>Green profit, Red loss, hidden if none</td></tr>
     </table>
 
-    <h3>MATTRIX Score Panel (Right Side)</h3>
-    <p>Shows all 8 currencies ranked by their MATTRIX Score, strongest on top. Each row displays the rank, currency name, score (with ▲▼ visual bars), COT score, MTF regime (−4 to +4, SMA20/200 alignment across M15/H1/H4/D1), session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums, and the FIX row showing the sum of all 28 pairs (FBT INDEX).</p>
+    <h3>MATTRIX Strength Panel (Right Side)</h3>
+    <p>Shows all 8 currencies ranked by their MATTRIX Strength, strongest on top. Each row displays: rank, currency name, <strong>Strength</strong> (a continuous %-value — the mean signed %-move of that currency across its 7 pairs since the day open; the eight values sum to zero by construction — the "Secret of Zero"), <strong>Coh(D)</strong> Coherence (how many of the 7 pairs agree with the currency's net direction, shown as X/7 — a breadth / conviction reading; <span class="key">7/7</span> is highlighted amber as exhaustion-risk), COT score, session pips, today pips, and W2D pips. Below the 8 currencies: RON and ROFF(inv) basket pip sums, and the FIX row showing the sum of all 28 pairs (FBT INDEX).</p>
+    <div class="box info">
+      <strong>Strength vs. ±4:</strong> The continuous %-Strength replaces the old forced ±4 score. The simple ±4 rank is still shown on the basket buttons for a quick glance. The Strength panel is <em>decision-support for chart reading</em> ("In Chart Veritas"), not a standalone auto-signal — backtesting found no robust mechanical edge in trading the ranking directly.
+    </div>
 
     <h3>Basket Buttons (Footer)</h3>
     <p>Currency basket buttons for EUR, GBP, AUD, NZD, USD, CAD, CHF, JPY — each with BUY, SELL, CLOSE. Plus RON and ROFF basket buttons (8 pairs each). Spread is shown per basket; buttons are grayed out when basket spread is too high.</p>
@@ -582,9 +598,9 @@
       <tr><td><span class="key">BasketStrength</span></td><td><span class="val">ON</span> Buy 80 / Sell -80</td><td>Minimum basket strength differential to trigger trade</td></tr>
       <tr><td><span class="key">Score</span></td><td><span class="val">ON</span> Buy 4 / Sell -4</td><td>Minimum score differential — only trades the strongest setups</td></tr>
       <tr><td><span class="key">COT</span></td><td><span class="val">OFF</span></td><td>COT differential filter (base COT − quote COT). SoZ validated — warns if scores are invalid</td></tr>
-      <tr><td><span class="key">MTF</span></td><td><span class="val">OFF</span></td><td>Multi-timeframe SMA20/200 regime filter. Checks alignment across M15/H1/H4/D1. Default thresholds: BUY ≥ 3, SELL ≤ −3</td></tr>
+      <tr><td><span class="key">MTF</span></td><td><span class="val">RETIRED</span></td><td>Removed from F7 in v2.02 — MTF no longer feeds the Score; kept as a fixed internal constant only</td></tr>
       <tr><td><span class="key">ADR%</span></td><td><span class="val">ON</span> Max 75%</td><td>Prevents entries when daily range is nearly exhausted</td></tr>
-      <tr><td><span class="key">MaxExposure</span></td><td><span class="val">ON</span> Max 3</td><td>Maximum trades involving the same currency</td></tr>
+      <tr><td><span class="key">MaxExposure</span></td><td><span class="val">ON</span> Max 7</td><td>Maximum trades involving the same currency (7 = once per pair in its basket). Moved to the Trade Management group in v2.02</td></tr>
     </table>
 
     <h3>COT Scores</h3>
@@ -1319,7 +1335,7 @@
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:6px;"><a href="https://mattrix8x.com" style="color:var(--cyan-dim)">mattrix8x.com</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.01b24 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;">MATTRIX v2.02b25 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>

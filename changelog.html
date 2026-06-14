@@ -96,9 +96,26 @@
 
 <div class="version">
   <div class="version-header">
+    <span class="version-num">v2.02b25</span>
+    <span class="version-date">June 14, 2026</span>
+    <span class="version-tag tag-current">CURRENT</span>
+  </div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>News Ticker — live economic calendar crawl above the dashboard header. Reads the MT5 calendar for the Big8 currencies and scrolls upcoming events with importance markers (! high, - moderate)</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>News warning box — permanent left box shows the next event with a live countdown; turns red and pulses when an event is less than 30 minutes away</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>News TOP/BOT tagging — events on the currently strongest/weakest currency are flagged [TOP]/[BOT], linking calendar risk to your live strength ranking</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Ticker 3-state toggle — Crawl (scrolling) / Static (next events) / Box-only. Look-ahead window and minimum importance configurable (F7: News Ticker section)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>MATTRIX Score redesigned — continuous %-strength (mean signed %-move per currency across its 7 pairs, sums to zero) replaces the forced ±4 pip composite. ±4 kept only as a quick rank on the basket buttons</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Coherence column (Coh) added to the Score Panel — X/7 pairs agreeing with a currency's net direction (breadth / conviction). 7/7 flagged as exhaustion-risk</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>MTF removed from the Score — multi-timeframe regime no longer feeds the strength value. The Score is decision-support for chart reading, not a standalone auto-signal (backtest: no robust mechanical edge)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>F7 settings reorganized — sections re-sorted into a clearer hierarchy: Trade Management split into (Broker)/(Terminal), dedicated Pyramiding and Sessions groups, updated defaults</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Deprecated inputs hidden — MTF filter, Pyramid Mode/Style, MATTRIX 2x, and Breakout OCO demoted from F7 to fixed internal constants (behaviour unchanged, values locked at their defaults)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Version bump: EA v2.02b25</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
     <span class="version-num">v2.01b24</span>
     <span class="version-date">June 1, 2026</span>
-    <span class="version-tag tag-current">CURRENT</span>
   </div>
   <div class="change"><span class="change-type type-fix">FIX</span><span>TP line drag now correctly closes the basket — ATPLEVEL GV sync added to PendingBaskets close-monitor loop. Before this fix, only SL line drag triggered close; TP line drag updated the visual line but the EA never picked up the new level</span></div>
   <div class="change"><span class="change-type type-new">NEW</span><span>Pending close alerts now tag SL vs TP — alert message shows "PENDING CLOSE: EUR (SL hit)" or "(TP hit)" so the trigger reason is visible in the alert history</span></div>
