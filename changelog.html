@@ -96,9 +96,24 @@
 
 <div class="version">
   <div class="version-header">
+    <span class="version-num">v2.02b26</span>
+    <span class="version-date">June 15, 2026</span>
+    <span class="version-tag tag-current">CURRENT</span>
+  </div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Two-click confirm on the bulk-action buttons — CLOSE ALL, CLOSE PROFIT, CLOSE LOSS and AUTO ON arm to "CONFIRM?" (amber) on the first click and only execute on a second click within 3 seconds; otherwise the button reverts automatically. Prevents accidental execution</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>AUTO OFF stays instant — the confirm applies only when arming AUTO. Switching AUTO off is an emergency stop and is never delayed by a confirmation step</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>AUTO no longer auto-resumes — live trading always starts OFF after every terminal restart, profile/template change, recompile or input change. AUTO must be armed consciously via the dashboard button (Strategy Tester unaffected: always ON)</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Daily Kill Switch is now percentage-based on day-start equity (previously absolute account currency). Limits scale automatically with the account — no manual re-tuning per balance</span></div>
+  <div class="change"><span class="change-type type-new">NEW</span><span>Kill Switch scope selector (F7) — measure the daily loss against whole-account equity (ACCT: every position, all magics, manual) or against this EA's own realized + floating P/L only (EA: Magic Number). The active scope is shown on the dashboard label</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Kill Switch armed by default with conservative limits — SL Warning at 1% (AUTO OFF), Hard Kill at 2% (AUTO OFF + CLOSE ALL) of day-start equity</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Entry trigger filters reactivated in the default set — BasketStrength (80), MATTRIX Score (±5) and ADR% now gate auto-entries, so arming AUTO no longer opens many positions at once</span></div>
+  <div class="change"><span class="change-type type-chg">CHG</span><span>Version bump: EA v2.02b26</span></div>
+</div>
+
+<div class="version">
+  <div class="version-header">
     <span class="version-num">v2.02b25</span>
     <span class="version-date">June 14, 2026</span>
-    <span class="version-tag tag-current">CURRENT</span>
   </div>
   <div class="change"><span class="change-type type-new">NEW</span><span>News Ticker — live economic calendar crawl above the dashboard header. Reads the MT5 calendar for the Big8 currencies and scrolls upcoming events with importance markers (! high, - moderate)</span></div>
   <div class="change"><span class="change-type type-new">NEW</span><span>News warning box — permanent left box shows the next event with a live countdown; turns red and pulses when an event is less than 30 minutes away</span></div>

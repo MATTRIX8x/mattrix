@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX v2.02b25 — User Manual</title>
+<title>MATTRIX v2.02b26 — User Manual</title>
 <style>
   /* Self-hosted fonts — no external requests (DSGVO compliant) */
   @font-face {
@@ -392,7 +392,7 @@
 <header>
   <h1>MATTRIX v2.02</h1>
   <div class="subtitle">User Manual — Forex Basket Trading System</div>
-  <div class="version">v2.02b25 BETA — EXPIRES 2026.07.31</div>
+  <div class="version">v2.02b26 BETA — EXPIRES 2026.07.31</div>
   <div class="platform">Built for <span>MetaTrader 5</span> — Expert Advisor + Indicators + Synthetic Charts</div>
 </header>
 
@@ -596,7 +596,7 @@
       <tr><td><span class="key">PipS</span></td><td><span class="val">OFF</span></td><td>Session pip threshold</td></tr>
       <tr><td><span class="key">PipE</span></td><td><span class="val">OFF</span></td><td>Event pip threshold (Session 4)</td></tr>
       <tr><td><span class="key">BasketStrength</span></td><td><span class="val">ON</span> Buy 80 / Sell -80</td><td>Minimum basket strength differential to trigger trade</td></tr>
-      <tr><td><span class="key">Score</span></td><td><span class="val">ON</span> Buy 4 / Sell -4</td><td>Minimum score differential — only trades the strongest setups</td></tr>
+      <tr><td><span class="key">Score</span></td><td><span class="val">ON</span> Buy 5 / Sell -5</td><td>Minimum score differential — only trades the strongest setups</td></tr>
       <tr><td><span class="key">COT</span></td><td><span class="val">OFF</span></td><td>COT differential filter (base COT − quote COT). SoZ validated — warns if scores are invalid</td></tr>
       <tr><td><span class="key">MTF</span></td><td><span class="val">RETIRED</span></td><td>Removed from F7 in v2.02 — MTF no longer feeds the Score; kept as a fixed internal constant only</td></tr>
       <tr><td><span class="key">ADR%</span></td><td><span class="val">ON</span> Max 75%</td><td>Prevents entries when daily range is nearly exhausted</td></tr>
@@ -657,16 +657,17 @@
     <p><span class="key">StopProfit</span> and <span class="key">StopLoss</span> (default: 1 each) control how many profitable/losing portfolio cycles are allowed per session before auto-trading stops.</p>
 
     <h3>Daily Kill Switch</h3>
-    <p>Account-level daily risk control. Monitors equity vs. day-start balance (includes floating P/L and commissions). Resets at midnight broker time.</p>
+    <p>Daily risk control. Monitors P/L against day-start equity (includes floating P/L and commissions) and resets at midnight broker time. All limits are expressed as a <strong>percentage of day-start equity</strong>, so they scale automatically with the account — no manual re-tuning when the balance changes.</p>
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
-      <tr><td><span class="key">KillSwitch</span></td><td><span class="val">OFF</span></td><td>Master enable/disable for all Kill Switch functions</td></tr>
-      <tr><td><span class="key">KillTP</span></td><td><span class="val">0</span> (off)</td><td>Daily TP Soft Kill in $ — stops auto trading when daily profit reaches this</td></tr>
-      <tr><td><span class="key">KillSLWarn</span></td><td><span class="val">0</span> (off)</td><td>Daily SL Warning in $ — stops auto trading as early alert</td></tr>
-      <tr><td><span class="key">KillSLHard</span></td><td><span class="val">0</span> (off)</td><td>Daily SL Hard Kill in $ — stops auto trading AND closes all positions</td></tr>
+      <tr><td><span class="key">KillSwitch</span></td><td><span class="val">ON</span></td><td>Master enable/disable for all Kill Switch functions</td></tr>
+      <tr><td><span class="key">KillScope</span></td><td><span class="val">ACCT</span></td><td>Measurement scope. <span class="key">ACCT</span> = whole-account equity (every position, all magics, manual trades). <span class="key">EA</span> = this EA's own realized + floating P/L only (Magic Number). The active scope is shown on the dashboard label</td></tr>
+      <tr><td><span class="key">KillSLWarnPct</span></td><td><span class="val">1.0</span> %</td><td>SL Warning — sets AUTO OFF when the daily loss reaches this % of day-start equity (positions stay open)</td></tr>
+      <tr><td><span class="key">KillSLHardPct</span></td><td><span class="val">2.0</span> %</td><td>SL Hard Kill — sets AUTO OFF and closes all positions when the daily loss reaches this %</td></tr>
+      <tr><td><span class="key">KillTPPct</span></td><td><span class="val">0</span> (off)</td><td>TP Soft Kill — sets AUTO OFF when the daily profit reaches this % (0 = disabled)</td></tr>
     </table>
     <div class="box info">
-      <strong>Recommended starting values:</strong> For a $100k account: KillTP $3,000, KillSLWarn $500, KillSLHard $1,000. For prop firm challenges: adjust based on Max Daily Loss rules (see Risk Management section).
+      <strong>Scope vs. prop firms:</strong> A prop firm's Max Daily Loss is always measured against your whole account. On a prop or shared account use <span class="key">ACCT</span>. <span class="key">EA</span> only protects against MATTRIX's own loss and will not catch a breach caused by manual trades or another EA — use it only where MATTRIX trades alone or you deliberately want per-EA scoping.
     </div>
     <div class="box warn">
       <strong>Pyramiding is blocked</strong> when any Kill Switch trigger is active. No new pyramid entries are allowed until the next day reset, even if the Warning (not Hard Kill) was triggered.
@@ -743,12 +744,15 @@
       <tr><td><span class="key">CLOSE PROFIT</span></td><td>Closes only positions currently in profit</td></tr>
       <tr><td><span class="key">CLOSE LOSS</span></td><td>Closes only positions currently in loss</td></tr>
     </table>
+    <p><strong>Two-click confirm:</strong> CLOSE ALL, CLOSE PROFIT and CLOSE LOSS each require confirmation. The first click turns the button amber and shows "CONFIRM?"; a second click within 3 seconds executes. If you don't confirm, the button reverts automatically — this prevents an accidental bulk close.</p>
 
     <h3>RESET EA</h3>
     <p>Performs a soft reset: clears all Locks, resets Cycle counters, recalculates ADR, resets session/weekly pip references. <strong>Does not close any open trades.</strong> Use this after manually closing all positions to start a fresh analysis cycle.</p>
 
     <h3>AUTO ON / AUTO OFF</h3>
-    <p>Clickable toggle button in the bottom-right corner with DEMO or LIVE indicator. Click to switch between AUTO ON (trades automatically) and AUTO OFF (signals only, manual buttons still work). The state is persisted via GlobalVariable — survives F7 restart, recompile, and MT5 restart. CLOSE ALL, CLOSE PROFIT, and CLOSE LOSS automatically set AUTO OFF to prevent immediate re-entry. Kill Switch triggers also set AUTO OFF.</p>
+    <p>Clickable toggle button in the bottom-right corner with a DEMO or LIVE indicator. AUTO ON trades automatically; AUTO OFF means signals only (the manual buttons still work).</p>
+    <p><strong>AUTO always starts OFF.</strong> For safety, live trading never auto-resumes: after every MT5 restart, profile or template change, recompile or input (F7) change, AUTO is forced OFF and must be armed again consciously. (In the Strategy Tester AUTO is always ON so backtests can trade.)</p>
+    <p><strong>Arming requires confirmation.</strong> Turning AUTO ON is a two-click action — the first click shows "CONFIRM?" (amber), a second click within 3 seconds arms it. Turning AUTO OFF is instant: an emergency stop is never delayed. CLOSE ALL, CLOSE PROFIT and CLOSE LOSS also set AUTO OFF, as do all Kill Switch triggers.</p>
 
   </div>
 </div>
@@ -1335,7 +1339,7 @@
 <footer>
   <div class="copy">© 2026 Matthias Scholz — FOREX BASKET TRADERS (F.B.T)</div>
   <div style="margin-top:6px;"><a href="https://mattrix8x.com" style="color:var(--cyan-dim)">mattrix8x.com</a> · <a href="https://discord.gg/ag4fnMa5" style="color:var(--cyan-dim)">Discord Community</a></div>
-  <div style="margin-top:6px;">MATTRIX v2.02b25 Beta — Decision Follows Structure</div>
+  <div style="margin-top:6px;">MATTRIX v2.02b26 Beta — Decision Follows Structure</div>
   <div style="margin-top:10px; font-size:0.9em;">
     <em>This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability. Use on demo accounts recommended. See Discord #disclaimer for full terms.</em>
   </div>
