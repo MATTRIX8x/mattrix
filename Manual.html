@@ -611,7 +611,7 @@
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
       <tr><td><span class="key">LotSize</span></td><td><span class="val">0.01</span></td><td>Fixed lot size (used when DollarPerPip = 0)</td></tr>
       <tr><td><span class="key">DollarPerPip</span></td><td><span class="val">0.10</span></td><td>Target $/pip — lot is auto-calculated per pair</td></tr>
-      <tr><td><span class="key">MaxTradesPerPair</span></td><td><span class="val">1</span></td><td>How many positions per pair (pyramiding)</td></tr>
+      <tr><td><span class="key">MaxTradesPerPair</span></td><td><span class="val">5</span></td><td>How many positions per pair (pyramiding)</td></tr>
       <tr><td><span class="key">MaxTotalTrades</span></td><td><span class="val">28</span></td><td>Maximum total open positions</td></tr>
       <tr><td><span class="key">MaxSpread</span></td><td><span class="val">1.5</span></td><td>Per-pair spread limit (pips)</td></tr>
       <tr><td><span class="key">MaxBasketSprd</span></td><td><span class="val">3.0</span></td><td>Basket spread limit (pips sum)</td></tr>
@@ -722,15 +722,15 @@
     <p>The EA does not allow simultaneous BUY and SELL positions on the same pair. If you have an open BUY on EURUSD and click SELL, the EA will not open a counter-position. Close the existing trade first.</p>
 
     <h3>Pyramiding</h3>
-    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals. Default settings are optimized for Event Momentum trading: SMART mode, Aggressive style, MinProfit 6 pips, BE buffer 3 pips. <strong>Important:</strong> Only enable pyramiding during explosive event moves with your finger on CLOSE ALL. Never pyramid swing trades — see the Trading Playbook for details.</p>
+    <p>When <span class="key">UsePyramid = ON</span>, the EA can add multiple entries per pair (up to <span class="key">MaxTradesPerPair</span>). Pyramiding is filter-independent — it triggers based on profit and spread, not on score/BStr signals. The engine runs in SMART mode with the Aggressive profile (both fixed in this build), MinProfit 6 pips, BE buffer 2 pips. <strong>Important:</strong> Only enable pyramiding during explosive event moves with your finger on CLOSE ALL. Never pyramid swing trades — see the Trading Playbook for details.</p>
     <table>
       <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
-      <tr><td><span class="key">MinProfitToAdd</span></td><td><span class="val">8.0</span></td><td>ALL existing positions must be at least X pips in profit before adding</td></tr>
+      <tr><td><span class="key">MinProfitToAdd</span></td><td><span class="val">6.0</span></td><td>ALL existing positions must be at least X pips in profit before adding</td></tr>
       <tr><td><span class="key">BreakEvenBeforeAdd</span></td><td><span class="val">ON</span></td><td>Move existing positions to breakeven before opening a new pyramid</td></tr>
-      <tr><td><span class="key">BEBufferPips</span></td><td><span class="val">1.0</span></td><td>Buffer above entry price for BE move (covers spread)</td></tr>
+      <tr><td><span class="key">BEBufferPips</span></td><td><span class="val">2.0</span></td><td>Buffer above entry price for BE move (covers spread)</td></tr>
       <tr><td><span class="key">OnlyAddProfit</span></td><td><span class="val">ON</span></td><td>Only add when existing positions are profitable (used when MinProfitToAdd = 0)</td></tr>
     </table>
-    <p><strong>Pyramid flow:</strong> Trade 1 opens → grows to +8 pips → BE-move shifts Trade 1 SL to entry+1 pip → Trade 2 opens with fresh SL/TP → both run independently. This satisfies prop firm rules that require existing risk to be neutralized before adding positions.</p>
+    <p><strong>Pyramid flow:</strong> Trade 1 opens → grows to +6 pips → BE-move shifts Trade 1 SL to entry+2 pips → Trade 2 opens with fresh SL/TP → both run independently. This satisfies prop firm rules that require existing risk to be neutralized before adding positions.</p>
     <div class="box info">
       <strong>Manual pyramiding:</strong> The BUY/SELL buttons also respect <span class="key">MinProfitToAdd</span>, <span class="key">BreakEvenBeforeAdd</span>, and <span class="key">MaxTradesPerPair</span>. Anti-hedging always applies (no BUY if SELL is open and vice versa). However, manual buttons do NOT respect the TP-Hit Session Block — you can always manually re-enter a pair if you see a setup in the chart.
     </div>
@@ -971,13 +971,14 @@
   <div class="section-content">
 
     <h3>Overview</h3>
-    <p>The Smart Pyramid Engine (PyramidMode=1) automatically calculates the minimum profit required before adding a new position, based on market conditions. It replaces the fixed <span class="key">MinProfitToAdd</span> with a dynamic formula.</p>
+    <p>The Smart Pyramid Engine automatically calculates the minimum profit required before adding a new position, based on market conditions. It replaces the fixed <span class="key">MinProfitToAdd</span> with a dynamic formula.</p>
 
-    <h3>Settings</h3>
+    <h3>Mode &amp; Style (fixed in this build)</h3>
+    <p>Pyramid Mode and Style are no longer F7 inputs — they are fixed internally (parked on standby). This build always runs <strong>SMART</strong> mode with the <strong>Aggressive</strong> tightening profile.</p>
     <table>
-      <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
-      <tr><td><span class="key">Pyramid Mode</span></td><td><span class="val">0</span></td><td>0 = FIXED (manual MinProfitToAdd), 1 = SMART (dynamic)</td></tr>
-      <tr><td><span class="key">Pyramid Style</span></td><td><span class="val">1</span></td><td>0 = Conservative, 1 = Moderate, 2 = Aggressive</td></tr>
+      <tr><th>Constant</th><th>Value</th><th>Meaning</th></tr>
+      <tr><td><span class="key">PyramidMode</span></td><td><span class="val">1 — SMART</span></td><td>Dynamic minimum profit (alternative: 0 = FIXED, manual MinProfitToAdd)</td></tr>
+      <tr><td><span class="key">PyramidStyle</span></td><td><span class="val">2 — Aggressive</span></td><td>Tightening speed of the per-level factor (alternatives: 0 = Conservative, 1 = Moderate)</td></tr>
     </table>
 
     <h3>Formula</h3>
@@ -986,7 +987,7 @@
     <table>
       <tr><th>Component</th><th>Description</th></tr>
       <tr><td>Base</td><td>MinProfitToAdd setting (your baseline)</td></tr>
-      <tr><td>LevelFactor</td><td>Decreases with each pyramid level: L0=1.00, L1=0.85, L2=0.75, L3=0.65, L5+=0.55 (Moderate)</td></tr>
+      <tr><td>LevelFactor</td><td>Decreases with each pyramid level (active Aggressive profile): L0=1.00, L1=0.75, L2=0.60, L3=0.50, L5+=0.40</td></tr>
       <tr><td>GapBoost</td><td>1 + |Gap| × 0.5 when |Gap| > 0.05 — stronger momentum = lower threshold</td></tr>
       <tr><td>Floor</td><td>Minimum 2.0 pips — never goes below this</td></tr>
     </table>
