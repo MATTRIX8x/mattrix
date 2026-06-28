@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATTRIX AutoQuickTrade — Quick Manual</title>
+<style>
+  :root{
+    --bg:#0a1322; --bg2:#0e1a30; --card:#111f39; --line:#1f3358;
+    --ink:#dce6f5; --dim:#8595b3; --cyan:#00ced1; --green:#39b56a;
+    --red:#d8554d; --gold:#caa14a; --amber:#e0922a;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+       font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 22px 64px}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+  .ey{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+  h1{font-family:var(--mono);font-size:23px;margin:6px 0 2px;letter-spacing:.01em}
+  .sub{color:var(--dim);font-size:13px}
+  .motto{font-family:var(--mono);color:var(--cyan);font-size:11px;letter-spacing:.18em;margin-top:8px}
+  h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+     color:var(--cyan);margin:30px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--dim);margin-right:10px}
+  p{margin:0 0 10px}
+  .lead{color:var(--dim)}
+  ul{margin:0 0 10px;padding-left:18px}
+  li{margin:3px 0}
+  b{color:#fff;font-weight:600}
+  code,.k{font-family:var(--mono);font-size:12.5px;color:var(--cyan);
+          background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card h3{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin:0 0 8px;color:#fff;text-transform:uppercase}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;border-radius:4px;
+        padding:1px 7px;margin-right:4px;border:1px solid var(--line)}
+  .buy{color:#bfe9cf;background:#0c3a1f;border-color:#1d6a39}
+  .sell{color:#f0c9c5;background:#3c1411;border-color:#7a2a24}
+  .gold{color:#f0dca8;background:#3a2e0e;border-color:#7a611f}
+  .auto{color:#bfe9cf;background:#10331f;border-color:#2c6a42}
+  table{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  td.s{font-family:var(--mono);color:var(--cyan);white-space:nowrap}
+  .note{border-left:3px solid var(--amber);background:#1c1608;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#e8d6a8}
+  .note b{color:#ffce6e}
+  .safe{border-left:3px solid var(--cyan);background:#08222a;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#bfe9ee}
+  .safe b{color:#7fe7ea}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);
+         font-family:var(--mono);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;color:#111}.card,.note,.safe{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5</div>
+  <h1>AutoQuickTrade — Quick Manual</h1>
+  <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
+  <div class="motto">IN CHART VERITAS &#9889;</div>
+</header>
+
+<h2><span class="n">01</span>What it is</h2>
+<p class="lead">AutoQuickTrade puts a compact panel on your chart. One click opens or closes a whole position — a single broker pair, or a full MATTRIX basket traded as its real legs. On top it adds rule-based pyramiding (manual or automatic) and pending entries you set with a line on the chart.</p>
+
+<h2><span class="n">02</span>Setup</h2>
+<ul>
+  <li><b>Chart symbol decides the mode.</b> Any broker symbol &rarr; <b>PAIR</b> (1 leg). A MATTRIX synthetic chart &rarr; basket: <code>#Big8</code> (7 legs), <code>#RON</code>/<code>#ROFF</code> (8), <code>#FIX</code> (28 — must be enabled with <span class="k">Allow #FIX trade</span>).</li>
+  <li><b>Baskets need the SyntheticCharts EA</b> to have created the <code>#</code> symbols first. AutoQuickTrade trades the <b>real</b> pairs; the <code>#</code> chart is only the host.</li>
+  <li><b>Hedging account required</b> — each pyramid layer is its own ticket.</li>
+  <li><b>AlgoTrading must be ON</b> (terminal toolbar) for any order to go through.</li>
+</ul>
+
+<h2><span class="n">03</span>The panel</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Actions</h3>
+    <p><span class="pill buy">BUY</span><span class="pill sell">SELL</span> open at market, now.</p>
+    <p><span class="pill buy">PEND BUY</span><span class="pill sell">PEND SELL</span> arm a line-triggered entry.</p>
+    <p><span class="pill gold">CLOSE</span> closes the whole pair/basket.</p>
+    <p><span class="pill auto">AUTO</span> arms automatic pyramiding (only shown when enabled).</p>
+  </div>
+  <div class="card">
+    <h3>Info lines</h3>
+    <ul style="padding-left:16px;margin:0">
+      <li>Lot mode &amp; risk</li>
+      <li>SL / TP basis (pips or ATR)</li>
+      <li>AutoPyr status (step &amp; max layers)</li>
+      <li><b>P/L</b> — always the money value, in account currency</li>
+      <li>Spread &amp; block reason</li>
+    </ul>
+  </div>
+</div>
+
+<h2><span class="n">04</span>Entering trades</h2>
+<p><b>Market:</b> click <span class="pill buy">BUY</span> or <span class="pill sell">SELL</span>. For a basket, every leg opens at once (wide legs may be skipped — see Spread).</p>
+<p><b>Pending (line-triggered):</b></p>
+<ul>
+  <li><b>1st click</b> on PEND BUY/SELL &rarr; a cyan dashed line <code>QT_ENTRY</code> appears (labelled <b>P-BUY</b> / <b>P-SELL</b>) and the button shows <b>DRAG &amp; ARM</b>.</li>
+  <li><b>Drag</b> the line to your level (at least <code>0.03%</code> away from price).</li>
+  <li><b>2nd click</b> &rarr; <b>ARMED</b>. The EA fires the moment price reaches the line, from either side. Before the touch you can keep dragging it; after the touch it is locked.</li>
+  <li><b>Cancel</b> anytime: click the armed button again, or delete the line.</li>
+  <li>While one direction is set up/armed, the opposite PEND button is <b>locked</b>.</li>
+</ul>
+<div class="safe"><b>Behaviour on touch:</b> if spread is temporarily too wide, the EA keeps retrying (throttled) until it clears — bounded by <span class="k">Pend timeout</span> seconds and the <span class="k">Pend max dist %</span> chase limit. Any other rejection disarms and is logged.</div>
+
+<h2><span class="n">05</span>Lot sizing &amp; stops</h2>
+<ul>
+  <li><b>Fixed lot</b> (<code>LOT_AUTO</code>): every layer = your lot, or a fixed <code>$ / pip</code>. SL/TP in pips.</li>
+  <li><b>Risk % + ATR</b> (<code>LOT_RISK_ATR</code>): each layer is sized to a % of equity with an ATR-based SL and TP = SL &times; reward:risk.</li>
+</ul>
+<div class="note"><b>Non-forex symbols</b> (crypto, gold, indices): here <b>1 pip = 10 points</b> and is broker-specific, so a forex-sized pip count is far too small and the broker rejects it (invalid stops). Scale your pip values to the asset and use the panel's <b>spread</b> reading as the yardstick — e.g. on BTCUSD a 5000-pip stop &asymp; $500, a 120-pip spread filter &asymp; $12. Prefer pips? Fine — just size them to the instrument. Or use <b>Risk % + ATR</b>, which scales itself.</div>
+
+<h2><span class="n">06</span>Pyramiding</h2>
+<p>Adding to a winning trade, on your terms. Same rules whether you click or AUTO does it:</p>
+<ul>
+  <li><span class="k">Only add in profit</span> — block adds while the weakest layer is red.</li>
+  <li><span class="k">Min pips on weakest layer</span> — how far in profit before the next add (0 = off).</li>
+  <li><span class="k">Move to BE</span> + <span class="k">BE buffer</span> — pull earlier layers to break-even on each add.</li>
+  <li><b>An added layer is never larger than your first layer</b> (prop-style cap, applied in both lot modes).</li>
+</ul>
+<p class="lead">Add purely on your own confirmation regardless of profit? Set <span class="k">Min pips = 0</span> <b>and</b> <span class="k">Only add in profit = false</span>.</p>
+
+<h2><span class="n">07</span>AUTO pyramiding — two switches</h2>
+<p>AUTO does exactly what a manual add would, automatically. It fires only when <b>both</b> are on:</p>
+<ul>
+  <li><b>Level 1 — Settings:</b> <span class="k">Enable AUTO Pyramiding</span> (makes the panel button appear).</li>
+  <li><b>Level 2 — Panel:</b> the green <span class="pill auto">AUTO</span> button (arms it for this session).</li>
+</ul>
+<div class="safe"><b>Safety reset:</b> AUTO returns to <b>OFF</b> after every restart, profile switch, symbol change and parameter change — you re-arm deliberately. It is preserved only across a pure timeframe change. AUTO is local: it runs only while MT5 and the chart are live.</div>
+
+<h2><span class="n">08</span>Spread filters</h2>
+<table>
+  <tr><th>Setting</th><th>Effect</th></tr>
+  <tr><td class="s">Max spread per pair</td><td>Skips individual wide legs and opens the rest of the basket.</td></tr>
+  <tr><td class="s">Max basket spread</td><td>Sums all legs; if the total is exceeded the <b>whole</b> basket is rejected (0 = off).</td></tr>
+</table>
+<p class="lead">On wide-cross baskets (e.g. <code>#GBP</code>) raise the basket limit or set it to 0, and set the per-pair limit to suit your style.</p>
+
+<h2><span class="n">09</span>Magic number — your separation tool</h2>
+<p>AUTO and pending only manage positions whose magic matches <span class="k">Magic Number</span> (default <code>1111</code>). Trades from the panel carry it automatically; manual platform orders carry magic 0 and are ignored. Use the magic to keep discretionary and tool-managed trades apart.</p>
+
+<h2><span class="n">10</span>Safety &amp; limits</h2>
+<ul>
+  <li><b>Online-only:</b> AUTO and pending watch in real time — they act only while MT5 + the chart + EA are running with AlgoTrading on.</li>
+  <li><b>Kill switch:</b> turn AlgoTrading off, or remove the EA, to stop all activity instantly. CLOSE always works.</li>
+  <li><b>Baskets are correlated:</b> #FIX = 28 legs in one direction is the extreme case — size accordingly.</li>
+  <li><b>Beta build</b> stops opening new trades after its expiry date (CLOSE stays available).</li>
+</ul>
+
+<h2><span class="n">11</span>Key settings — quick reference</h2>
+<table>
+  <tr><th>Group</th><th>Setting</th><th>Note</th></tr>
+  <tr><td class="s">Trade</td><td>Lot size / Target $ per pip</td><td>Fixed-lot mode</td></tr>
+  <tr><td class="s">Trade</td><td>SL / TP (pips)</td><td>0 = off</td></tr>
+  <tr><td class="s">Trade</td><td>Magic Number</td><td>Separation key (1111)</td></tr>
+  <tr><td class="s">Trade</td><td>Max spread per pair / per basket</td><td>Skip leg / reject basket</td></tr>
+  <tr><td class="s">Trade</td><td>Anti-Hedge, Max positions, Allow #FIX</td><td>Guards</td></tr>
+  <tr><td class="s">Lot mode</td><td>Lot sizing mode</td><td>Fixed lot · Risk % + ATR</td></tr>
+  <tr><td class="s">Lot mode</td><td>Risk %, ATR period / TF / SL mult / RR</td><td>RISK_ATR only</td></tr>
+  <tr><td class="s">Pyramiding</td><td>Enable, Only in profit, Min pips, Move to BE, BE buffer</td><td>Apply to manual &amp; AUTO</td></tr>
+  <tr><td class="s">Auto-pyr</td><td>Enable AUTO Pyramiding</td><td>Level 1 switch</td></tr>
+  <tr><td class="s">Auto-pyr</td><td>Max layers, Cooldown (sec)</td><td>Automation guards</td></tr>
+  <tr><td class="s">Pending</td><td>Pend timeout (sec)</td><td>Retry window, 0 = until filled/cancelled</td></tr>
+  <tr><td class="s">Pending</td><td>Pend max dist (%)</td><td>Chase limit, 0 = off</td></tr>
+</table>
+
+<footer>
+  <span>&copy; Matthias Scholz · mattrix8x.com</span>
+  <span>AutoQuickTrade · Quick Manual</span>
+</footer>
+
+</div>
+</body>
+</html>
