@@ -124,6 +124,7 @@
   <li><b>An added layer is never larger than your first layer</b> (prop-style cap, applied in both lot modes).</li>
 </ul>
 <p class="lead">Add purely on your own confirmation regardless of profit? Set <span class="k">Min pips = 0</span> <b>and</b> <span class="k">Only add in profit = false</span>.</p>
+<div class="note"><b>In Risk % + ATR mode:</b> lot, SL and TP scale with volatility, but <span class="k">Min pips</span> and <span class="k">BE buffer</span> stay <b>pip-based</b> — scale them to the instrument like SL/TP (on BTCUSD a 1000-pip add step &asymp; $100).</div>
 
 <h2><span class="n">07</span>AUTO pyramiding — two switches</h2>
 <p>AUTO does exactly what a manual add would, automatically. It fires only when <b>both</b> are on:</p>
