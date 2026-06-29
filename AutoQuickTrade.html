@@ -74,6 +74,7 @@
   <li><b>Hedging account required</b> — each pyramid layer is its own ticket.</li>
   <li><b>AlgoTrading must be ON</b> (terminal toolbar) for any order to go through.</li>
 </ul>
+<div class="note"><b>#FIX (28 pairs) — a hot iron.</b> One BUY / SELL / PEND acts on all 28 legs at once. <b>Per-pair</b> settings (pyramiding, AUTO, per-pair spread, anti-hedge) run on each leg on their own; <b>basket</b> settings (basket spread, max trades) apply to the summed 28. Risk multiplies by 28 — 0.1%/layer &asymp; 2.8% across the basket — and up to 5 layers &times; 28 = <b>140 open tickets</b>. Locked by default — <b>use it on a DEMO account, for testing only</b>.</div>
 
 <h2><span class="n">03</span>The panel</h2>
 <div class="grid">
