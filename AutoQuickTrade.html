@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.47 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.49 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -125,8 +125,8 @@
 <p>Three one-click tools manage <b>open</b> positions. <b>SECURE</b> and <b>TP</b> place <b>server-side</b> stops and targets, so they keep working even when MT5 is closed — together they bracket the position for a walk-away.</p>
 <div class="grid">
   <div class="card">
-    <h3>SECURE — the floor</h3>
-    <p>Moves each leg's stop to <b>net break-even</b> (entry &plusmn; round-trip cost + buffer) where it is profitable enough, else to a <b>protective stop</b> at <span class="k">Secure distance</span> (0 = use SL Pips). <b>Tighten-only</b> — never loosens an existing stop.</p>
+    <h3>SECURE — break-even &amp; trail</h3>
+    <p><span class="k">Secure distance = 0</span> &rarr; locks the stack's <b>net break-even</b> (entry &plusmn; round-trip cost + buffer) once it is profitable enough. <span class="k">&gt; 0</span> &rarr; <b>trails</b> that many pips behind the current price, but <b>never looser than break-even</b> — BE is a floor under the trail. <b>Tighten-only</b>; re-click to trail up.</p>
     <p>Live: <b style="color:#39b56a">PROTECTED</b> (every leg has a stop) &middot; <b style="color:#d8554d">NAKED: n</b> (n legs unprotected).</p>
   </div>
   <div class="card">
@@ -135,7 +135,7 @@
   </div>
 </div>
 <p><span class="pill gold">-25%</span><span class="pill gold">-50%</span> <b>Partial close:</b> close that share of every leg's volume, immediately — discretionary profit-taking / de-risking. Lot-safe: a leg is skipped if the closed part <b>or</b> the remainder would fall below the broker min lot.</p>
-<div class="safe"><b>Net P/L &amp; cost model:</b> the panel P/L is <b>net</b> — profit + swap &minus; estimated round-trip commission, learned automatically from your fills per symbol and shown as <code>c:</code>. Set <span class="k">Round-trip commission / lot</span> to override, or leave 0 to auto-learn. SECURE's break-even is cost-inclusive, so a stop there nets ~break-even after commission.</div>
+<div class="safe"><b>Net P/L &amp; cost model:</b> the panel P/L is <b>net</b> — profit + swap &minus; estimated round-trip commission, learned automatically from your fills per symbol and shown as <code>c:</code>. Set <span class="k">Round-trip commission / lot</span> to override, or leave 0 to auto-learn.</div>
 <div class="note"><b>Offline vs online:</b> SECURE and TP survive offline (real SL / TP orders on the broker). The <b>-25% / -50%</b> partials are manual clicks — online by nature, but their result is permanent. Anything account-wide or trailing stays online-only.</div>
 
 <h2><span class="n">07</span>Pyramiding</h2>
@@ -191,14 +191,14 @@
   <tr><td class="s">Auto-pyr</td><td>Max layers, Cooldown (sec)</td><td>Automation guards</td></tr>
   <tr><td class="s">Pending</td><td>Pend timeout (sec)</td><td>Retry window, 0 = until filled/cancelled</td></tr>
   <tr><td class="s">Pending</td><td>Pend max dist (%)</td><td>Chase limit, 0 = off</td></tr>
-  <tr><td class="s">Protect</td><td>SECURE fallback stop distance (pips)</td><td>0 = use SL Pips</td></tr>
+  <tr><td class="s">Protect</td><td>SECURE trail distance behind price (pips)</td><td>0 = net break-even</td></tr>
   <tr><td class="s">Protect</td><td>TP distance from current price (pips)</td><td>0 = off</td></tr>
   <tr><td class="s">Cost</td><td>Round-trip commission per lot</td><td>0 = auto-learn from fills</td></tr>
 </table>
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.47 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.49 (beta) · Quick Manual</span>
 </footer>
 
 </div>
