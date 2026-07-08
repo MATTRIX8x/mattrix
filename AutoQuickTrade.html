@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.50 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.56 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -93,7 +93,7 @@
     <h3>Info lines</h3>
     <ul style="padding-left:16px;margin:0">
       <li>Lot mode &amp; risk</li>
-      <li>SL / TP basis (pips or ATR)</li>
+      <li>SL / TP basis (panel unit or ATR)</li>
       <li>AutoPyr status (step &amp; max layers)</li>
       <li><b>P/L</b> — <b>net</b>: profit + swap &minus; est. commission (<code>c:</code>)</li>
       <li>Spread &amp; block reason</li>
@@ -119,7 +119,7 @@
   <li><b>Fixed lot</b> (<code>LOT_AUTO</code>): every layer = your lot, or a fixed <code>$ / pip</code>. SL/TP in pips.</li>
   <li><b>Risk % + ATR</b> (<code>LOT_RISK_ATR</code>): each layer is sized to a % of equity with an ATR-based SL and TP = SL &times; reward:risk.</li>
 </ul>
-<div class="note"><b>Non-forex symbols</b> (crypto, gold, indices): here <b>1 pip = 10 points</b> and is broker-specific, so a forex-sized pip count is far too small and the broker rejects it (invalid stops). Scale your pip values to the asset and use the panel's <b>spread</b> reading as the yardstick — e.g. on BTCUSD a 5000-pip stop &asymp; $500, a 120-pip spread filter &asymp; $12. Prefer pips? Fine — just size them to the instrument. Or use <b>Risk % + ATR</b>, which scales itself.</div>
+<div class="safe"><b>Units — the spread is your yardstick.</b> The panel labels every distance in the symbol's own unit, and the <b>spread reading is the anchor</b>: whatever unit it shows is exactly the unit your SL / TP / SECURE values use.<br>&bull; <b>Forex &amp; metals</b> &rarr; <code>pips</code> (e.g. EURUSD <code>0.8 pips</code>, Gold <code>1.1 pips</code>).<br>&bull; <b>Indices, crypto, stocks</b> &rarr; <code>pts</code>, where <b>1 pt = one whole price unit</b> (index point / $1): US30 <code>0.7 pts</code>, BTCUSD <code>12 pts</code>. So a SECURE trail of <code>10</code> on US30 is 10 index points; on BTCUSD it is $10. That is why the settings read <span class="k">panel unit</span> rather than "pips". (In <b>Risk % + ATR</b> mode the entry SL/TP are ATR-based and self-scaling anyway; the panel unit governs the manual buttons.)</div>
 
 <h2><span class="n">06</span>Protect &amp; take profit — the offline bracket</h2>
 <p>Three one-click tools manage <b>open</b> positions. <b>SECURE</b> and <b>TP</b> place <b>server-side</b> stops and targets, so they keep working even when MT5 is closed — together they bracket the position for a walk-away.</p>
@@ -180,7 +180,7 @@
 <table>
   <tr><th>Group</th><th>Setting</th><th>Note</th></tr>
   <tr><td class="s">Trade</td><td>Lot size / Target $ per pip</td><td>Fixed-lot mode</td></tr>
-  <tr><td class="s">Trade</td><td>SL / TP (pips)</td><td>0 = off</td></tr>
+  <tr><td class="s">Trade</td><td>SL / TP (panel unit)</td><td>0 = off</td></tr>
   <tr><td class="s">Trade</td><td>Magic Number</td><td>Separation key (1111)</td></tr>
   <tr><td class="s">Trade</td><td>Max spread per pair / per basket</td><td>Skip leg / reject basket</td></tr>
   <tr><td class="s">Trade</td><td>Anti-Hedge, Max positions, Allow #FIX</td><td>Guards</td></tr>
@@ -191,14 +191,14 @@
   <tr><td class="s">Auto-pyr</td><td>Max layers, Cooldown (sec)</td><td>Automation guards</td></tr>
   <tr><td class="s">Pending</td><td>Pend timeout (sec)</td><td>Retry window, 0 = until filled/cancelled</td></tr>
   <tr><td class="s">Pending</td><td>Pend max dist (%)</td><td>Chase limit, 0 = off</td></tr>
-  <tr><td class="s">Protect</td><td>SECURE trail distance behind price (pips)</td><td>0 = net break-even</td></tr>
-  <tr><td class="s">Protect</td><td>TP distance from current price (pips)</td><td>0 = off</td></tr>
+  <tr><td class="s">Protect</td><td>SECURE trail distance behind price (panel unit)</td><td>0 = net break-even</td></tr>
+  <tr><td class="s">Protect</td><td>TP distance from current price (panel unit)</td><td>0 = off</td></tr>
   <tr><td class="s">Cost</td><td>Round-trip commission per lot</td><td>0 = auto-learn from fills</td></tr>
 </table>
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.50 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.56 (beta) · Quick Manual</span>
 </footer>
 
 </div>
