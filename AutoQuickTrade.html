@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.56 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.57 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -76,7 +76,7 @@
   <li><b>AlgoTrading must be ON</b> (terminal toolbar) for any order to go through.</li>
 </ul>
 <div class="note"><b>#FIX (28 pairs) — a hot iron.</b> One BUY / SELL / PEND acts on all 28 legs at once. <b>Per-pair</b> settings (pyramiding, AUTO, per-pair spread, anti-hedge) run on each leg on their own; <b>basket</b> settings (basket spread, max trades) apply to the summed 28. Risk multiplies by 28 — 0.1%/layer &asymp; 2.8% across the basket — and up to 5 layers &times; 28 = <b>140 open tickets</b>. Locked by default — <b>use it on a DEMO account, for testing only</b>.</div>
-<div class="note"><b>Netting / exchange accounts:</b> the panel warns on load. Layers merge into one net position and each add overwrites SECURE / break-even stops &mdash; <b>use a hedging account</b>.</div>
+<div class="note"><b>Netting / exchange accounts:</b> detected on load &rarr; the panel <b>forces pyramiding and AUTO off</b>. (An add on netting merges into the one net position and silently overwrites your SECURE / BE stop.) <b>Single trades, SECURE, TP and partial closes still work correctly</b> &mdash; a red <code>! NETTING - pyramiding OFF</code> notice stays on the panel. For the full basket / pyramiding feature set, <b>use a hedging account</b>. Manual re-adds remain your responsibility.</div>
 
 <h2><span class="n">03</span>The panel</h2>
 <div class="grid">
@@ -198,7 +198,7 @@
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.56 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.57 (beta) · Quick Manual</span>
 </footer>
 
 </div>
