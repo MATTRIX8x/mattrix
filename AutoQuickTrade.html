@@ -167,6 +167,7 @@
 
 <h2><span class="n">10</span>Magic number — your separation tool</h2>
 <p>AUTO and pending only manage positions whose magic matches <span class="k">Magic Number</span> (default <code>1111</code>). Trades from the panel carry it automatically; manual platform orders carry magic 0 and are ignored. Use the magic to keep discretionary and tool-managed trades apart.</p>
+<div class="note"><b>Not &quot;0 = all&quot;.</b> Unlike the Position Monitor (where a magic filter of <code>0</code> means <b>every</b> position), in AutoQuickTrade the magic is a <b>literal stamp &amp; filter</b>. Each chart manages <b>only its own</b> magic. Setting <span class="k">Magic Number</span> to <code>0</code> therefore manages <b>manual</b> trades (they carry magic 0) &mdash; not the panel's own trades, and not &quot;all&quot;. One panel cannot manage a mixed set (e.g. own <code>1111</code> + manual <code>0</code>) at once &mdash; by design.</div>
 
 <h2><span class="n">11</span>Safety &amp; limits</h2>
 <ul>
