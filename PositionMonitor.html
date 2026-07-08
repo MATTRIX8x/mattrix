@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATTRIX Position Monitor — Quick Manual</title>
+<style>
+  :root{
+    --bg:#0a1322; --bg2:#0e1a30; --card:#111f39; --line:#1f3358;
+    --ink:#dce6f5; --dim:#8595b3; --cyan:#00ced1; --green:#39b56a;
+    --red:#d8554d; --gold:#caa14a; --amber:#e0922a;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+       font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 22px 64px}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+  .ey{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+  h1{font-family:var(--mono);font-size:23px;margin:6px 0 2px;letter-spacing:.01em}
+  .sub{color:var(--dim);font-size:13px}
+  .motto{font-family:var(--mono);color:var(--cyan);font-size:11px;letter-spacing:.18em;margin-top:8px}
+  h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+     color:var(--cyan);margin:30px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--dim);margin-right:10px}
+  p{margin:0 0 10px}
+  .lead{color:var(--dim)}
+  ul{margin:0 0 10px;padding-left:18px}
+  li{margin:3px 0}
+  b{color:#fff;font-weight:600}
+  code,.k{font-family:var(--mono);font-size:12.5px;color:var(--cyan);
+          background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card h3{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin:0 0 8px;color:#fff;text-transform:uppercase}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;border-radius:4px;
+        padding:1px 7px;margin-right:4px;border:1px solid var(--line)}
+  .buy{color:#bfe9cf;background:#0c3a1f;border-color:#1d6a39}
+  .sell{color:#f0c9c5;background:#3c1411;border-color:#7a2a24}
+  .gold{color:#f0dca8;background:#3a2e0e;border-color:#7a611f}
+  .auto{color:#bfe9cf;background:#10331f;border-color:#2c6a42}
+  .teal{color:#bfe9ee;background:#08222a;border-color:#1d6a6c}
+  table{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  td.s{font-family:var(--mono);color:var(--cyan);white-space:nowrap}
+  .note{border-left:3px solid var(--amber);background:#1c1608;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#e8d6a8}
+  .note b{color:#ffce6e}
+  .safe{border-left:3px solid var(--cyan);background:#08222a;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#bfe9ee}
+  .safe b{color:#7fe7ea}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);
+         font-family:var(--mono);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;color:#111}.card,.note,.safe{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.10 (beta)</div>
+  <h1>Position Monitor — Quick Manual</h1>
+  <div class="sub">An 8&times;8 currency matrix — read and bulk-manage every open position across the 28 majors, at a glance.</div>
+  <div class="motto">IN CHART VERITAS &#9889;</div>
+</header>
+
+<h2><span class="n">01</span>What it is</h2>
+<p>The Position Monitor is a <b>portfolio cockpit</b>: an on-chart 8&times;8 grid that shows all your open positions across the 28 major pairs and the 8 currency baskets in one place, plus one-click <b>bulk actions</b> to reduce or close the whole book.</p>
+<p class="lead">It complements AutoQuickTrade: AutoQuickTrade opens and manages positions per pair / basket, the Monitor gives you the overview and the account-wide controls. It reads the account &mdash; it does not open new trades.</p>
+
+<h2><span class="n">02</span>The 8&times;8 matrix</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Lower triangle — pairs</h3>
+    <p>The 28 cross cells are the <b>28 major pairs</b>. Each cell <b>aggregates all open positions</b> on that pair (all pyramid layers, both directions) into one net figure.</p>
+  </div>
+  <div class="card">
+    <h3>Diagonal — baskets</h3>
+    <p>The 8 diagonal cells are the <b>currency baskets</b> (<span class="k">#EUR</span> &hellip; <span class="k">#JPY</span>). <span class="k">B:n</span> shows how many positions belong to that currency's basket.</p>
+  </div>
+</div>
+
+<h2><span class="n">03</span>Reading a cell</h2>
+<ul>
+  <li><b>Fill colour</b> &mdash; P/L sign: green = in profit, red = in loss</li>
+  <li><b>Value</b> &mdash; net <b>pips</b> or net <b>money</b> (toggled by <span class="k">Show pips</span>)</li>
+  <li><b>&quot;S&quot; marker</b> &mdash; at least one leg on that pair has <b>no stop-loss</b> (naked)</li>
+  <li><b>Blue / magenta frame</b> &mdash; a <b>pending</b> order is armed (blue = BUY, magenta = SELL)</li>
+  <li><b>Teal frame</b> &mdash; the pair is secured at net break-even (see next section)</li>
+</ul>
+
+<h2><span class="n">04</span>The net break-even frame</h2>
+<p>A <b>teal ring</b> around a pair cell means its stack is <b>secured at or above net break-even</b>: if every leg's stop-loss were hit right now, the <b>sum</b> across all legs would net <b>&ge; 0</b> (after estimated commission and swap).</p>
+<div class="grid">
+  <div class="card">
+    <h3>Aggregated, not per-leg</h3>
+    <p>Judged over <b>all legs together</b>. Example: three EURUSD layers at +10 / +16 / &minus;20 pips &mdash; the frame looks at the <b>sum</b>, so the winners can carry the loser and the cell still counts as secured.</p>
+  </div>
+  <div class="card">
+    <h3>What blocks the frame</h3>
+    <p>A <b>naked</b> leg (the &quot;S&quot; marker) &rarr; <b>never</b> framed (open downside). A <b>pending</b> frame takes precedence over the teal one on the same cell.</p>
+  </div>
+</div>
+<div class="safe"><b>Most accurate with AutoQuickTrade.</b> The check subtracts the commission the Monitor <b>learned from your fills</b>, so it is an <b>estimate</b>. It is most precise when the stop was placed by AutoQuickTrade's <span class="k">SECURE</span> (net-BE mode), which sets the SL exactly on the cost-inclusive net break-even using the same cost model. A manually-set stop is judged only as well as the learned commission &mdash; and without a learned rate the frame effectively means raw break-even + swap.</div>
+<div class="note"><b>&quot;Secured&quot; = no loss at the SL, not a guarantee.</b> Gaps and slippage can still slip past a stop. The frame is a live estimate for the overview &mdash; stops are <b>placed</b> from AutoQuickTrade, not from the Monitor.</div>
+
+<h2><span class="n">05</span>Status strip &amp; net P/L</h2>
+<p>The line under the matrix summarises the book:</p>
+<p><code>7 positions | +27.8p | net: +56.31 (c:12.82)</code></p>
+<ul>
+  <li><b>net</b> &mdash; profit + swap &minus; estimated round-trip commission (shown as <code>c:</code>)</li>
+  <li>counts of <b>no-SL</b> and <b>pending</b> appear only when &gt; 0, to keep the strip clean</li>
+</ul>
+
+<h2><span class="n">06</span>Footer &amp; bulk actions</h2>
+<p>The footer carries the account figures and the one-click controls (all across the current <span class="k">Magic filter</span>):</p>
+<p>
+  <span class="pill teal">HIDE</span> privacy toggle &nbsp;
+  <span class="pill sell">ALL</span><span class="pill auto">PROFIT</span><span class="pill sell">LOSS</span> close all / profitable / losing &nbsp;
+  <span class="pill gold">-25%</span><span class="pill gold">-50%</span> bulk partial close
+</p>
+<div class="note"><b>Two-click confirm.</b> Every bulk button (ALL / PROFIT / LOSS / &minus;25% / &minus;50%) needs a <b>second click</b> within <span class="k">Confirmation timeout</span> seconds &mdash; the button shows <code>CONFIRM?</code> after the first click. The partial close is lot-safe: a position is skipped if the closed part <b>or</b> the remainder would fall below the broker minimum lot.</div>
+
+<h2><span class="n">07</span>Privacy (HIDE)</h2>
+<p><span class="pill teal">HIDE</span> replaces the money values (balance, equity, delta, and the net figure) with <code>***</code>. Pips stay visible. Ideal for screenshots and streaming without exposing account size.</p>
+
+<h2><span class="n">08</span>Magic filter</h2>
+<p><span class="k">Magic Number filter</span> scopes the whole Monitor &mdash; matrix, net total and bulk actions &mdash; to one strategy:</p>
+<ul>
+  <li><b>0</b> &mdash; all positions on the account</li>
+  <li><b>a magic</b> &mdash; only positions with that magic (e.g. one basket that AutoQuickTrade stamped)</li>
+</ul>
+
+<h2><span class="n">09</span>Click to chart</h2>
+<p>Click any cell to open (or focus) that symbol's chart on the <span class="k">Timeframe to open on click</span>, using your <span class="k">Chart template</span> if set. Jump straight from the overview to the pair you want to manage in AutoQuickTrade.</p>
+
+<h2><span class="n">10</span>Key settings</h2>
+<table>
+  <tr><th>Group</th><th>Setting</th><th>Notes</th></tr>
+  <tr><td class="s">General</td><td>Magic Number filter</td><td>0 = all positions</td></tr>
+  <tr><td class="s">General</td><td>Refresh interval (ms)</td><td>Matrix / net refresh, default 600</td></tr>
+  <tr><td class="s">General</td><td>Timeframe to open on click</td><td>Chart TF for click-to-open</td></tr>
+  <tr><td class="s">General</td><td>Chart template</td><td>Applied to newly opened charts (empty = default)</td></tr>
+  <tr><td class="s">Display</td><td>Show profit in pips</td><td>false = money value</td></tr>
+  <tr><td class="s">Display</td><td>Cell width / height</td><td>Matrix sizing (px)</td></tr>
+  <tr><td class="s">Display</td><td>Panel X / Y offset</td><td>Position on the chart</td></tr>
+  <tr><td class="s">Safety</td><td>Confirmation timeout (sec)</td><td>Window for the 2nd confirm click</td></tr>
+  <tr><td class="s">Safety</td><td>CLOSE ALL also cancels pending</td><td>true = clears pending orders too</td></tr>
+</table>
+
+<h2><span class="n">11</span>Notes &amp; safety</h2>
+<ul>
+  <li><b>Hedging account</b> &mdash; matches AutoQuickTrade, which manages each pyramid layer as its own ticket</li>
+  <li><b>Bulk actions are account-wide</b> within the magic filter &mdash; the two-click confirm is your safeguard; read the button before the second click</li>
+  <li>The net figure, the <code>c:</code> commission and the net-BE frame are <b>estimates</b> (learned commission), not the broker's exact settlement</li>
+  <li>The <b>Test build</b> is a time-limited beta; the marketplace build has no expiry</li>
+  <li>Educational / analysis tool &mdash; not financial advice</li>
+</ul>
+
+<footer>
+  <span>Position Monitor v1.10 (beta) &middot; Quick Manual</span>
+  <span>mattrix8x.com &middot; &copy; Matthias Scholz &middot; IN CHART VERITAS</span>
+</footer>
+
+</div>
+</body>
+</html>
