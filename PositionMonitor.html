@@ -59,9 +59,9 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.10 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.17 (beta)</div>
   <h1>Position Monitor — Quick Manual</h1>
-  <div class="sub">An 8&times;8 currency matrix — read and bulk-manage every open position across the 28 majors, at a glance.</div>
+  <div class="sub">Monitor &amp; protect — your account cockpit. An 8&times;8 currency matrix that reads and bulk-manages every open position across the 28 majors, with an account-level equity kill switch.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
 </header>
 
@@ -106,11 +106,11 @@
 <div class="note"><b>&quot;Secured&quot; = no loss at the SL, not a guarantee.</b> Gaps and slippage can still slip past a stop. The frame is a live estimate for the overview &mdash; stops are <b>placed</b> from AutoQuickTrade, not from the Monitor.</div>
 
 <h2><span class="n">05</span>Status strip &amp; net P/L</h2>
-<p>The line under the matrix summarises the book:</p>
-<p><code>7 positions | +27.8p | net: +56.31 (c:12.82)</code></p>
+<p>The line under the matrix has <b>two zones</b>:</p>
+<p><code>7 positions | +27.8p | net: +56.31 (c:12.82)&nbsp;&nbsp;&nbsp;&nbsp;K(E) SL 1.42%</code></p>
 <ul>
-  <li><b>net</b> &mdash; profit + swap &minus; estimated round-trip commission (shown as <code>c:</code>)</li>
-  <li>counts of <b>no-SL</b> and <b>pending</b> appear only when &gt; 0, to keep the strip clean</li>
+  <li><b>Left</b> &mdash; live book: <b>net</b> = profit + swap &minus; estimated round-trip commission (shown as <code>c:</code>). Counts of <b>no-SL</b> and <b>pending</b> appear only when &gt; 0, to keep the strip clean.</li>
+  <li><b>Right</b> &mdash; kill switch. <code>K(E)</code> or <code>K(B)</code> shows the reference (day-start <b>E</b>quity or <b>B</b>alance), then the <b>headroom to the nearest trigger</b> in % of equity. It turns <span class="k">amber</span> once less than a quarter of the configured distance is left.</li>
 </ul>
 
 <h2><span class="n">06</span>Footer &amp; bulk actions</h2>
@@ -135,7 +135,20 @@
 <h2><span class="n">09</span>Click to chart</h2>
 <p>Click any cell to open (or focus) that symbol's chart on the <span class="k">Timeframe to open on click</span>, using your <span class="k">Chart template</span> if set. Jump straight from the overview to the pair you want to manage in AutoQuickTrade.</p>
 
-<h2><span class="n">10</span>Key settings</h2>
+<h2><span class="n">10</span>Kill switch &mdash; account equity SL / TP</h2>
+<p>An <b>account-level stop</b> that sits above every individual SL: when equity reaches a threshold, the monitor closes <b>everything</b> (all symbols, all magics the filter covers, pending orders included), raises an alert, and then <b>disarms for the rest of the day</b>. It re-arms automatically at the next day rollover. All four thresholds default to <code>0 = off</code>.</p>
+<table>
+  <tr><th>Setting</th><th>What it does</th></tr>
+  <tr><td class="s">Reference</td><td><code>KILL_REF_DAYEQ</code> = equity at the start of the trading day &mdash; a true <b>daily loss cap</b> (prop-firm semantics; realised losses count against it). <code>KILL_REF_BALANCE</code> = live balance &mdash; protects the <b>current batch</b>, the level follows the balance after each close.</td></tr>
+  <tr><td class="s">Day reset hour</td><td>Server time. <code>0</code> = broker midnight. Shift it to match your prop firm's daily reset (broker GMT+3 vs. a CET reset &rarr; <code>2</code>).</td></tr>
+  <tr><td class="s">Equity SL / TP %</td><td>Percent below / above the reference.</td></tr>
+  <tr><td class="s">Equity SL / TP absolute</td><td>Fixed equity marks, independent of the reference.</td></tr>
+</table>
+<p>When it fires, the right zone names the trigger: <code>! KILL SL -2.00% HIT</code> in red, or <code>KILL TP abs HIT</code> in green &mdash; a reached target is not an alarm.</p>
+<div class="safe"><b>Account break-even.</b> Set <span class="k">Equity SL absolute</span> to your current balance. Everything closes the moment equity falls back to it, so the open batch cannot turn into a loss.</div>
+<div class="note"><b>It needs the terminal running.</b> The kill switch checks equity on the refresh timer, so it only works while the monitor is online and connected. It does <b>not</b> replace broker-side stop losses on your positions &mdash; it <b>overlays</b> them as an extra account-level layer. Gaps, slippage or a closed terminal can still pass it. Its state (day anchor, fired flag) is stored in terminal GlobalVariables <code>MATTRIX_PM_&lt;login&gt;_*</code>, so a timeframe switch, recompile or restart can no longer reset your protection by accident.</div>
+
+<h2><span class="n">11</span>Key settings</h2>
 <table>
   <tr><th>Group</th><th>Setting</th><th>Notes</th></tr>
   <tr><td class="s">General</td><td>Magic Number filter</td><td>0 = all positions</td></tr>
@@ -147,9 +160,12 @@
   <tr><td class="s">Display</td><td>Panel X / Y offset</td><td>Position on the chart</td></tr>
   <tr><td class="s">Safety</td><td>Confirmation timeout (sec)</td><td>Window for the 2nd confirm click</td></tr>
   <tr><td class="s">Safety</td><td>CLOSE ALL also cancels pending</td><td>true = clears pending orders too</td></tr>
+  <tr><td class="s">Kill switch</td><td>Reference for the % thresholds</td><td>Day-start equity (default) or balance</td></tr>
+  <tr><td class="s">Kill switch</td><td>Day reset hour (server)</td><td>0 = broker midnight; match your prop firm</td></tr>
+  <tr><td class="s">Kill switch</td><td>Equity SL / TP (% and absolute)</td><td>0 = off; see section 10</td></tr>
 </table>
 
-<h2><span class="n">11</span>Notes &amp; safety</h2>
+<h2><span class="n">12</span>Notes &amp; safety</h2>
 <ul>
   <li><b>Hedging account</b> &mdash; matches AutoQuickTrade, which manages each pyramid layer as its own ticket</li>
   <li><b>Bulk actions are account-wide</b> within the magic filter &mdash; the two-click confirm is your safeguard; read the button before the second click</li>
@@ -159,7 +175,7 @@
 </ul>
 
 <footer>
-  <span>Position Monitor v1.10 (beta) &middot; Quick Manual</span>
+  <span>Position Monitor v1.17 (beta) &middot; Quick Manual</span>
   <span>mattrix8x.com &middot; &copy; Matthias Scholz &middot; IN CHART VERITAS</span>
 </footer>
 
