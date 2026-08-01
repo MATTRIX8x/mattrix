@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.17 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.19 (beta)</div>
   <h1>Position Monitor — Quick Manual</h1>
   <div class="sub">Monitor &amp; protect — your account cockpit. An 8&times;8 currency matrix that reads and bulk-manages every open position across the 28 majors, with an account-level equity kill switch.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -144,6 +144,18 @@
   <tr><td class="s">Equity SL / TP %</td><td>Percent below / above the reference.</td></tr>
   <tr><td class="s">Equity SL / TP absolute</td><td>Fixed equity marks, independent of the reference.</td></tr>
 </table>
+
+<p><b>Which reference? A worked example.</b> Day starts at 100,000 with an Equity SL of 2%:</p>
+<table>
+  <tr><th>Step</th><th><code>KILL_REF_DAYEQ</code></th><th><code>KILL_REF_BALANCE</code></th></tr>
+  <tr><td class="s">Threshold in the morning</td><td>98,000</td><td>98,000</td></tr>
+  <tr><td class="s">You realise &minus;1,500</td><td>stays <b>98,000</b></td><td>balance 98,500 &rarr; threshold <b>96,530</b></td></tr>
+  <tr><td class="s">Further loss still possible</td><td>only &minus;500</td><td>another &minus;1,970</td></tr>
+  <tr><td class="s">Daily loss capped?</td><td><b>Yes</b> &mdash; at 2% for the whole day</td><td><b>No</b> &mdash; each close resets the budget</td></tr>
+</table>
+<p>In short: <b>DAYEQ</b> is a real <b>daily limit</b> &mdash; realised losses count against it and the cap holds all day (this is what prop firms measure). <b>BALANCE</b> protects the <b>current batch</b>: after every close the measurement restarts from where you stand, so the level trails your profits upward &mdash; but it also follows losses down. Use DAYEQ for a funded account, BALANCE when you just want to protect the trades that are open right now.</p>
+
+<p><b>Changing a threshold re-arms it.</b> Editing any kill-switch setting is a deliberate act, so a fired trigger is cleared and the switch goes live again (the day anchor is kept). Simply carrying on trading does <b>not</b> re-arm it &mdash; that is the point of the one-shot design.</p>
 <p>When it fires, the right zone names the trigger: <code>! KILL SL -2.00% HIT</code> in red, or <code>KILL TP abs HIT</code> in green &mdash; a reached target is not an alarm.</p>
 <div class="safe"><b>Account break-even.</b> Set <span class="k">Equity SL absolute</span> to your current balance. Everything closes the moment equity falls back to it, so the open batch cannot turn into a loss.</div>
 <div class="note"><b>It needs the terminal running.</b> The kill switch checks equity on the refresh timer, so it only works while the monitor is online and connected. It does <b>not</b> replace broker-side stop losses on your positions &mdash; it <b>overlays</b> them as an extra account-level layer. Gaps, slippage or a closed terminal can still pass it. Its state (day anchor, fired flag) is stored in terminal GlobalVariables <code>MATTRIX_PM_&lt;login&gt;_*</code>, so a timeframe switch, recompile or restart can no longer reset your protection by accident.</div>
@@ -175,7 +187,7 @@
 </ul>
 
 <footer>
-  <span>Position Monitor v1.17 (beta) &middot; Quick Manual</span>
+  <span>Position Monitor v1.19 (beta) &middot; Quick Manual</span>
   <span>mattrix8x.com &middot; &copy; Matthias Scholz &middot; IN CHART VERITAS</span>
 </footer>
 
