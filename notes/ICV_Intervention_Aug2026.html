@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IN CHART VERITAS &mdash; What the Baskets Saw First</title>
+<style>
+  /* Self-hosted / system stacks only - no external font CDN (DSGVO) */
+  :root{
+    --bg:#0d1117; --panel:#141a22; --line:#232c38;
+    --txt:#d6dde3; --dim:#8a97a3; --gold:#F5B841;
+    --teal:#26A69A; --red:#EF5350; --blue:#5aa9e6;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:32px 16px; background:var(--bg); color:var(--txt);
+    font-family:"Outfit","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.65; font-size:16px;
+  }
+  .wrap{max-width:820px;margin:0 auto}
+  .mono{font-family:"JetBrains Mono","Consolas","DejaVu Sans Mono",monospace}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:30px}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+  h1{margin:.35em 0 .15em;font-size:30px;line-height:1.25;color:var(--gold);font-weight:700}
+  .sub{color:var(--dim);font-size:15px}
+
+  h2{
+    margin:38px 0 12px;font-size:19px;color:var(--txt);font-weight:600;
+    display:flex;align-items:center;gap:10px;
+  }
+  h2 .n{
+    font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--bg);
+    background:var(--gold);border-radius:4px;padding:2px 7px;font-weight:700;
+  }
+  p{margin:0 0 14px}
+  strong{color:#fff}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--teal);
+    border-radius:6px;padding:14px 18px;margin:18px 0;
+  }
+  .card.warn{border-left-color:var(--gold)}
+  .card.red{border-left-color:var(--red)}
+  .card h3{margin:0 0 6px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:600}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  td.k{color:var(--gold);font-family:"JetBrains Mono",monospace;white-space:nowrap}
+  .up{color:var(--teal)} .dn{color:var(--red)} .dim{color:var(--dim)}
+
+  .quote{
+    border-left:3px solid var(--blue);padding:4px 0 4px 16px;margin:18px 0;
+    color:var(--txt);font-size:17px;
+  }
+  .lead{font-size:17.5px;color:#e8eef3}
+
+  figure{margin:22px 0}
+  figure img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px}
+  figcaption{color:var(--dim);font-size:13px;margin-top:8px;line-height:1.5}
+  figcaption b{color:var(--txt)}
+
+  footer{
+    margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+    color:var(--dim);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;
+    justify-content:space-between;align-items:center;
+  }
+  .veritas{color:var(--gold);font-weight:700;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker mono">Market Note &middot; 31 Jul &ndash; 4 Aug 2026</div>
+  <h1>What the Baskets Saw Before the News</h1>
+  <div class="sub">A rare joint yen intervention, an oil-driven CAD slide &mdash; and why the indices <em>didn&rsquo;t</em> do what the textbook says.</div>
+</header>
+
+<p class="lead">Last Friday the Big8 baskets printed something unusual: <strong>every single JPY leg turned up at once</strong>, while CAD went down across the board. No news had broken yet. The story only arrived three days later.</p>
+
+<h2><span class="n mono">1</span>The yen: seven legs, one direction</h2>
+<p>A move in one pair is noise. A move across <strong>all seven legs of a basket</strong> is flow &mdash; somebody large is doing something. That is the whole point of looking at currencies as baskets instead of pairs: you see the actor, not the symptom.</p>
+<p>What the chart showed on 31 July was later confirmed as a <strong>coordinated yen-buying intervention by Japan&rsquo;s Ministry of Finance and the U.S. Treasury</strong> &mdash; the first joint operation of its kind since 1998. The yen had touched a roughly 40-year low near 164 before snapping back hard.</p>
+
+<div class="card">
+  <h3>The detail that mattered</h3>
+  <p style="margin:0">The Treasury reportedly funded part of the operation by <strong>selling euros</strong> to buy yen. That is exactly why the strength showed up simultaneously against EUR <em>and</em> USD &mdash; and why it was visible on the basket long before any headline named it.</p>
+</div>
+
+<figure>
+  <img src="icv_baskets_h6.png" alt="The eight MATTRIX Big8 baskets on H6 - JPY up across all legs, CAD down across all legs">
+  <figcaption><b>The Big8 baskets, H6.</b> JPY is up against every one of its seven legs; CAD is down against every one of its own. That is breadth &mdash; not a single pair moving, but a currency being bought or sold wholesale. Money values removed; pip readings left intact.</figcaption>
+</figure>
+
+<h2><span class="n mono">2</span>The CAD leg: same picture, different cause</h2>
+<p>At the same time CAD was sold across the board. Different driver, same readability: <strong>oil fell sharply</strong> after officials raised hopes of a diplomatic path in the Iran conflict and better flows through the Strait of Hormuz. Oil down &rarr; CAD down. The basket showed the result; the reason came later.</p>
+
+<h2><span class="n mono">3</span>The puzzle: why did the indices rally?</h2>
+<p>Here is where it gets interesting. Textbook says: <strong>yen up &rarr; carry trades unwind &rarr; equities fall.</strong> August 2024 is the scar everyone remembers. This time the Dow and S&amp;P closed at <strong>record highs</strong> instead.</p>
+
+<table>
+  <tr><th>&nbsp;</th><th>August 2024</th><th>August 2026</th></tr>
+  <tr><td class="k">Trigger</td><td>BoJ hike + Fed cut bets</td><td>FX intervention only</td></tr>
+  <tr><td class="k">Rate gap</td><td class="dn">closing</td><td class="up">unchanged</td></tr>
+  <tr><td class="k">Forced unwind</td><td class="dn">yes</td><td class="up">no</td></tr>
+  <tr><td class="k">Yen strength</td><td>persistent</td><td>faded within days</td></tr>
+  <tr><td class="k">Equities</td><td class="dn">crash</td><td class="up">record highs</td></tr>
+</table>
+
+<figure>
+  <img src="icv_indices.png" alt="US30, S&P 500 and Nasdaq 100 pushing to record highs while the JPY basket spikes">
+  <figcaption><b>The control question.</b> Dow, S&amp;P and Nasdaq pressing to record highs (left and bottom) while the JPY basket spikes (top right). In a real carry unwind these two pictures cannot coexist &mdash; which is precisely what made the divergence informative.</figcaption>
+</figure>
+
+<p>An intervention moves the price. It does <strong>not</strong> change the interest-rate differential &mdash; and the differential is what makes a carry trade worth holding. Nobody was forced to deleverage, so nothing broke. Within days the yen had already given most of it back.</p>
+<p>Meanwhile equities had their own fuel: solid manufacturing data, strong corporate guidance, and falling oil on the same Iran headlines that sank CAD.</p>
+
+<div class="card warn">
+  <h3>The read</h3>
+  <p style="margin:0">The divergence wasn&rsquo;t a contradiction &mdash; it was <strong>a diagnosis</strong>. A genuine carry unwind shows yen strength <em>and</em> equity weakness together. Here the yen moved alone. Checking the indices was the right control question, and the answer told you what kind of move you were in.</p>
+</div>
+
+<h2><span class="n mono">4</span>Eagle, not frog</h2>
+<p>The pair trader sees USDJPY drop and wonders what happened to the dollar. The basket trader sees <strong>JPY up against everything</strong> and knows immediately: this is yen-specific, not dollar-specific. Same data, different altitude.</p>
+
+<div class="quote">By the time the headline lands, the move is largely done. You cannot trade the news &mdash; but you can be positioned, patient, and ready when the flow shows up on the chart.</div>
+
+<p>Which is the practical lesson: you don&rsquo;t need to predict an intervention. You need to <strong>recognise breadth when it appears</strong>, wait for spreads to normalise, and let the setup come to you. The calendar tells the eagle where to circle; the baskets tell it when to dive.</p>
+
+<div class="card red">
+  <h3>Honest caveat</h3>
+  <p style="margin:0">This is one episode, not a rule. Breadth is a signal, not a guarantee &mdash; and reading a cause into a chart after the fact is the easiest mistake in this business. The move was tradable because it was <em>broad</em>, not because anyone knew who was buying.</p>
+</div>
+
+<footer>
+  <span class="veritas mono">&#9889; IN CHART VERITAS</span>
+  <span>&copy; Matthias Scholz &middot; mattrix8x.com</span>
+</footer>
+
+</div>
+</body>
+</html>
