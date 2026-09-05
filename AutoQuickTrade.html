@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.57 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.84 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -71,6 +71,7 @@
 <h2><span class="n">02</span>Setup</h2>
 <ul>
   <li><b>Chart symbol decides the mode.</b> Any broker symbol &rarr; <b>PAIR</b> (1 leg). A MATTRIX synthetic chart &rarr; basket: <code>#Big8</code> (7 legs), <code>#RON</code>/<code>#ROFF</code> (8), <code>#FIX</code> (28 — must be enabled with <span class="k">Allow #FIX trade</span>).</li>
+  <li><b>Custom baskets</b> — any other <code>#</code> chart works too, and its members come straight from the <b>symbol description</b> that SyntheticCharts writes (<code>AMD+CSCO+CVX+JNJ+...</code>). Stocks, indices, metals, up to <b>8 legs</b>, and fewer is fine. Nothing to configure: change the synthetic, and the EA follows.</li>
   <li><b>Baskets need the SyntheticCharts EA</b> to have created the <code>#</code> symbols first. AutoQuickTrade trades the <b>real</b> pairs; the <code>#</code> chart is only the host.</li>
   <li><b>Hedging account required</b> — each pyramid layer is its own ticket.</li>
   <li><b>AlgoTrading must be ON</b> (terminal toolbar) for any order to go through.</li>
@@ -101,6 +102,7 @@
   </div>
 </div>
 <p class="lead">A few seconds after load / profile switch the panel re-asserts itself on top, so indicator labels never cover it.</p>
+<p>By default the panel <b>starts collapsed</b> — useful when nine charts share one screen. Click <b>+</b> to open it, <b>&minus;</b> to fold it back to the header line; a pure timeframe change keeps whichever state you left it in. Set <span class="k">Start with the panel collapsed</span> to false for charts you actively trade from.</p>
 
 <h2><span class="n">04</span>Entering trades</h2>
 <p><b>Market:</b> click <span class="pill buy">BUY</span> or <span class="pill sell">SELL</span>. For a basket, every leg opens at once (wide legs may be skipped — see Spread).</p>
@@ -114,10 +116,21 @@
 </ul>
 <div class="safe"><b>Behaviour on touch:</b> if spread is temporarily too wide, the EA keeps retrying (throttled) until it clears — bounded by <span class="k">Pend timeout</span> seconds and the <span class="k">Pend max dist %</span> chase limit. Any other rejection disarms and is logged.</div>
 
+<p><b>Pending SL / TP lines (single-pair charts):</b> arming a pending also places two draggable lines, pre-set to the distance your current settings would produce:</p>
+<ul>
+  <li><b>SL</b> (red dashed) and <b>TP</b> (green dashed), each with a live label: distance in the panel unit, the resulting lot, and the <b>RR</b> ratio.</li>
+  <li>Drag either line and the entry uses <b>exactly that level</b> instead of the calculated one.</li>
+  <li>In <b>Risk % + ATR</b> mode the <b>lot follows the SL distance</b>, so your risk stays constant: drag the stop further out and the lot shrinks. The label updates as you drag.</li>
+  <li><b>Delete the TP line</b> to enter with <b>no take profit</b>. Delete the SL line to fall back to the calculated stop.</li>
+  <li>The lines survive timeframe changes and re-appear on the level you dragged them to.</li>
+</ul>
+<div class="note"><b>The EA refuses to fire on an impossible setup</b> rather than letting the broker reject it: a line on the wrong side of the entry shows <code>! SL WRONG SIDE - trade blocked</code>, and a lot the account cannot margin shows <code>! LOT &gt; MARGIN</code>. The pending stays armed — fix the line (or drag the stop further out to shrink the lot) and it triggers on the next touch. The reason is named in the journal.</div>
+
 <h2><span class="n">05</span>Lot sizing &amp; stops</h2>
 <ul>
   <li><b>Fixed lot</b> (<code>LOT_AUTO</code>): every layer = your lot, or a fixed <code>$ / pip</code>. SL/TP in pips.</li>
   <li><b>Risk % + ATR</b> (<code>LOT_RISK_ATR</code>): each layer is sized to a % of equity with an ATR-based SL and TP = SL &times; reward:risk.</li>
+  <li><b>Custom baskets</b> behave the same way. In <b>Risk % + ATR</b> every member is sized to the <b>same risk</b>, which evens out the volatility difference between, say, a $170 and a $610 stock. With a fixed <code>$ / pip</code> every member gets the <b>same lot</b> instead — that equalises $ per point (index style) but <b>not</b> risk, and the EA says so once in the journal.</li>
 </ul>
 <div class="safe"><b>Units — the spread is your yardstick.</b> The panel labels every distance in the symbol's own unit, and the <b>spread reading is the anchor</b>: whatever unit it shows is exactly the unit your SL / TP / SECURE values use.<br>&bull; <b>Forex &amp; metals</b> &rarr; <code>pips</code> (e.g. EURUSD <code>0.8 pips</code>, Gold <code>1.1 pips</code>).<br>&bull; <b>Indices, crypto, stocks</b> &rarr; <code>pts</code>, where <b>1 pt = one whole price unit</b> (index point / $1): US30 <code>0.7 pts</code>, BTCUSD <code>12 pts</code>. So a SECURE trail of <code>10</code> on US30 is 10 index points; on BTCUSD it is $10. That is why the settings read <span class="k">panel unit</span> rather than "pips". (In <b>Risk % + ATR</b> mode the entry SL/TP are ATR-based and self-scaling anyway; the panel unit governs the manual buttons.)</div>
 
@@ -138,7 +151,24 @@
 <div class="safe"><b>Net P/L &amp; cost model:</b> the panel P/L is <b>net</b> — profit + swap &minus; estimated round-trip commission, learned automatically from your fills per symbol and shown as <code>c:</code>. Set <span class="k">Round-trip commission / lot</span> to override, or leave 0 to auto-learn.</div>
 <div class="note"><b>Offline vs online:</b> SECURE and TP survive offline (real SL / TP orders on the broker). The <b>-25% / -50%</b> partials are manual clicks — online by nature, but their result is permanent. Anything account-wide or trailing stays online-only.</div>
 
-<h2><span class="n">07</span>Pyramiding</h2>
+<h2><span class="n">07</span>Basket exit lines — SET SL / SET TP</h2>
+<p>On a <b>basket chart</b> the panel shows two extra buttons. They place a price level on the synthetic chart that closes <b>every leg of this basket</b> when the basket price crosses it — a basket-level exit that sits above whatever stops the individual legs carry.</p>
+<ul>
+  <li><b>1st click</b> &rarr; the line appears at the current price, button shows <b>DRAG&amp;ARM</b>. Nothing is active yet.</li>
+  <li><b>Drag</b> it wherever you want it — close to price is your call.</li>
+  <li><b>2nd click</b> &rarr; <b>ARMED</b>. The chart label reads <code>SL-ARMED</code> / <code>TP-ARMED</code>.</li>
+  <li><b>3rd click</b> (or deleting the line) removes it.</li>
+</ul>
+<p>Same three-step rhythm as the pending lines: <i>click to place, drag to position, click to arm.</i> An armed line can still be dragged — the side is re-taken, so moving it never triggers it.</p>
+<ul>
+  <li><b>Wrong side is refused:</b> a long basket takes SL below and TP above (short: the other way round). The EA works the direction out from the open legs, or from an armed pending if nothing is open yet, and shows <code>! wrong side for a LONG basket</code> instead of arming.</li>
+  <li><b>Buttons unlock</b> as soon as one leg is open <b>or</b> a pending is armed — so you can prepare the exit before the entry fires. With nothing open and nothing armed they stay greyed out.</li>
+  <li><b>When one fires</b>, all legs close, both lines are cleared and any armed pending is disarmed. If the basket goes flat by other means, the levels clear themselves.</li>
+  <li>The armed state survives a timeframe change, recompile or restart.</li>
+</ul>
+<div class="note"><b>Online only.</b> These levels are watched by the EA, not held at the broker. They need the terminal running with this chart loaded, and they do <b>not</b> replace the stops on your individual legs — they overlay them.</div>
+
+<h2><span class="n">08</span>Pyramiding</h2>
 <p>Adding to a winning trade, on your terms. Same rules whether you click or AUTO does it:</p>
 <ul>
   <li><span class="k">Only add in profit</span> — block adds while the weakest layer is red.</li>
@@ -149,7 +179,7 @@
 <p class="lead">Add purely on your own confirmation regardless of profit? Set <span class="k">Min pips = 0</span> <b>and</b> <span class="k">Only add in profit = false</span>.</p>
 <div class="note"><b>In Risk % + ATR mode:</b> lot, SL and TP scale with volatility, but <span class="k">Min pips</span> and <span class="k">BE buffer</span> stay <b>pip-based</b> — scale them to the instrument like SL/TP (on BTCUSD a 1000-pip add step &asymp; $100).</div>
 
-<h2><span class="n">08</span>AUTO pyramiding — two switches</h2>
+<h2><span class="n">09</span>AUTO pyramiding — two switches</h2>
 <p>AUTO does exactly what a manual add would, automatically. It fires only when <b>both</b> are on:</p>
 <ul>
   <li><b>Level 1 — Settings:</b> <span class="k">Enable AUTO Pyramiding</span> (makes the panel button appear).</li>
@@ -157,7 +187,7 @@
 </ul>
 <div class="safe"><b>Safety reset:</b> AUTO returns to <b>OFF</b> after every restart, profile switch, symbol change and parameter change — you re-arm deliberately. It is preserved only across a pure timeframe change. AUTO is local: it runs only while MT5 and the chart are live.</div>
 
-<h2><span class="n">09</span>Spread filters</h2>
+<h2><span class="n">10</span>Spread filters</h2>
 <table>
   <tr><th>Setting</th><th>Effect</th></tr>
   <tr><td class="s">Max spread per pair</td><td>Skips individual wide legs and opens the rest of the basket.</td></tr>
@@ -165,11 +195,11 @@
 </table>
 <p class="lead">On wide-cross baskets (e.g. <code>#GBP</code>) raise the basket limit or set it to 0, and set the per-pair limit to suit your style.</p>
 
-<h2><span class="n">10</span>Magic number — your separation tool</h2>
+<h2><span class="n">11</span>Magic number — your separation tool</h2>
 <p>AUTO and pending only manage positions whose magic matches <span class="k">Magic Number</span> (default <code>1111</code>). Trades from the panel carry it automatically; manual platform orders carry magic 0 and are ignored. Use the magic to keep discretionary and tool-managed trades apart.</p>
 <div class="note"><b>Not &quot;0 = all&quot;.</b> Unlike the Position Monitor (where a magic filter of <code>0</code> means <b>every</b> position), in AutoQuickTrade the magic is a <b>literal stamp &amp; filter</b>. Each chart manages <b>only its own</b> magic. Setting <span class="k">Magic Number</span> to <code>0</code> therefore manages <b>manual</b> trades (they carry magic 0) &mdash; not the panel's own trades, and not &quot;all&quot;. One panel cannot manage a mixed set (e.g. own <code>1111</code> + manual <code>0</code>) at once &mdash; by design.</div>
 
-<h2><span class="n">11</span>Safety &amp; limits</h2>
+<h2><span class="n">12</span>Safety &amp; limits</h2>
 <ul>
   <li><b>Online-only:</b> AUTO and pending watch in real time — they act only while MT5 + the chart + EA are running with AlgoTrading on.</li>
   <li><b>Kill switch:</b> turn AlgoTrading off, or remove the EA, to stop all activity instantly. CLOSE always works.</li>
@@ -177,7 +207,7 @@
   <li><b>Beta build</b> stops opening new trades after its expiry date (CLOSE stays available).</li>
 </ul>
 
-<h2><span class="n">12</span>Key settings — quick reference</h2>
+<h2><span class="n">13</span>Key settings — quick reference</h2>
 <table>
   <tr><th>Group</th><th>Setting</th><th>Note</th></tr>
   <tr><td class="s">Trade</td><td>Lot size / Target $ per pip</td><td>Fixed-lot mode</td></tr>
@@ -195,11 +225,12 @@
   <tr><td class="s">Protect</td><td>SECURE trail distance behind price (panel unit)</td><td>0 = net break-even</td></tr>
   <tr><td class="s">Protect</td><td>TP distance from current price (panel unit)</td><td>0 = off</td></tr>
   <tr><td class="s">Cost</td><td>Round-trip commission per lot</td><td>0 = auto-learn from fills</td></tr>
+  <tr><td class="s">Display</td><td>Start with the panel collapsed</td><td>Default on — click <b>+</b> to open. Kept across a timeframe change.</td></tr>
 </table>
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.57 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.84 (beta) · Quick Manual</span>
 </footer>
 
 </div>
