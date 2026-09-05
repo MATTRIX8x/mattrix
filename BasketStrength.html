@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATTRIX Basket Strength — Quick Manual</title>
+<style>
+  :root{
+    --bg:#0a1322; --bg2:#0e1a30; --card:#111f39; --line:#1f3358;
+    --ink:#dce6f5; --dim:#8595b3; --cyan:#00ced1; --green:#39b56a;
+    --red:#d8554d; --gold:#caa14a; --amber:#e0922a;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+       font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 22px 64px}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+  .ey{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+  h1{font-family:var(--mono);font-size:23px;margin:6px 0 2px;letter-spacing:.01em}
+  .sub{color:var(--dim);font-size:13px}
+  .motto{font-family:var(--mono);color:var(--cyan);font-size:11px;letter-spacing:.18em;margin-top:8px}
+  h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+     color:var(--cyan);margin:30px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--dim);margin-right:10px}
+  p{margin:0 0 10px}
+  .lead{color:var(--dim)}
+  ul{margin:0 0 10px;padding-left:18px}
+  li{margin:3px 0}
+  b{color:#fff;font-weight:600}
+  code,.k{font-family:var(--mono);font-size:12.5px;color:var(--cyan);
+          background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card h3{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin:0 0 8px;color:#fff;text-transform:uppercase}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;border-radius:4px;
+        padding:1px 7px;margin-right:4px;border:1px solid var(--line)}
+  .buy{color:#bfe9cf;background:#0c3a1f;border-color:#1d6a39}
+  .sell{color:#f0c9c5;background:#3c1411;border-color:#7a2a24}
+  .gold{color:#f0dca8;background:#3a2e0e;border-color:#7a611f}
+  .auto{color:#bfe9cf;background:#10331f;border-color:#2c6a42}
+  .teal{color:#bfe9ee;background:#08222a;border-color:#1d6a6c}
+  table{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  td.s{font-family:var(--mono);color:var(--cyan);white-space:nowrap}
+  .note{border-left:3px solid var(--amber);background:#1c1608;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#e8d6a8}
+  .note b{color:#ffce6e}
+  .safe{border-left:3px solid var(--cyan);background:#08222a;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#bfe9ee}
+  .safe b{color:#7fe7ea}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);
+         font-family:var(--mono);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;color:#111}.card,.note,.safe{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.13</div>
+  <h1>Basket Strength</h1>
+  <div class="sub">Reads one basket at a glance: how far it has moved, how many of its legs agree, and which leg leads.</div>
+  <div class="motto">IN CHART VERITAS</div>
+</header>
+
+<h2><span class="n">01</span>What it is</h2>
+<p class="lead">A panel in the top-right of a MATTRIX synthetic chart. It breaks the basket into its individual legs, sorts them strongest-first, and answers the question a single price chart cannot: <b>is this move broad, or is it one pair doing all the work?</b></p>
+<div class="grid">
+  <div class="card">
+    <h3>Panel</h3>
+    <ul style="padding-left:16px;margin:0">
+      <li>Basket move (big number) + unit</li>
+      <li><b>Coherence</b> — how many legs agree</li>
+      <li>Signal label (CHOPPY &rarr; MIXED &rarr; STRONG &rarr; EXTREME)</li>
+      <li>Every leg with arrow and value, sorted</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>On the chart</h3>
+    <ul style="padding-left:16px;margin:0">
+      <li>CLS lines: entry, SL and TP of the running basket</li>
+      <li>Click any leg name to open that pair&rsquo;s chart</li>
+    </ul>
+  </div>
+</div>
+
+<h2><span class="n">02</span>Setup</h2>
+<ul>
+  <li>Drop it on a <b>MATTRIX synthetic chart</b> (<code>#EUR</code>, <code>#USD</code>, <code>#RON</code>, <code>#MyMag7</code> &hellip;). On a normal broker pair it will report <b>WRONG CHART</b> and stop.</li>
+  <li>The <b>SyntheticCharts EA</b> must have created the <code>#</code> symbols first.</li>
+  <li>Set <span class="k">Broker suffix</span> if your FX symbols carry one (e.g. <code>.a</code>).</li>
+</ul>
+
+<h2><span class="n">03</span>Which baskets it reads</h2>
+<table>
+  <tr><th>Chart</th><th>Legs</th><th>Unit</th></tr>
+  <tr><td class="s">#EUR &hellip; #JPY</td><td>7 pairs</td><td>pips</td></tr>
+  <tr><td class="s">#RON / #ROFF</td><td>8 pairs</td><td>pips</td></tr>
+  <tr><td class="s">Any other # chart</td><td>up to 8 members</td><td>pips or %</td></tr>
+</table>
+<p><b>Custom baskets need no configuration.</b> The members are read from the synthetic symbol&rsquo;s own <b>description</b> — the list SyntheticCharts writes there (<code>AMD+CSCO+CVX+JNJ+&hellip;</code>). Free text in the description is ignored, so a prefix like <code>MyTop8:</code> does no harm. Change the synthetic and the panel follows; there is no list to keep in sync.</p>
+<div class="safe"><b>The unit picks itself.</b> If every member is an FX pair, the panel measures in <b>pips</b> — the familiar behaviour. As soon as one member is not FX (a stock, index or metal), it switches to <b>percent</b>, because a $1 move means something entirely different on a $170 share than on a $610 one. Percent legs are measured against the <b>previous close</b>, the way any quote screen does it, so gaps are counted properly.</div>
+
+<h2><span class="n">04</span>Reading the panel</h2>
+<p><b>The big number</b> is the basket move for the current bar. For a currency basket it is the summed pip move of all legs; for a custom basket it is taken from the synthetic series itself, so it reflects exactly the weighting your basket is built with.</p>
+<p><b>Coherence</b> is the count that matters: <code>6/7</code> means six of seven legs point the same way. It is the difference between a currency being <i>bought across the board</i> and a single cross running away.</p>
+<table>
+  <tr><th>Signal</th><th>Meaning</th></tr>
+  <tr><td class="s">CHOPPY</td><td>Below ~60% agreement — no usable direction.</td></tr>
+  <tr><td class="s">MIXED &#9650;/&#9660;</td><td>Majority agrees, but the basket is not aligned.</td></tr>
+  <tr><td class="s">STRONG &#9650;/&#9660;</td><td>~85% or more of the legs agree — this is breadth.</td></tr>
+  <tr><td class="s">EXTREME &#9650;/&#9660;</td><td>STRONG plus momentum beyond the extreme threshold. Powerful, but also where moves exhaust.</td></tr>
+</table>
+<p><b>The leg list</b> is sorted strongest first, so the leader and the laggard are always at the ends. Click any leg name to open that pair&rsquo;s chart in the timeframe and template you configured.</p>
+<div class="note"><b>Watch for divergence.</b> When the arrow disagrees with the number — the basket is net positive but most legs point down — the move is carried by <b>a few strong crosses</b>, not by breadth. Coherence will show it as a low count. Treat that as a weaker signal, not a trend.</div>
+
+<h2><span class="n">05</span>CLS lines</h2>
+<p>If the MATTRIX EA is running a basket with the same <span class="k">EA Magic Number</span>, the panel draws its <b>entry, stop and target</b> onto the synthetic chart, so you see the running trade in basket terms rather than per pair. Drag a line and the update pauses briefly so it does not fight you.</p>
+
+<h2><span class="n">06</span>Key settings</h2>
+<table>
+  <tr><th>Setting</th><th>Note</th></tr>
+  <tr><td class="s">Broker suffix</td><td>e.g. <code>.a</code> — leave empty if your symbols have none.</td></tr>
+  <tr><td class="s">Momentum lookback / thresholds</td><td>Bars used for the momentum reading, and the levels for STRONG vs EXTREME.</td></tr>
+  <tr><td class="s">Panel X / Y offset</td><td>Position from the top-right corner. Keep Y &ge; 50 so the EA label stays clear.</td></tr>
+  <tr><td class="s">Chart timeframe / template</td><td>Used when you click a leg to open its chart.</td></tr>
+  <tr><td class="s">EA Magic Number</td><td>Must match the EA whose basket you want drawn as CLS lines.</td></tr>
+</table>
+
+<h2><span class="n">07</span>How to use it</h2>
+<ul>
+  <li><b>Pick the basket, not the pair.</b> Compare coherence across your <code>#</code> charts and trade the one with real breadth behind it.</li>
+  <li><b>Confirm, never trigger.</b> The panel tells you <i>how broad</i> a move is. Where and when to act stays a chart decision.</li>
+  <li><b>Watch the extremes.</b> EXTREME means the move is powerful and stretched at the same time — a level to respect in both directions.</li>
+</ul>
+<div class="note"><b>Correlated baskets.</b> Several baskets showing STRONG in the same direction are usually <b>one</b> trade seen from different sides — most FX moves are a dollar move. Breadth is a signal; it is not diversification.</div>
+
+<footer>
+  <span>&copy; Matthias Scholz &middot; mattrix8x.com</span>
+  <span>Basket Strength v1.13 &middot; Quick Manual</span>
+</footer>
+
+</div>
+</body>
+</html>
