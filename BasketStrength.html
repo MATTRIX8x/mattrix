@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.13</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.14</div>
   <h1>Basket Strength</h1>
   <div class="sub">Reads one basket at a glance: how far it has moved, how many of its legs agree, and which leg leads.</div>
   <div class="motto">IN CHART VERITAS</div>
@@ -114,6 +114,8 @@
   <tr><td class="s">EXTREME &#9650;/&#9660;</td><td>STRONG plus momentum beyond the extreme threshold. Powerful, but also where moves exhaust.</td></tr>
 </table>
 <p><b>The leg list</b> is sorted strongest first, so the leader and the laggard are always at the ends. Click any leg name to open that pair&rsquo;s chart in the timeframe and template you configured.</p>
+<div class="safe"><b>Who opens the chart.</b> With <span class="k">Let AutoQuickTrade open the chart</span> on (the default), the click becomes a request and an <b>AutoQuickTrade</b> opens the chart instead. That matters: a chart opened by an EA inherits permission to trade, one opened by an indicator does not. If no AutoQuickTrade answers within three seconds, Basket Strength opens the chart itself and says so &mdash; the chart appears, but the EA on it will not be allowed to trade until you enable it by hand.</div>
+<div class="note"><b>The new chart brings its own settings.</b> Magic number, lot mode, risk and SL/TP on the chart you just opened come from the <b>template</b> named below &mdash; not from the basket chart you clicked on. Nothing is copied across. Keep that template in step with how you want those pair charts to trade, and glance at the panel before you act on a chart that just appeared.</div>
 <div class="note"><b>Watch for divergence.</b> When the arrow disagrees with the number — the basket is net positive but most legs point down — the move is carried by <b>a few strong crosses</b>, not by breadth. Coherence will show it as a low count. Treat that as a weaker signal, not a trend.</div>
 
 <h2><span class="n">05</span>CLS lines</h2>
@@ -125,7 +127,8 @@
   <tr><td class="s">Broker suffix</td><td>e.g. <code>.a</code> — leave empty if your symbols have none.</td></tr>
   <tr><td class="s">Momentum lookback / thresholds</td><td>Bars used for the momentum reading, and the levels for STRONG vs EXTREME.</td></tr>
   <tr><td class="s">Panel X / Y offset</td><td>Position from the top-right corner. Keep Y &ge; 50 so the EA label stays clear.</td></tr>
-  <tr><td class="s">Chart timeframe / template</td><td>Used when you click a leg to open its chart.</td></tr>
+  <tr><td class="s">Chart timeframe / template</td><td>Used when you click a leg to open its chart. The template also decides how that chart trades.</td></tr>
+  <tr><td class="s">Let AutoQuickTrade open the chart</td><td>Default on. Keeps Algo Trading alive on the new chart. Off &rarr; the indicator opens it and the EA there stays blocked.</td></tr>
   <tr><td class="s">EA Magic Number</td><td>Must match the EA whose basket you want drawn as CLS lines.</td></tr>
 </table>
 
@@ -139,7 +142,7 @@
 
 <footer>
   <span>&copy; Matthias Scholz &middot; mattrix8x.com</span>
-  <span>Basket Strength v1.13 &middot; Quick Manual</span>
+  <span>Basket Strength v1.14 &middot; Quick Manual</span>
 </footer>
 
 </div>

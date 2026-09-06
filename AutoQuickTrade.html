@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.84 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.87 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -75,9 +75,12 @@
   <li><b>Baskets need the SyntheticCharts EA</b> to have created the <code>#</code> symbols first. AutoQuickTrade trades the <b>real</b> pairs; the <code>#</code> chart is only the host.</li>
   <li><b>Hedging account required</b> — each pyramid layer is its own ticket.</li>
   <li><b>AlgoTrading must be ON</b> (terminal toolbar) for any order to go through.</li>
+  <li><b>Charts opened from Basket Strength</b> are opened <i>by AutoQuickTrade</i>, so the EA on the new chart inherits permission to trade. That needs three things at once: AlgoTrading on in the terminal, the calling AutoQuickTrade allowed to trade, and a template that contains AutoQuickTrade and was saved with <b>Allow Algo Trading</b> ticked. Miss one and the new chart&rsquo;s EA loads but cannot trade.</li>
 </ul>
 <div class="note"><b>#FIX (28 pairs) — a hot iron.</b> One BUY / SELL / PEND acts on all 28 legs at once. <b>Per-pair</b> settings (pyramiding, AUTO, per-pair spread, anti-hedge) run on each leg on their own; <b>basket</b> settings (basket spread, max trades) apply to the summed 28. Risk multiplies by 28 — 0.1%/layer &asymp; 2.8% across the basket — and up to 5 layers &times; 28 = <b>140 open tickets</b>. Locked by default — <b>use it on a DEMO account, for testing only</b>.</div>
 <div class="note"><b>Netting / exchange accounts:</b> detected on load &rarr; the panel <b>forces pyramiding and AUTO off</b>. (An add on netting merges into the one net position and silently overwrites your SECURE / BE stop.) <b>Single trades, SECURE, TP and partial closes still work correctly</b> &mdash; a red <code>! NETTING - pyramiding OFF</code> notice stays on the panel. For the full basket / pyramiding feature set, <b>use a hedging account</b>. Manual re-adds remain your responsibility.</div>
+
+<div class="note"><b>Settings do not travel between charts.</b> Opening a chart from Basket Strength carries the <b>permission</b> to trade &mdash; it does <b>not</b> carry your settings. Magic number, lot mode, risk, ATR parameters and SL/TP on the new chart come from <b>its template</b>, not from the chart you clicked on. A basket chart running risk-based sizing with magic <code>1112</code> can therefore open a pair chart that trades fixed lots with magic <code>1111</code> &mdash; both are behaving correctly. <b>Check the panel before you trade a freshly opened chart</b>, and keep the template you configure in Basket Strength in step with how you want those charts to trade. The journal records where the chart came from: <code>Opened from #EUR</code>.</div>
 
 <h2><span class="n">03</span>The panel</h2>
 <div class="grid">
@@ -230,7 +233,7 @@
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.84 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.87 (beta) · Quick Manual</span>
 </footer>
 
 </div>
