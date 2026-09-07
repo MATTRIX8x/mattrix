@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.14</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.21</div>
   <h1>Basket Strength</h1>
   <div class="sub">Reads one basket at a glance: how far it has moved, how many of its legs agree, and which leg leads.</div>
   <div class="motto">IN CHART VERITAS</div>
@@ -73,8 +73,9 @@
     <ul style="padding-left:16px;margin:0">
       <li>Basket move (big number) + unit</li>
       <li><b>Coherence</b> — how many legs agree</li>
-      <li>Signal label (CHOPPY &rarr; MIXED &rarr; STRONG &rarr; EXTREME)</li>
+      <li>Signal label (CHOPPY &rarr; MIXED &rarr; STRONG &rarr; EXTREME, or DIVERGENT)</li>
       <li>Every leg with arrow and value, sorted</li>
+      <li>An <b>exposure dot</b> on legs you hold</li>
     </ul>
   </div>
   <div class="card">
@@ -102,6 +103,7 @@
 </table>
 <p><b>Custom baskets need no configuration.</b> The members are read from the synthetic symbol&rsquo;s own <b>description</b> — the list SyntheticCharts writes there (<code>AMD+CSCO+CVX+JNJ+&hellip;</code>). Free text in the description is ignored, so a prefix like <code>MyTop8:</code> does no harm. Change the synthetic and the panel follows; there is no list to keep in sync.</p>
 <div class="safe"><b>The unit picks itself.</b> If every member is an FX pair, the panel measures in <b>pips</b> — the familiar behaviour. As soon as one member is not FX (a stock, index or metal), it switches to <b>percent</b>, because a $1 move means something entirely different on a $170 share than on a $610 one. Percent legs are measured against the <b>previous close</b>, the way any quote screen does it, so gaps are counted properly.</div>
+<p><b>You can override it.</b> <span class="k">Leg values shown in</span> forces <b>pips</b>, <b>points</b> or <b>percent</b> regardless of what the basket holds; the default <b>Auto</b> is the behaviour described above. Points are the natural way to read an index leg — but be aware that a point on an instrument quoted near 44,000 and one quoted near 2,400 are the same number and a very different move, so the basket total will follow whichever member carries the largest figures. For mixed baskets percent stays the honest choice, and forcing pips or points on one is noted in the journal rather than blocked.</p>
 
 <h2><span class="n">04</span>Reading the panel</h2>
 <p><b>The big number</b> is the basket move for the current bar. For a currency basket it is the summed pip move of all legs; for a custom basket it is taken from the synthetic series itself, so it reflects exactly the weighting your basket is built with.</p>
@@ -112,11 +114,13 @@
   <tr><td class="s">MIXED &#9650;/&#9660;</td><td>Majority agrees, but the basket is not aligned.</td></tr>
   <tr><td class="s">STRONG &#9650;/&#9660;</td><td>~85% or more of the legs agree — this is breadth.</td></tr>
   <tr><td class="s">EXTREME &#9650;/&#9660;</td><td>STRONG plus momentum beyond the extreme threshold. Powerful, but also where moves exhaust.</td></tr>
+  <tr><td class="s">DIVERGENT</td><td>The total points one way, the majority of legs the other. Replaces whatever the reading would otherwise have been — including STRONG and EXTREME. Shown without an arrow, because there is no single direction to point at.</td></tr>
 </table>
+<p><b>The exposure dot</b> to the right of each value shows where you are actually positioned. <b>Filled</b> means a position carrying your <span class="k">EA Magic Number</span>, <b>hollow</b> means someone else's magic on the same symbol — a manual trade, or another EA. Green is floating profit, red floating loss, grey means too close to zero to say: commission is not readable from an open position, so a sign that small would be a guess. Legs you do not hold show nothing.</p>
 <p><b>The leg list</b> is sorted strongest first, so the leader and the laggard are always at the ends. Click any leg name to open that pair&rsquo;s chart in the timeframe and template you configured.</p>
 <div class="safe"><b>Who opens the chart.</b> With <span class="k">Let AutoQuickTrade open the chart</span> on (the default), the click becomes a request and an <b>AutoQuickTrade</b> opens the chart instead. That matters: a chart opened by an EA inherits permission to trade, one opened by an indicator does not. If no AutoQuickTrade answers within three seconds, Basket Strength opens the chart itself and says so &mdash; the chart appears, but the EA on it will not be allowed to trade until you enable it by hand.</div>
 <div class="note"><b>The new chart brings its own settings.</b> Magic number, lot mode, risk and SL/TP on the chart you just opened come from the <b>template</b> named below &mdash; not from the basket chart you clicked on. Nothing is copied across. Keep that template in step with how you want those pair charts to trade, and glance at the panel before you act on a chart that just appeared.</div>
-<div class="note"><b>Watch for divergence.</b> When the arrow disagrees with the number — the basket is net positive but most legs point down — the move is carried by <b>a few strong crosses</b>, not by breadth. Coherence will show it as a low count. Treat that as a weaker signal, not a trend.</div>
+<div class="note"><b>DIVERGENT is the warning worth knowing.</b> It appears when the big number and the leg majority disagree — the basket is net positive while most legs point down, or the reverse. The move is then carried by <b>a few strong crosses</b> rather than by breadth, which is the weakest kind of basket move and the easiest to misread from the total alone. Read the leg list: the two or three outliers doing the work are usually the actual trade, and the basket is not. Treat it as a reason to look closer, never as a direction.</div>
 
 <h2><span class="n">05</span>CLS lines</h2>
 <p>If the MATTRIX EA is running a basket with the same <span class="k">EA Magic Number</span>, the panel draws its <b>entry, stop and target</b> onto the synthetic chart, so you see the running trade in basket terms rather than per pair. Drag a line and the update pauses briefly so it does not fight you.</p>
@@ -125,6 +129,7 @@
 <table>
   <tr><th>Setting</th><th>Note</th></tr>
   <tr><td class="s">Broker suffix</td><td>e.g. <code>.a</code> — leave empty if your symbols have none.</td></tr>
+  <tr><td class="s">Leg values shown in</td><td>Auto / pips / points / percent. Auto picks pips for an all-FX basket, percent otherwise.</td></tr>
   <tr><td class="s">Momentum lookback / thresholds</td><td>Bars used for the momentum reading, and the levels for STRONG vs EXTREME.</td></tr>
   <tr><td class="s">Panel X / Y offset</td><td>Position from the top-right corner. Keep Y &ge; 50 so the EA label stays clear.</td></tr>
   <tr><td class="s">Chart timeframe / template</td><td>Used when you click a leg to open its chart. The template also decides how that chart trades.</td></tr>
@@ -142,7 +147,7 @@
 
 <footer>
   <span>&copy; Matthias Scholz &middot; mattrix8x.com</span>
-  <span>Basket Strength v1.14 &middot; Quick Manual</span>
+  <span>Basket Strength v1.21 &middot; Quick Manual</span>
 </footer>
 
 </div>

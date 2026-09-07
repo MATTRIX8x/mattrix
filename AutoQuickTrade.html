@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.87 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.88 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -121,12 +121,14 @@
 
 <p><b>Pending SL / TP lines (single-pair charts):</b> arming a pending also places two draggable lines, pre-set to the distance your current settings would produce:</p>
 <ul>
-  <li><b>SL</b> (red dashed) and <b>TP</b> (green dashed), each with a live label: distance in the panel unit, the resulting lot, and the <b>RR</b> ratio.</li>
+  <li><b>SL</b> (red dashed) and <b>TP</b> (green dashed), each with a live label: distance in the panel unit, the resulting lot, the <b>RR</b> ratio, and what the level is worth in <b>money</b> — amount in account currency plus the share of your balance, e.g. <code>-19.16 USD (-0.19 %)</code>.</li>
+  <li>The labels are right-aligned and end at the current candle, so they stay readable however long they get.</li>
   <li>Drag either line and the entry uses <b>exactly that level</b> instead of the calculated one.</li>
   <li>In <b>Risk % + ATR</b> mode the <b>lot follows the SL distance</b>, so your risk stays constant: drag the stop further out and the lot shrinks. The label updates as you drag.</li>
   <li><b>Delete the TP line</b> to enter with <b>no take profit</b>. Delete the SL line to fall back to the calculated stop.</li>
   <li>The lines survive timeframe changes and re-appear on the level you dragged them to.</li>
 </ul>
+<div class="safe"><b>About those amounts.</b> They are calculated with the broker's own contract size and currency conversion, not estimated — and they are <b>net</b>: the round-trip commission is subtracted, which makes the loss at the stop bigger and the gain at the target smaller. One caveat: the figure assumes a fill at the line you drew. For market execution it holds; for a pending in a fast market it is a close estimate, not a promise.</div>
 <div class="note"><b>The EA refuses to fire on an impossible setup</b> rather than letting the broker reject it: a line on the wrong side of the entry shows <code>! SL WRONG SIDE - trade blocked</code>, and a lot the account cannot margin shows <code>! LOT &gt; MARGIN</code>. The pending stays armed — fix the line (or drag the stop further out to shrink the lot) and it triggers on the next touch. The reason is named in the journal.</div>
 
 <h2><span class="n">05</span>Lot sizing &amp; stops</h2>
@@ -233,7 +235,7 @@
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.87 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.88 (beta) · Quick Manual</span>
 </footer>
 
 </div>
