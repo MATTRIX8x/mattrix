@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATTRIX Cockpit &mdash; Quick Manual</title>
+<style>
+  :root{
+    --bg:#0a1322; --bg2:#0e1a30; --card:#111f39; --line:#1f3358;
+    --ink:#dce6f5; --dim:#8595b3; --cyan:#00ced1; --green:#39b56a;
+    --red:#d8554d; --gold:#caa14a; --amber:#e0922a;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+       font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 22px 64px}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+  .ey{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+  h1{font-family:var(--mono);font-size:23px;margin:6px 0 2px;letter-spacing:.01em}
+  .sub{color:var(--dim);font-size:13px}
+  .motto{font-family:var(--mono);color:var(--cyan);font-size:11px;letter-spacing:.18em;margin-top:8px}
+  h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+     color:var(--cyan);margin:30px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--dim);margin-right:10px}
+  p{margin:0 0 10px}
+  .lead{color:var(--dim)}
+  ul{margin:0 0 10px;padding-left:18px}
+  li{margin:3px 0}
+  b{color:#fff;font-weight:600}
+  code,.k{font-family:var(--mono);font-size:12.5px;color:var(--cyan);
+          background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card h3{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin:0 0 8px;color:#fff;text-transform:uppercase}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;border-radius:4px;
+        padding:1px 7px;margin-right:4px;border:1px solid var(--line)}
+  .buy{color:#bfe9cf;background:#0c3a1f;border-color:#1d6a39}
+  .sell{color:#f0c9c5;background:#3c1411;border-color:#7a2a24}
+  .gold{color:#f0dca8;background:#3a2e0e;border-color:#7a611f}
+  .auto{color:#bfe9cf;background:#10331f;border-color:#2c6a42}
+  .teal{color:#bfe9ee;background:#08222a;border-color:#1d6a6c}
+  table{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  td.s{font-family:var(--mono);color:var(--cyan);white-space:nowrap}
+  .note{border-left:3px solid var(--amber);background:#1c1608;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#e8d6a8}
+  .note b{color:#ffce6e}
+  .safe{border-left:3px solid var(--cyan);background:#08222a;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#bfe9ee}
+  .safe b{color:#7fe7ea}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);
+         font-family:var(--mono);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;color:#111}.card,.note,.safe{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.33</div>
+  <h1>Cockpit</h1>
+  <div class="sub">Where price sits, what the timeframes say, and whether the two agree &mdash; on one screen, on any symbol.</div>
+  <div class="motto">IN CHART VERITAS</div>
+</header>
+
+<h2><span class="n">01</span>What it is</h2>
+<p class="lead">A context layer, not a signal generator. It draws the range of a window you choose, tells you how the timeframes above you are leaning, and marks how favourably price sits between the two. Every reading describes the <b>situation</b>; where and when to act stays a chart decision.</p>
+
+<h2><span class="n">02</span>The range window</h2>
+<p>A candle count means something different on every timeframe &mdash; 70 candles are six hours on M5 and a quarter of a year on D1. The window can therefore follow the calendar instead.</p>
+<table>
+  <tr><th>Setting</th><th>Window</th></tr>
+  <tr><td class="s">Auto</td><td>By chart timeframe: up to M15 the current day, up to H4 the current week, up to D1 the current month. Above D1 the fixed count applies.</td></tr>
+  <tr><td class="s">Today / This week / This month</td><td>You set the anchor.</td></tr>
+  <tr><td class="s">Fixed bar count</td><td>The classic behaviour.</td></tr>
+</table>
+<p>Monday morning and the first of the month hold too few candles for a meaningful range, so whole previous periods are added until the minimum is reached. The tag beside the countdown shows what you are actually looking at: <code>M2D+2 49</code> means month-to-date plus two earlier months, 49 candles in total.</p>
+<p>Within the window, the upper and lower <b>zones</b> mark the top and bottom slice of the range. They are drawn from candle bodies by default, so wicks stand out as rejections rather than defining the edge.</p>
+
+<h2><span class="n">03</span>The three lines, bottom right</h2>
+<p><b>Countdown</b> to the close of the current candle, with the window tag beside it.</p>
+<p><b>BIAS</b> as one Long/Short number, weighted across four timeframes. Each contributes according to how far price stands from its EMA50, measured in ATR &mdash; a market clinging to its average counts for less than one standing well clear of it. Flat timeframes pull the value toward neutral rather than faking conviction.</p>
+<p><b>RR</b> gives the reward-to-risk of going long or short from here to the opposite edge of the range. Sitting on an edge drives one leg to zero, so the ratio is capped at 10:1 and marked <code>(at edge)</code>; outside the range it reads <code>outside range (breakout)</code>.</p>
+
+<h2><span class="n">04</span>The timeframe column</h2>
+<p>M1 through MN, each showing <code>UP</code>, <code>DN</code> or <code>~</code>. The rule is strict on purpose: <b>UP</b> needs price above the EMA50 <i>and</i> that EMA rising. One condition alone gives <code>~</code>. A single timeframe reading <code>DN</code> inside an otherwise rising column is not a contradiction &mdash; it is a correction on that scale.</p>
+<p>D1, W1 and MN also show their performance from the previous close to the current bid.</p>
+
+<h2><span class="n">05</span>The barometer</h2>
+<p>The bar beside those three rows answers the question the other readings leave open: <b>is this a good place to join?</b> It multiplies the bias direction by how favourably price sits inside the window.</p>
+<ul>
+  <li>Long bias with price <b>low</b> in the range &rarr; long cyan bar. A pullback in an uptrend &mdash; what a trend trader waits for.</li>
+  <li>Short bias with price <b>high</b> in the range &rarr; long amber bar, growing downward.</li>
+  <li>The same bias with price at the <b>far</b> end &rarr; almost nothing. The trend is confirmed but you are late.</li>
+</ul>
+<div class="safe"><b>Direction is readable without colour.</b> The fill grows upward for long and downward for short, from a marked centre. Cyan and amber were chosen over the usual green and red because they stay distinguishable with red-green colour deficiency.</div>
+<div class="note"><b>It needs Bias mode = Auto</b>, which is the default. In the fixed modes the bias comes from a set of timeframes that has nothing to do with the chart window, and mixing the two would produce a number whose meaning changes silently. The bar then stays grey. It also greys when the D1 move contradicts the bias &mdash; show the disagreement, do not hide it.</div>
+
+<h2><span class="n">06</span>Profile &mdash; POC and value area</h2>
+<p>Off by default. The range box shows where the <i>extremes</i> were; the profile shows where the market actually spent itself. <b>POC</b> is the busiest price band, <b>VAH</b> and <b>VAL</b> enclose 70 percent of the profile.</p>
+<p><b>TPO</b> counts how many candles touched each band and needs no volume at all. <b>Volume</b> uses tick volume, which on FX and CFDs counts price changes rather than traded size.</p>
+<div class="note"><b>On synthetic charts use TPO.</b> On real symbols the two land in nearly the same place, which is what you would expect. On MATTRIX synthetic symbols they diverge systematically &mdash; the tick count there is a by-product of how the symbol is built, not a measure of market activity.</div>
+
+<h2><span class="n">07</span>Alerts</h2>
+<p>A close entering a zone, leaving a zone, or leaving the range entirely. The <b>setup</b> alert is off by default: it fires only when a zone entry agrees with the bias.</p>
+
+<h2><span class="n">08</span>Notes</h2>
+<ul>
+  <li>The left edge of the window <b>jumps</b> when a previous period is added. Fine as a description of the situation; not a level to hang a stop on.</li>
+  <li>All four bias inputs are the same method on different timeframes. In a trend they move together, so a reading of 0 or 100 is one signal counted four times, not four confirmations.</li>
+  <li>The community build is a time-limited beta; the marketplace build has no expiry.</li>
+  <li>Educational / analysis tool &mdash; not financial advice.</li>
+</ul>
+
+<footer>
+  <span>&copy; Matthias Scholz &middot; <a href="https://mattrix8x.com" style="color:inherit">mattrix8x.com</a></span>
+  <span>Cockpit v1.33 &middot; Quick Manual</span>
+</footer>
+
+</div>
+</body>
+</html>
