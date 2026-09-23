@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATTRIX Basket Viewer &mdash; Quick Manual</title>
+<style>
+  :root{
+    --bg:#0a1322; --bg2:#0e1a30; --card:#111f39; --line:#1f3358;
+    --ink:#dce6f5; --dim:#8595b3; --cyan:#00ced1; --green:#39b56a;
+    --red:#d8554d; --gold:#caa14a; --amber:#e0922a;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+       font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 22px 64px}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+  .ey{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+  h1{font-family:var(--mono);font-size:23px;margin:6px 0 2px;letter-spacing:.01em}
+  .sub{color:var(--dim);font-size:13px}
+  .motto{font-family:var(--mono);color:var(--cyan);font-size:11px;letter-spacing:.18em;margin-top:8px}
+  h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+     color:var(--cyan);margin:30px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--dim);margin-right:10px}
+  p{margin:0 0 10px}
+  .lead{color:var(--dim)}
+  ul{margin:0 0 10px;padding-left:18px}
+  li{margin:3px 0}
+  b{color:#fff;font-weight:600}
+  code,.k{font-family:var(--mono);font-size:12.5px;color:var(--cyan);
+          background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card h3{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin:0 0 8px;color:#fff;text-transform:uppercase}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;border-radius:4px;
+        padding:1px 7px;margin-right:4px;border:1px solid var(--line)}
+  .buy{color:#bfe9cf;background:#0c3a1f;border-color:#1d6a39}
+  .sell{color:#f0c9c5;background:#3c1411;border-color:#7a2a24}
+  .gold{color:#f0dca8;background:#3a2e0e;border-color:#7a611f}
+  .auto{color:#bfe9cf;background:#10331f;border-color:#2c6a42}
+  .teal{color:#bfe9ee;background:#08222a;border-color:#1d6a6c}
+  table{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:13px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+  td.s{font-family:var(--mono);color:var(--cyan);white-space:nowrap}
+  .note{border-left:3px solid var(--amber);background:#1c1608;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#e8d6a8}
+  .note b{color:#ffce6e}
+  .safe{border-left:3px solid var(--cyan);background:#08222a;padding:9px 13px;border-radius:0 6px 6px 0;margin:10px 0;color:#bfe9ee}
+  .safe b{color:#7fe7ea}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:14px;color:var(--dim);
+         font-family:var(--mono);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;color:#111}.card,.note,.safe{break-inside:avoid}}
+</style>
+<style>
+  .lead-s{color:#0e1a30;background:#ebf5fa;border-color:#ebf5fa}
+  .end-s{color:#dcf0f5;background:#20304a;border-color:#3b5578}
+  .past-s{color:#8595b3;background:#0e1a30;border-color:#1f3358}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.11</div>
+  <h1>Basket Viewer &mdash; Quick Manual</h1>
+  <div class="sub">Eight synthetic currency baskets as real charts, plus a live dashboard that ranks them by strength and coherence &mdash; per day, week, month, year or trading session.</div>
+  <div class="motto">IN CHART VERITAS &#9889;</div>
+</header>
+
+<h2><span class="n">01</span>What it is</h2>
+<p>The Basket Viewer builds the eight currency baskets <span class="k">#EUR</span> <span class="k">#GBP</span> <span class="k">#AUD</span> <span class="k">#NZD</span> <span class="k">#USD</span> <span class="k">#CAD</span> <span class="k">#CHF</span> <span class="k">#JPY</span> as <b>custom symbols</b> from the 28 major pairs and keeps them updated live. Next to them it draws a <b>dashboard</b> that shows how each currency is moving right now.</p>
+<p class="lead">It reads prices only &mdash; it does not open, modify or close trades.</p>
+
+<h2><span class="n">02</span>Synthetic basket charts</h2>
+<div class="grid">
+  <div class="card">
+    <h3>How a basket is built</h3>
+    <p>Each basket is the <b>geometric mean</b> of the currency's seven pairs (exponent 1/7), inverted where the currency is the quote. The symbols are created in <span class="k">Symbol group path</span> (default <code>Custom\FX</code>).</p>
+  </div>
+  <div class="card">
+    <h3>History &amp; live data</h3>
+    <p>On start the history is built from <b>M1</b> data (<span class="k">Days of M1 history</span>, 30 = light, 90 = full). After that the current bar is written every <span class="k">n seconds</span>.</p>
+  </div>
+</div>
+<div class="safe"><b>Works alongside MATTRIX SyntheticCharts.</b> Both tools use the same symbol names. A shared write lock makes sure only one of them writes; if the SyntheticCharts EA is running it takes over, and the Viewer's dashboard keeps working as a pure reader.</div>
+
+<h2><span class="n">03</span>The dashboard</h2>
+<p>One row per basket, <b>sorted</b> from strongest to weakest by <b>pip sum &times; coherence ratio</b> for the selected reference period (section 06).</p>
+<ul>
+  <li><b>Basket button</b> &mdash; opens (or focuses) that basket's chart on <span class="k">Chart timeframe when opening</span>, with your <span class="k">Chart template</span> if set</li>
+  <li><b>Value columns</b> &mdash; up to four periods, freely chosen (section 04); green = up, red = down, grey = within &plusmn;0.5</li>
+  <li><b>Coh(x)</b> &mdash; how many of the seven pairs agree on the direction, e.g. <code>7/7</code>. Green / red = 6 or 7 agree, yellow = mixed, dim red = choppy. The letter shows the reference period</li>
+  <li><b>Dir</b> &mdash; majority direction &#9650; / &#9660;</li>
+</ul>
+
+<h2><span class="n">04</span>Columns &amp; sessions</h2>
+<p><span class="k">Column 1</span> &hellip; <span class="k">Column 4</span> each take one period; <code>OFF</code> slots are skipped, the panel width adapts. Columns keep their order &mdash; they never move around during the day.</p>
+<table>
+  <tr><th>Header</th><th>Period</th></tr>
+  <tr><td class="s">YTD</td><td>Year to date &mdash; from the first bar of the year</td></tr>
+  <tr><td class="s">MTD / WTD / DAY</td><td>The current month / week / day bar of your broker</td></tr>
+  <tr><td class="s">TYO / LON / NYC</td><td>Tokyo, London, New York session, each <b>08:00&ndash;17:00 local time</b> of that city, daylight saving included</td></tr>
+</table>
+<p><b>Session highlighting</b> &mdash; header and column background show where you are in the trading day:</p>
+<p>
+  <span class="pill lead-s">NYC</span> open, and continues (alone, or it ends last in an overlap) &nbsp;
+  <span class="pill end-s">LON</span> open, ends within the current overlap &nbsp;
+  <span class="pill past-s">TYO</span> not open
+</p>
+<div class="note"><b>The star means &quot;last trading day&quot;, not &quot;yesterday&quot;.</b> A session column is never empty: if the session has not yet run on the current trading day, it shows the last completed one, marked <code>*</code> (e.g. <code>NYC*</code>). The trading day rolls at <b>17:00 New York</b>, so after the NY close all three sessions carry a star until Tokyo opens &mdash; and on Monday morning <code>NYC*</code> is Friday's session.</div>
+
+<h2><span class="n">05</span>Reading the numbers</h2>
+<ul>
+  <li><b>Pip sum per basket</b> &mdash; a basket value is the sum of the pip moves of its seven pairs over the period, each counted in the currency's direction. It is not the move of any single instrument</li>
+  <li><b>JPY pairs</b> are counted in 0.01 pips, all others in 0.0001 &mdash; so every pair contributes on the same pip scale</li>
+  <li><b>DAY &ne; TYO.</b> The day bar starts at the broker's midnight (with the usual GMT+2/+3 servers: 17:00 New York), Tokyo two hours later. DAY therefore also contains the thin rollover hours before Tokyo</li>
+  <li><b>DAY &ne; TYO + LON + NYC.</b> Session overlaps count twice in the session columns, and the hours before Tokyo are in none of them</li>
+</ul>
+
+<h2><span class="n">06</span>Reference period &amp; AUTO</h2>
+<p><span class="k">Reference period for ranking and coherence</span> drives the sort order, <code>Coh(x)</code>, Top Pairs and the snapshot. Choose any of the seven periods, or <code>AUTO</code>.</p>
+<p><b>AUTO</b> ranks by the open session that <b>started first</b>. It switches to a new session only when the previous one has closed &mdash; so the ranking never rests on the first few minutes of a fresh session. With no session open it uses the last New York session (<code>NYC*</code>).</p>
+<table>
+  <tr><th>UTC (summer)</th><th>Brightest column</th><th>AUTO ranks by</th></tr>
+  <tr><td class="s">23:00&ndash;07:00</td><td>TYO</td><td>TYO</td></tr>
+  <tr><td class="s">07:00&ndash;08:00</td><td>LON</td><td>TYO</td></tr>
+  <tr><td class="s">08:00&ndash;12:00</td><td>LON</td><td>LON</td></tr>
+  <tr><td class="s">12:00&ndash;16:00</td><td>NYC</td><td>LON</td></tr>
+  <tr><td class="s">16:00&ndash;21:00</td><td>NYC</td><td>NYC</td></tr>
+  <tr><td class="s">21:00&ndash;23:00</td><td>none</td><td>NYC*</td></tr>
+</table>
+<div class="note"><b>The ranking jumps when a session closes.</b> At that moment AUTO changes its reference, and the row order can change in one step. That is intended, not a glitch. During overlaps the highlighted column and the ranking session differ on purpose: the highlight shows what continues, the ranking uses the session with the most data.</div>
+
+<h2><span class="n">07</span>Top Pairs</h2>
+<p>The three best-scored pairs from all strong/weak combinations: <b>70 % basket spread + 30 % combined coherence</b>. Click a pair to open its chart.</p>
+<div class="note"><b>The value is a basket spread, not the pair's pips.</b> <code>EURAUD SELL (+186)</code> means the AUD basket is 186 pips of sum ahead of the EUR basket &mdash; EURAUD itself has not moved 186 pips.</div>
+
+<h2><span class="n">08</span>Snapshot &amp; export</h2>
+<p>With <span class="k">Show snapshot text on chart</span> enabled, a text block to the right of the dashboard summarises the reference period: strongest and weakest currency, best pair, and a line with the <b>session hours of the current trading day</b> in server time, coloured like the columns:</p>
+<p><code>TYO 02-11&nbsp;&nbsp;&nbsp;LON 10-19&nbsp;&nbsp;&nbsp;NYC 15-00</code></p>
+<p class="lead">In the weeks when London and New York change their clocks on different dates, these hours shift against each other &mdash; the line shows it.</p>
+<p>Clicking the <b>top basket</b> also writes two text files to the terminal's <code>MQL5\Files</code> folder: <code>MATTRIX_Snapshot_en.txt</code> (chart and comment text) and <code>MATTRIX_Snapshot_de.txt</code> (short German version for messengers).</p>
+
+<h2><span class="n">09</span>Server time</h2>
+<p>Session windows are defined in <b>UTC</b> and converted to your broker's server time. The Viewer measures the server offset itself. If your broker follows the common <b>New York close</b> convention (GMT+2 winter / GMT+3 summer), it recognises this and applies the correct offset to past sessions as well, even across a daylight-saving weekend. The journal reports the result on start, e.g. <code>Server time GMT+3.0 (NY-close convention, DST-aware)</code>.</p>
+<div class="safe"><b>Keep your PC clock right.</b> The measurement compares server time with your computer's UTC time. A clock off by a few minutes is tolerated; a wrong time zone setting on the PC is not.</div>
+
+<h2><span class="n">10</span>Key settings</h2>
+<table>
+  <tr><th>Group</th><th>Setting</th><th>Notes</th></tr>
+  <tr><td class="s">Chart</td><td>Days of M1 history</td><td>30 = light, 90 = full</td></tr>
+  <tr><td class="s">Chart</td><td>Symbol group path</td><td>Where the basket symbols are created</td></tr>
+  <tr><td class="s">Chart</td><td>Chart timeframe / template</td><td>Used when a basket or pair chart is opened</td></tr>
+  <tr><td class="s">Chart</td><td>Delete custom symbols when EA removed</td><td>Default off; never deletes while SyntheticCharts owns them</td></tr>
+  <tr><td class="s">Columns</td><td>Column 1&ndash;4</td><td>Default DAY / TYO / LON / NYC</td></tr>
+  <tr><td class="s">Columns</td><td>Reference period</td><td>Default AUTO; see section 06</td></tr>
+  <tr><td class="s">Position</td><td>Dashboard X / Y</td><td>Position on the chart</td></tr>
+  <tr><td class="s">Position</td><td>Show snapshot text</td><td>Also enables the export on click</td></tr>
+  <tr><td class="s">Live write</td><td>Write ticks only</td><td>Recommended</td></tr>
+  <tr><td class="s">Live write</td><td>Write every n seconds</td><td>Minimum 1</td></tr>
+</table>
+
+<h2><span class="n">11</span>Notes</h2>
+<ul>
+  <li><b>All 28 major pairs</b> must be available at your broker</li>
+  <li>Attach it to any major pair chart, e.g. EURUSD</li>
+  <li><b>Tick volume on the basket charts is not meaningful</b> &mdash; it does not measure the market. For profile tools on <code>#</code> charts use time-based (TPO) modes</li>
+  <li>Session hours follow the common forex convention (08:00&ndash;17:00 local), not the opening hours of the stock exchanges</li>
+  <li>Educational / analysis tool &mdash; not financial advice</li>
+</ul>
+
+<footer>
+  <span>Basket Viewer v1.11 &middot; Quick Manual</span>
+  <span>mattrix8x.com &middot; &copy; Matthias Scholz &middot; IN CHART VERITAS</span>
+</footer>
+
+</div>
+</body>
+</html>
