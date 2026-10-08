@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.88 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.93 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -70,7 +70,7 @@
 
 <h2><span class="n">02</span>Setup</h2>
 <ul>
-  <li><b>Chart symbol decides the mode.</b> Any broker symbol &rarr; <b>PAIR</b> (1 leg). A MATTRIX synthetic chart &rarr; basket: <code>#Big8</code> (7 legs), <code>#RON</code>/<code>#ROFF</code> (8), <code>#FIX</code> (28 — must be enabled with <span class="k">Allow #FIX trade</span>).</li>
+  <li><b>Chart symbol decides the mode.</b> Any broker symbol &rarr; <b>PAIR</b> (1 leg). A MATTRIX synthetic chart &rarr; basket: <code>#Big8</code> (7 legs), <code>#RON</code>/<code>#ROFF</code> (8), <code>#RONm</code>/<code>#ROFFm</code> (4 &mdash; the half baskets, handled like any custom basket below), <code>#FIX</code> (28 — must be enabled with <span class="k">Allow #FIX trade</span>).</li>
   <li><b>Custom baskets</b> — any other <code>#</code> chart works too, and its members come straight from the <b>symbol description</b> that SyntheticCharts writes (<code>AMD+CSCO+CVX+JNJ+...</code>). Stocks, indices, metals, up to <b>8 legs</b>, and fewer is fine. Nothing to configure: change the synthetic, and the EA follows.</li>
   <li><b>Baskets need the SyntheticCharts EA</b> to have created the <code>#</code> symbols first. AutoQuickTrade trades the <b>real</b> pairs; the <code>#</code> chart is only the host.</li>
   <li><b>Hedging account required</b> — each pyramid layer is its own ticket.</li>
@@ -135,6 +135,7 @@
 <ul>
   <li><b>Fixed lot</b> (<code>LOT_AUTO</code>): every layer = your lot, or a fixed <code>$ / pip</code>. SL/TP in pips.</li>
   <li><b>Risk % + ATR</b> (<code>LOT_RISK_ATR</code>): each layer is sized to a % of equity with an ATR-based SL and TP = SL &times; reward:risk.</li>
+  <li><b>$ per 1% move</b> (<code>LOT_DOLLAR_PCT</code>): each layer is sized so that a 1% price move is worth <span class="k">$/PCT: money per 1% move</span>; SL and TP are set in <b>percent of price</b> (<span class="k">stop distance in %</span>, <span class="k">target distance in %</span>, 0 = off). This is <code>$ / pip</code> for instruments whose points do not compare: one point on an index near 44,000 and one near 2,400 are the same number but a very different move &mdash; one percent is not. Sizing and stops share the same unit on purpose. With <span class="k">money per 1% move</span> = 0 the fixed lot is used.</li>
   <li><b>Custom baskets</b> behave the same way. In <b>Risk % + ATR</b> every member is sized to the <b>same risk</b>, which evens out the volatility difference between, say, a $170 and a $610 stock. With a fixed <code>$ / pip</code> every member gets the <b>same lot</b> instead — that equalises $ per point (index style) but <b>not</b> risk, and the EA says so once in the journal.</li>
 </ul>
 <div class="safe"><b>Units — the spread is your yardstick.</b> The panel labels every distance in the symbol's own unit, and the <b>spread reading is the anchor</b>: whatever unit it shows is exactly the unit your SL / TP / SECURE values use.<br>&bull; <b>Forex &amp; metals</b> &rarr; <code>pips</code> (e.g. EURUSD <code>0.8 pips</code>, Gold <code>1.1 pips</code>).<br>&bull; <b>Indices, crypto, stocks</b> &rarr; <code>pts</code>, where <b>1 pt = one whole price unit</b> (index point / $1): US30 <code>0.7 pts</code>, BTCUSD <code>12 pts</code>. So a SECURE trail of <code>10</code> on US30 is 10 index points; on BTCUSD it is $10. That is why the settings read <span class="k">panel unit</span> rather than "pips". (In <b>Risk % + ATR</b> mode the entry SL/TP are ATR-based and self-scaling anyway; the panel unit governs the manual buttons.)</div>
@@ -144,7 +145,7 @@
 <div class="grid">
   <div class="card">
     <h3>SECURE — break-even &amp; trail</h3>
-    <p><span class="k">Secure distance = 0</span> &rarr; locks the stack's <b>net break-even</b> (entry &plusmn; round-trip cost + buffer) once it is profitable enough. <span class="k">&gt; 0</span> &rarr; <b>trails</b> that many pips behind the current price, but <b>never looser than break-even</b> — BE is a floor under the trail. <b>Tighten-only</b>; re-click to trail up.</p>
+    <p><span class="k">Secure distance = 0</span> &rarr; locks the stack's <b>net break-even</b> (entry &plusmn; round-trip cost + <span class="k">SECURE net-BE buffer</span>, default 3 panel units) once it is profitable enough. <span class="k">&gt; 0</span> &rarr; <b>trails</b> that many pips behind the current price, but <b>never looser than break-even</b> — BE is a floor under the trail. <b>Tighten-only</b>; re-click to trail up.</p>
     <p>Live: <b style="color:#39b56a">PROTECTED</b> (every leg has a stop) &middot; <b style="color:#d8554d">NAKED: n</b> (n legs unprotected).</p>
   </div>
   <div class="card">
@@ -209,7 +210,8 @@
   <li><b>Online-only:</b> AUTO and pending watch in real time — they act only while MT5 + the chart + EA are running with AlgoTrading on.</li>
   <li><b>Kill switch:</b> turn AlgoTrading off, or remove the EA, to stop all activity instantly. CLOSE always works.</li>
   <li><b>Baskets are correlated:</b> #FIX = 28 legs in one direction is the extreme case — size accordingly.</li>
-  <li><b>Beta build</b> stops opening new trades after its expiry date (CLOSE stays available).</li>
+  <li><b>Strategy Tester:</b> in the MT5 tester the panel cannot be clicked, so the EA runs a simple Donchian breakout demo instead (<span class="k">Donchian lookback</span>, default 20 bars) to show the order handling. It has no meaning outside the tester and never runs on a live or demo chart.</li>
+  <li><b>Beta build:</b> AutoQuickTrade is still in beta, and a beta build may carry an expiry date. After it, the EA opens no new trades &mdash; BUY, SELL, PEND and AUTO are blocked and an armed pending is cancelled &mdash; while CLOSE, SECURE, TP and partial closes stay available, so open positions can always be managed. The header tooltip shows the date of your build; a newer build replaces it.</li>
 </ul>
 
 <h2><span class="n">13</span>Key settings — quick reference</h2>
@@ -220,22 +222,25 @@
   <tr><td class="s">Trade</td><td>Magic Number</td><td>Separation key (1111)</td></tr>
   <tr><td class="s">Trade</td><td>Max spread per pair / per basket</td><td>Skip leg / reject basket</td></tr>
   <tr><td class="s">Trade</td><td>Anti-Hedge, Max positions, Allow #FIX</td><td>Guards</td></tr>
-  <tr><td class="s">Lot mode</td><td>Lot sizing mode</td><td>Fixed lot · Risk % + ATR</td></tr>
+  <tr><td class="s">Lot mode</td><td>Lot sizing mode</td><td>Fixed lot · Risk % + ATR · $ per 1% move</td></tr>
   <tr><td class="s">Lot mode</td><td>Risk %, ATR period / TF / SL mult / RR</td><td>RISK_ATR only</td></tr>
+  <tr><td class="s">Lot mode</td><td>Money per 1% move, stop / target distance in %</td><td>$/PCT only, 0 = off</td></tr>
   <tr><td class="s">Pyramiding</td><td>Enable, Only in profit, Min pips, Move to BE, BE buffer</td><td>Apply to manual &amp; AUTO</td></tr>
   <tr><td class="s">Auto-pyr</td><td>Enable AUTO Pyramiding</td><td>Level 1 switch</td></tr>
   <tr><td class="s">Auto-pyr</td><td>Max layers, Cooldown (sec)</td><td>Automation guards</td></tr>
   <tr><td class="s">Pending</td><td>Pend timeout (sec)</td><td>Retry window, 0 = until filled/cancelled</td></tr>
   <tr><td class="s">Pending</td><td>Pend max dist (%)</td><td>Chase limit, 0 = off</td></tr>
   <tr><td class="s">Protect</td><td>SECURE trail distance behind price (panel unit)</td><td>0 = net break-even</td></tr>
+  <tr><td class="s">Protect</td><td>SECURE net-BE buffer (panel unit)</td><td>Locked above cost break-even (3)</td></tr>
   <tr><td class="s">Protect</td><td>TP distance from current price (panel unit)</td><td>0 = off</td></tr>
   <tr><td class="s">Cost</td><td>Round-trip commission per lot</td><td>0 = auto-learn from fills</td></tr>
   <tr><td class="s">Display</td><td>Start with the panel collapsed</td><td>Default on — click <b>+</b> to open. Kept across a timeframe change.</td></tr>
+  <tr><td class="s">Tester</td><td>Donchian lookback (bars)</td><td>Strategy Tester demo only (20)</td></tr>
 </table>
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.88 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.93 (beta) · Quick Manual</span>
 </footer>
 
 </div>
