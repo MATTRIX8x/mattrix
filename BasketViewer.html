@@ -64,7 +64,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.12</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.13</div>
   <h1>Basket Viewer &mdash; Quick Manual</h1>
   <div class="sub">Eight synthetic currency baskets as real charts, plus a live dashboard that ranks them by strength and coherence &mdash; per day, week, month, year or trading session.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -91,13 +91,14 @@
 <p>One row per basket, <b>sorted</b> from strongest to weakest by <b>pip sum &times; coherence ratio</b> for the selected reference period (section 06).</p>
 <ul>
   <li><b>Basket button</b> &mdash; opens (or focuses) that basket's chart on <span class="k">Chart timeframe when opening</span>, with your <span class="k">Chart template</span> if set</li>
-  <li><b>Value columns</b> &mdash; up to four periods, freely chosen (section 04); green = up, red = down, grey = within &plusmn;0.5</li>
+  <li><b>Value columns</b> &mdash; up to four periods, freely chosen (section 04); green = up, red = down, grey = within &plusmn;0.5. A value that rounds to zero shows <code>0</code>, without a sign</li>
   <li><b>Coh(x)</b> &mdash; how many of the seven pairs agree on the direction, e.g. <code>7/7</code>. Green / red = 6 or 7 agree, yellow = mixed, dim red = choppy. The letter shows the reference period</li>
   <li><b>Dir</b> &mdash; majority direction &#9650; / &#9660;</li>
 </ul>
 
 <h2><span class="n">04</span>Columns &amp; sessions</h2>
-<p><span class="k">Column 1</span> &hellip; <span class="k">Column 4</span> each take one period; <code>OFF</code> slots are skipped, the panel width adapts. Columns keep their order &mdash; they never move around during the day.</p>
+<p><span class="k">Column 1</span> &hellip; <span class="k">Column 4</span> each take one period; <code>OFF</code> slots are skipped, the panel width adapts.</p>
+<p><b>Session columns follow the clock.</b> With <span class="k">Session column order</span> on <code>Chronological</code> (default) the session columns are sorted by the start of the session they show &mdash; the most recent one on the right. The table then reads left to right like the trading day: once Tokyo has opened it shows <code>LON* NYC* TYO</code> &mdash; yesterday&rsquo;s London and New York, then today&rsquo;s Tokyo &mdash; instead of putting the fresh Tokyo session in front of them. The order therefore changes during the day; <code>YTD</code>, <code>MTD</code>, <code>WTD</code> and <code>DAY</code> keep their slot. <code>Fixed</code> keeps the order of the column inputs, as before v1.13.</p>
 <table>
   <tr><th>Header</th><th>Period</th></tr>
   <tr><td class="s">YTD</td><td>Year to date &mdash; from the first bar of the year</td></tr>
@@ -156,6 +157,7 @@
   <tr><td class="s">Chart</td><td>Chart timeframe / template</td><td>Used when a basket or pair chart is opened</td></tr>
   <tr><td class="s">Chart</td><td>Delete custom symbols when EA removed</td><td>Default off; never deletes while SyntheticCharts owns them</td></tr>
   <tr><td class="s">Columns</td><td>Column 1&ndash;4</td><td>Default DAY / TYO / LON / NYC</td></tr>
+  <tr><td class="s">Columns</td><td>Session column order</td><td>Chronological (default) or Fixed; see section 04</td></tr>
   <tr><td class="s">Columns</td><td>Reference period</td><td>Default AUTO; see section 06</td></tr>
   <tr><td class="s">Position</td><td>Dashboard X / Y</td><td>Position on the chart</td></tr>
   <tr><td class="s">Position</td><td>Show snapshot text</td><td>Also enables the export on click</td></tr>
@@ -173,7 +175,7 @@
 </ul>
 
 <footer>
-  <span>Basket Viewer v1.12 &middot; Quick Manual</span>
+  <span>Basket Viewer v1.13 &middot; Quick Manual</span>
   <span>mattrix8x.com &middot; &copy; Matthias Scholz &middot; IN CHART VERITAS</span>
 </footer>
 
