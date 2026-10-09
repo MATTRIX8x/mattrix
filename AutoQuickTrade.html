@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.93 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.94 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -129,13 +129,14 @@
   <li>The lines survive timeframe changes and re-appear on the level you dragged them to.</li>
 </ul>
 <div class="safe"><b>About those amounts.</b> They are calculated with the broker's own contract size and currency conversion, not estimated — and they are <b>net</b>: the round-trip commission is subtracted, which makes the loss at the stop bigger and the gain at the target smaller. One caveat: the figure assumes a fill at the line you drew. For market execution it holds; for a pending in a fast market it is a close estimate, not a promise.</div>
-<div class="note"><b>The EA refuses to fire on an impossible setup</b> rather than letting the broker reject it: a line on the wrong side of the entry shows <code>! SL WRONG SIDE - trade blocked</code>, and a lot the account cannot margin shows <code>! LOT &gt; MARGIN</code>. The pending stays armed — fix the line (or drag the stop further out to shrink the lot) and it triggers on the next touch. The reason is named in the journal.</div>
+<div class="note"><b>The EA refuses to fire on an impossible setup</b> rather than letting the broker reject it: a line on the wrong side of the entry shows <code>! SL WRONG SIDE - trade blocked</code>, and a lot the account cannot margin shows <code>! LOT &gt; MARGIN</code>, and a lot above the broker's maximum per order shows <code>! LOT &gt; MAX</code>. The pending stays armed — fix the line (or drag the stop further out to shrink the lot) and it triggers on the next touch. The reason is named in the journal.</div>
 
 <h2><span class="n">05</span>Lot sizing &amp; stops</h2>
 <ul>
   <li><b>Fixed lot</b> (<code>LOT_AUTO</code>): every layer = your lot, or a fixed <code>$ / pip</code>. SL/TP in pips.</li>
   <li><b>Risk % + ATR</b> (<code>LOT_RISK_ATR</code>): each layer is sized to a % of equity with an ATR-based SL and TP = SL &times; reward:risk.</li>
   <li><b>$ per 1% move</b> (<code>LOT_DOLLAR_PCT</code>): each layer is sized so that a 1% price move is worth <span class="k">$/PCT: money per 1% move</span>; SL and TP are set in <b>percent of price</b> (<span class="k">stop distance in %</span>, <span class="k">target distance in %</span>, 0 = off). This is <code>$ / pip</code> for instruments whose points do not compare: one point on an index near 44,000 and one near 2,400 are the same number but a very different move &mdash; one percent is not. Sizing and stops share the same unit on purpose. With <span class="k">money per 1% move</span> = 0 the fixed lot is used.</li>
+  <li><b>Broker maximum per order.</b> Every broker caps the lot of a single order (e.g. 10 ETH, 100 SOL, 1,000 XRP lots). If the calculated lot is above that cap, AutoQuickTrade <b>refuses</b> BUY, SELL and pending fills rather than sending a smaller lot &mdash; a silently smaller lot would be a silently smaller risk. The panel shows <b>! LOT &gt; MAX</b>, and the journal names the symbol, the lot needed and the maximum. On a basket, one leg above the cap blocks the whole basket. Lower the amount (<code>$/PCT</code> or <code>$ / pip</code>) or use another lot mode; on load the journal also states the highest amount per 1% the maximum allows.</li>
   <li><b>Custom baskets</b> behave the same way. In <b>Risk % + ATR</b> every member is sized to the <b>same risk</b>, which evens out the volatility difference between, say, a $170 and a $610 stock. With a fixed <code>$ / pip</code> every member gets the <b>same lot</b> instead — that equalises $ per point (index style) but <b>not</b> risk, and the EA says so once in the journal.</li>
 </ul>
 <div class="safe"><b>Units — the spread is your yardstick.</b> The panel labels every distance in the symbol's own unit, and the <b>spread reading is the anchor</b>: whatever unit it shows is exactly the unit your SL / TP / SECURE values use.<br>&bull; <b>Forex &amp; metals</b> &rarr; <code>pips</code> (e.g. EURUSD <code>0.8 pips</code>, Gold <code>1.1 pips</code>).<br>&bull; <b>Indices, crypto, stocks</b> &rarr; <code>pts</code>, where <b>1 pt = one whole price unit</b> (index point / $1): US30 <code>0.7 pts</code>, BTCUSD <code>12 pts</code>. So a SECURE trail of <code>10</code> on US30 is 10 index points; on BTCUSD it is $10. That is why the settings read <span class="k">panel unit</span> rather than "pips". (In <b>Risk % + ATR</b> mode the entry SL/TP are ATR-based and self-scaling anyway; the panel unit governs the manual buttons.)</div>
@@ -240,7 +241,7 @@
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.93 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v1.94 (beta) · Quick Manual</span>
 </footer>
 
 </div>
