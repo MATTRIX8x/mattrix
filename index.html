@@ -3,426 +3,426 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MATTRIX 8x — Decision Follows Structure</title>
+<title>MATTRIX 8x | Decision Follows Structure</title>
+<meta name="description" content="Currency-strength tools for MetaTrader 5 and TradingView. Eight currency baskets, 28 pairs, one sum: zero.">
 <style>
-  /* Self-hosted fonts — no external requests (DSGVO compliant) */
-  @font-face {
-    font-family: 'JetBrains Mono';
-    src: url('fonts/JetBrainsMono-Regular.woff2') format('woff2');
-    font-weight: 400; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'JetBrains Mono';
-    src: url('fonts/JetBrainsMono-Medium.woff2') format('woff2');
-    font-weight: 500; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'JetBrains Mono';
-    src: url('fonts/JetBrainsMono-Bold.woff2') format('woff2');
-    font-weight: 700; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'Outfit';
-    src: url('fonts/outfit-v15-latin-300.woff2') format('woff2');
-    font-weight: 300; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'Outfit';
-    src: url('fonts/outfit-v15-latin-regular.woff2') format('woff2');
-    font-weight: 400; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'Outfit';
-    src: url('fonts/outfit-v15-latin-500.woff2') format('woff2');
-    font-weight: 500; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'Outfit';
-    src: url('fonts/outfit-v15-latin-600.woff2') format('woff2');
-    font-weight: 600; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'Outfit';
-    src: url('fonts/outfit-v15-latin-700.woff2') format('woff2');
-    font-weight: 700; font-style: normal; font-display: swap;
-  }
+  /* Self-hosted fonts, no external requests (DSGVO) */
+  @font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Regular.woff2') format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Medium.woff2') format('woff2'); font-weight:500; font-style:normal; font-display:swap; }
+  @font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Bold.woff2') format('woff2'); font-weight:700; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Outfit'; src:url('fonts/outfit-v15-latin-300.woff2') format('woff2'); font-weight:300; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Outfit'; src:url('fonts/outfit-v15-latin-regular.woff2') format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Outfit'; src:url('fonts/outfit-v15-latin-500.woff2') format('woff2'); font-weight:500; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Outfit'; src:url('fonts/outfit-v15-latin-600.woff2') format('woff2'); font-weight:600; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Outfit'; src:url('fonts/outfit-v15-latin-700.woff2') format('woff2'); font-weight:700; font-style:normal; font-display:swap; }
 
   :root {
-    --bg-deep: #060911;
-    --bg-main: #0a0d1a;
-    --bg-card: #111628;
-    --bg-card-hover: #161d35;
-    --cyan: #00ced1;
-    --cyan-dim: #008c91;
-    --cyan-glow: rgba(0,206,209,0.12);
-    --green: #00ff7f;
-    --text: #b8c0d4;
-    --text-bright: #e4e8f2;
-    --text-dim: #505878;
-    --border: #1e2744;
+    --bg-deep:#060911;
+    --bg-main:#0a0d1a;
+    --bg-card:#111628;
+    --cyan:#00ced1;
+    --cyan-dim:#008c91;
+    --orange:#ff9f43;          /* negative side, colour-blind safe vs. cyan */
+    --text:#b8c0d4;
+    --text-bright:#e4e8f2;
+    --text-dim:#6b7394;
+    --border:#1e2744;
+    --mono:'JetBrains Mono', ui-monospace, Consolas, monospace;
+    --sans:'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--sans); font-weight:400; background:var(--bg-deep); color:var(--text); line-height:1.6; font-size:17px; }
+  a { color:var(--cyan); }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline:2px solid var(--cyan); outline-offset:3px; border-radius:2px; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+  section { padding:72px 0; border-top:1px solid var(--border); }
+  h2 { font-size:1.75rem; font-weight:600; color:var(--text-bright); line-height:1.25; margin-bottom:12px; }
+  h3 { font-size:1.1rem; font-weight:600; color:var(--text-bright); }
+  .lead { max-width:62ch; color:var(--text); }
+  .dim { color:var(--text-dim); }
 
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--bg-deep);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  /* ─── Top bar ─── */
+  .top { display:flex; justify-content:space-between; align-items:center; padding:22px 0; }
+  .wordmark { font-family:var(--mono); font-weight:700; font-size:1.05rem; letter-spacing:4px; color:var(--cyan); text-decoration:none; }
+  .top nav a { color:var(--text); text-decoration:none; margin-left:22px; font-size:0.95rem; }
+  .top nav a:hover { color:var(--text-bright); }
 
   /* ─── Hero ─── */
-  .hero {
-    width: 100%;
-    text-align: center;
-    padding: 60px 20px 50px;
-    position: relative;
-    overflow: hidden;
-    background: radial-gradient(ellipse at 50% 0%, rgba(0,206,209,0.06) 0%, transparent 60%);
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 500px; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  }
+  .hero { display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center; padding:56px 0 88px; }
+  .hero h1 { font-size:clamp(2.4rem, 5.2vw, 3.8rem); font-weight:700; line-height:1.05; color:var(--text-bright); letter-spacing:-0.5px; }
+  .hero .sub { margin-top:22px; font-size:1.15rem; max-width:44ch; }
+  .actions { margin-top:32px; display:flex; flex-wrap:wrap; gap:12px; }
+  .btn { display:inline-block; padding:12px 22px; border-radius:4px; font-weight:600; text-decoration:none; font-size:0.98rem; }
+  .btn.primary { background:var(--cyan); color:#04121a; }
+  .btn.primary:hover { background:#29e0e3; }
+  .btn.ghost { border:1px solid var(--border); color:var(--text-bright); }
+  .btn.ghost:hover { border-color:var(--cyan-dim); }
 
-  .logo-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 3em;
-    font-weight: 700;
-    color: var(--cyan);
-    letter-spacing: 8px;
-    text-transform: uppercase;
-  }
-  .logo-sub {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85em;
-    color: var(--text-dim);
-    letter-spacing: 4px;
-    margin-top: 4px;
-  }
-  .tagline {
-    font-size: 1.15em;
-    color: var(--text);
-    margin-top: 20px;
-    font-weight: 300;
-    letter-spacing: 0.5px;
-  }
-  .tagline em {
-    color: var(--cyan);
-    font-style: normal;
-    font-weight: 500;
-  }
+  /* Secret of Zero board */
+  .board { font-family:var(--mono); background:var(--bg-main); border:1px solid var(--border); border-radius:6px; padding:22px 22px 16px; }
+  .row { display:grid; grid-template-columns:40px 1fr 1fr 58px; align-items:center; height:30px; font-size:0.85rem; }
+  .row .cur { color:var(--text-bright); font-weight:500; }
+  .row .neg, .row .pos { height:12px; position:relative; }
+  .row .neg { border-right:1px solid var(--text-dim); }
+  .row .neg i, .row .pos i { position:absolute; top:0; height:100%; display:block; transform-origin:inherit; animation:grow .9s cubic-bezier(.2,.7,.2,1) both; }
+  .row .neg i { right:0; background:var(--orange); transform-origin:right; }
+  .row .pos i { left:0; background:var(--cyan); transform-origin:left; }
+  .row .val { text-align:right; color:var(--text); }
+  .sum { display:grid; grid-template-columns:40px 1fr 58px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:0.9rem; }
+  .sum b { color:var(--cyan); font-size:1.15rem; text-align:right; grid-column:3; }
+  .sum span { grid-column:1 / 3; color:var(--text-bright); }
+  .board figcaption { margin-top:12px; font-family:var(--sans); font-size:0.8rem; color:var(--text-dim); }
+  @keyframes grow { from { transform:scaleX(0); } to { transform:scaleX(1); } }
 
-  .badge-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 22px;
-    flex-wrap: wrap;
-  }
-  .badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72em;
-    padding: 4px 14px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--text-dim);
-    letter-spacing: 1.5px;
-  }
-  .badge.mt5 { border-color: var(--cyan-dim); color: var(--cyan-dim); }
+  /* ─── How it works ─── */
+  .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; margin-top:36px; }
+  .steps div { border-left:2px solid var(--cyan-dim); padding-left:18px; }
+  .steps p { margin-top:8px; font-size:0.97rem; }
+  .steps .n { font-family:var(--mono); color:var(--cyan); font-size:0.9rem; }
 
-  /* ─── Cards Grid ─── */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    max-width: 920px;
-    width: 100%;
-    padding: 0 20px;
-    margin-top: -10px;
-  }
+  /* ─── Highlight: AQT ─── */
+  .aqt { display:grid; grid-template-columns:1fr 1fr; gap:48px; background:linear-gradient(180deg, rgba(0,206,209,0.05), transparent 70%); border:1px solid var(--cyan-dim); border-radius:6px; padding:40px; }
+  .status { display:inline-block; font-family:var(--mono); font-size:0.8rem; color:var(--cyan); border:1px solid var(--cyan-dim); padding:3px 9px; border-radius:3px; margin-bottom:16px; }
+  .aqt ul { list-style:none; }
+  .aqt li { padding:10px 0; border-bottom:1px solid var(--border); font-size:0.97rem; }
+  .aqt li:last-child { border-bottom:0; }
+  .aqt li strong { color:var(--text-bright); font-weight:600; }
 
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 28px 24px;
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--cyan);
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
-  .card:hover {
-    background: var(--bg-card-hover);
-    border-color: var(--cyan-dim);
-    transform: translateY(-2px);
-  }
-  .card:hover::before { opacity: 1; }
+  /* ─── Tools ─── */
+  .groups { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:36px; }
+  .group h3 { font-size:0.95rem; color:var(--cyan); font-weight:600; padding-bottom:10px; border-bottom:1px solid var(--border); }
+  .group .gdesc { font-size:0.88rem; color:var(--text-dim); margin:8px 0 6px; }
+  .tool { padding:16px 0; border-bottom:1px solid var(--border); }
+  .tool .name { display:flex; justify-content:space-between; align-items:baseline; gap:8px; color:var(--text-bright); font-weight:600; }
+  .tag { font-family:var(--mono); font-size:0.72rem; color:var(--cyan); border:1px solid var(--cyan-dim); padding:1px 6px; border-radius:3px; white-space:nowrap; font-weight:400; }
+  .tag.beta { color:var(--orange); border-color:#8a5a2b; }
+  .tool p { font-size:0.92rem; margin-top:4px; }
+  .tool .links { margin-top:6px; font-size:0.88rem; }
+  .tool .links a { text-decoration:none; margin-right:14px; }
+  .tool .links a:hover { text-decoration:underline; }
 
-  .card-icon {
-    font-size: 1.8em;
-    margin-bottom: 2px;
-  }
-  .card-title {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--text-bright);
-  }
-  .card-desc {
-    font-size: 0.88em;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-  .card-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7em;
-    color: var(--cyan-dim);
-    letter-spacing: 1px;
-    margin-top: auto;
-    padding-top: 8px;
-  }
+  /* ─── Platforms ─── */
+  .platforms { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:32px; }
+  .platforms p { margin-top:8px; font-size:0.97rem; }
 
-  /* ─── Currencies Strip ─── */
-  .currencies {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 40px 0 10px;
-    padding: 0 20px;
-  }
-  .cur {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78em;
-    padding: 5px 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--cyan);
-    letter-spacing: 1px;
-  }
+  /* ─── Research ─── */
+  .findings { margin-top:28px; display:grid; gap:0; }
+  .finding { display:grid; grid-template-columns:90px 1fr; gap:20px; padding:18px 0; border-bottom:1px solid var(--border); }
+  .finding .fig { font-family:var(--mono); font-size:1.5rem; font-weight:700; color:var(--cyan); }
+  .finding p { font-size:0.97rem; }
+  .finding strong { color:var(--text-bright); font-weight:600; }
+  .note { margin-top:18px; font-size:0.85rem; color:var(--text-dim); max-width:70ch; }
 
-  /* ─── Quote ─── */
-  .quote {
-    text-align: center;
-    padding: 40px 20px;
-    max-width: 600px;
-  }
-  .quote p {
-    font-size: 1.2em;
-    font-weight: 300;
-    color: var(--text-dim);
-    font-style: italic;
-    letter-spacing: 0.5px;
-  }
-  .quote span {
-    color: var(--cyan);
-    font-style: normal;
-    font-weight: 500;
-  }
+  /* ─── Community ─── */
+  .community { display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:center; }
 
-  /* ─── Footer ─── */
-  footer {
-    text-align: center;
-    padding: 30px 20px 40px;
-    color: var(--text-dim);
-    font-size: 0.78em;
-    border-top: 1px solid var(--border);
-    width: 100%;
-    max-width: 920px;
-    margin-top: 20px;
-  }
-  footer .copy { color: var(--cyan-dim); }
-  footer .disclaimer {
-    margin-top: 12px;
-    font-size: 0.92em;
-    line-height: 1.6;
-    color: #404868;
-  }
+  /* ─── FAQ ─── */
+  details { border-bottom:1px solid var(--border); padding:16px 0; max-width:760px; }
+  summary { cursor:pointer; color:var(--text-bright); font-weight:500; list-style:none; display:flex; justify-content:space-between; gap:16px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:'+'; font-family:var(--mono); color:var(--cyan); }
+  details[open] summary::after { content:'−'; }
+  details p { margin-top:10px; font-size:0.95rem; max-width:68ch; }
 
-  /* ─── Mobile ─── */
-  @media (max-width: 640px) {
-    .logo-text { font-size: 2em; letter-spacing: 4px; }
-    .cards { grid-template-columns: 1fr; }
-    .hero { padding: 40px 16px 35px; }
+  /* ─── Quote + footer ─── */
+  .quote { text-align:center; padding:64px 0; border-top:1px solid var(--border); }
+  .quote p { font-size:1.3rem; color:var(--text-bright); font-weight:300; }
+  .quote .sig { margin-top:10px; font-family:var(--mono); font-size:0.85rem; color:var(--cyan); letter-spacing:3px; }
+  footer { border-top:1px solid var(--border); padding:32px 0 48px; font-size:0.85rem; color:var(--text-dim); }
+  footer .cols { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  footer a { color:var(--cyan-dim); text-decoration:none; }
+  footer a:hover { color:var(--cyan); }
+  footer .disclaimer { margin-top:20px; max-width:80ch; font-size:0.8rem; line-height:1.55; }
+  .sep { color:#303858; margin:0 8px; }
+
+  @media (max-width:860px) {
+    .hero, .aqt, .platforms, .community { grid-template-columns:1fr; gap:32px; }
+    .steps, .groups { grid-template-columns:1fr; }
+    .aqt { padding:26px; }
+    .top nav a:not(.keep) { display:none; }
+    section { padding:56px 0; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    html { scroll-behavior:auto; }
+    .row .neg i, .row .pos i { animation:none; }
   }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="logo-text">MATTRIX 8x</div>
-  <div class="logo-sub">Forex Basket Trading System</div>
-  <div class="tagline">Buy the strong. Sell the weak. <em>Trade the best pair.</em></div>
-  <div class="badge-row">
-    <span class="badge mt5">METATRADER 5</span>
-    <span class="badge">v2.02b26 BETA</span>
-    <span class="badge">EXPIRES 2026.07.31</span>
-  </div>
-  <div class="badge-row" style="margin-top:8px;">
-    <span class="badge" style="border-color:#555; color:#666;">TESTER</span>
-    <span class="badge" style="border-color:var(--cyan-dim); color:var(--cyan-dim);">→</span>
-    <span class="badge" style="border-color:#cc0; color:#cc0;">ALPHA</span>
-    <span class="badge" style="border-color:var(--cyan-dim); color:var(--cyan-dim);">→</span>
-    <span class="badge" style="border-color:var(--green); color:var(--green);">PRO</span>
-  </div>
-</div>
+<div class="wrap">
+  <header class="top">
+    <a class="wordmark" href="#">MATTRIX 8x</a>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#tools">Tools</a>
+      <a href="#faq">FAQ</a>
+      <a class="keep" href="#community">Community</a>
+    </nav>
+  </header>
 
-<div class="currencies">
-  <span class="cur">EUR</span>
-  <span class="cur">GBP</span>
-  <span class="cur">AUD</span>
-  <span class="cur">NZD</span>
-  <span class="cur">USD</span>
-  <span class="cur">CAD</span>
-  <span class="cur">CHF</span>
-  <span class="cur">JPY</span>
-</div>
-
-<div class="cards">
-
-  <a class="card" href="https://discord.gg/PchWNuPVNN" target="_blank">
-    <div class="card-icon">💬</div>
-    <div class="card-title">Discord Community</div>
-    <div class="card-desc">Join Forex Basket Traders (F.B.T) — scores, discussions, support, and live analysis.</div>
-    <div class="card-tag">COMMUNITY → JOIN SERVER</div>
-  </a>
-
-  <a class="card" href="Manual.html">
-    <div class="card-icon">📖</div>
-    <div class="card-title">User Manual</div>
-    <div class="card-desc">Complete guide: installation, dashboard, settings, manual & auto trading, risk management.</div>
-    <div class="card-tag">DOCUMENTATION → READ</div>
-  </a>
-
-  <a class="card" href="changelog.html">
-    <div class="card-icon">📋</div>
-    <div class="card-title">Changelog</div>
-    <div class="card-desc">Version history, new features, bug fixes, and what's coming next.</div>
-    <div class="card-tag">UPDATES → v2.01b23</div>
-  </a>
-
-  <a class="card" href="https://discord.gg/PchWNuPVNN" target="_blank">
-    <div class="card-icon">🐛</div>
-    <div class="card-title">Report a Bug</div>
-    <div class="card-desc">Found an issue? Post in #bug-reports with a screenshot of the Experts tab.</div>
-    <div class="card-tag">DISCORD → #BUG-REPORTS</div>
-  </a>
-
-  <a class="card" href="https://discord.gg/PchWNuPVNN" target="_blank">
-    <div class="card-icon">❓</div>
-    <div class="card-title">FAQ</div>
-    <div class="card-desc">Frequently asked questions about scoring, trading, COT data, and system setup.</div>
-    <div class="card-tag">DISCORD → #QUESTIONS-AND-ANSWERS</div>
-  </a>
-
-  <a class="card" href="https://discord.gg/PchWNuPVNN" target="_blank">
-    <div class="card-icon">📊</div>
-    <div class="card-title">Daily Scores</div>
-    <div class="card-desc">Current MATTRIX scores, analysis, and trade setups shared by the community.</div>
-    <div class="card-tag">DISCORD → #DAILY-SCORES</div>
-  </a>
-
-</div>
-
-<!-- ═══ RESEARCH TEASER ═══ -->
-<div style="max-width:860px;width:100%;padding:0 20px;margin:48px 0 0;">
-  <div style="text-align:center;margin-bottom:28px;">
-    <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--cyan);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;">Market Research · 520 Days Backtested</div>
-    <div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">Five Discoveries That <span style="color:var(--cyan);">Change Everything</span></div>
-    <div style="color:var(--text-dim);font-size:0.85rem;margin-top:6px;">Statistical analysis of currency basket behavior across sessions, days &amp; weeks.</div>
-  </div>
-
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0;">
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;flex:1;min-width:110px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);">520</div>
-      <div style="font-size:0.68rem;color:var(--text-dim);margin-top:2px;">Days analyzed</div>
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <div>
+      <h1>Decision follows structure.</h1>
+      <p class="sub">Currency-strength tools for MetaTrader&nbsp;5 and TradingView. Eight currency baskets, 28 pairs, one sum: zero.</p>
+      <div class="actions">
+        <a class="btn primary" href="#tools">Explore the tools</a>
+        <a class="btn ghost" href="https://discord.gg/PchWNuPVNN" target="_blank" rel="noopener">Join the Discord</a>
+      </div>
     </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;flex:1;min-width:110px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);">37M+</div>
-      <div style="font-size:0.68rem;color:var(--text-dim);margin-top:2px;">Simulated trades</div>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;flex:1;min-width:110px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);">1,512</div>
-      <div style="font-size:0.68rem;color:var(--text-dim);margin-top:2px;">Combinations tested</div>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;flex:1;min-width:110px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);">9</div>
-      <div style="font-size:0.68rem;color:var(--text-dim);margin-top:2px;">Strategies evaluated</div>
-    </div>
-  </div>
 
-  <div style="display:grid;gap:10px;margin:24px 0;">
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);min-width:28px;">1</div>
-      <div style="font-size:0.85rem;line-height:1.5;"><strong style="color:var(--text-bright);">Tuesday + Wednesday predict the weekly direction with 73% accuracy.</strong><br><span style="color:var(--text-dim);">JPY reaches 86%. Institutional positioning before the Friday COT release.</span></div>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);min-width:28px;">2</div>
-      <div style="font-size:0.85rem;line-height:1.5;"><strong style="color:var(--text-bright);">Session-to-session prediction is a coin flip. Exactly 50/50.</strong><br><span style="color:var(--text-dim);">The profitable strategies react to breakouts, not predict direction.</span></div>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);min-width:28px;">3</div>
-      <div style="font-size:0.85rem;line-height:1.5;"><strong style="color:var(--text-bright);">Friday is the universal reversal day.</strong><br><span style="color:var(--text-dim);">55% of Fridays reverse the weekly trend. NZD, USD, JPY: 62–65%.</span></div>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);min-width:28px;">4</div>
-      <div style="font-size:0.85rem;line-height:1.5;"><strong style="color:var(--text-bright);">The "Initial Candle" — Monday's D1 predicts the week with 63%.</strong><br><span style="color:var(--text-dim);">Multi-timeframe SMA alignment reaches 86% when all 4 TFs agree.</span></div>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--cyan);min-width:28px;">5</div>
-      <div style="font-size:0.85rem;line-height:1.5;"><strong style="color:var(--text-bright);">EUR and GBP have zero M15 breakout edge across the entire day.</strong><br><span style="color:var(--text-dim);">760 slots tested. The edge lives in CHF, JPY, USD — NY Overlap only.</span></div>
-    </div>
-  </div>
-
-  <div style="text-align:center;margin-top:20px;">
-    <a href="MATTRIX_MarketBehavior_Report.html" style="color:var(--cyan);text-decoration:none;font-size:0.85rem;font-weight:600;letter-spacing:0.03em;font-family:'JetBrains Mono',monospace;">READ FULL REPORT →</a>
+    <!-- Example values only. Sum must stay exactly 0. -->
+    <figure class="board" aria-label="Example: eight currency baskets whose values sum to zero">
+      <div class="row"><span class="cur">AUD</span><span class="neg"></span><span class="pos"><i style="width:100%"></i></span><span class="val">+205</span></div>
+      <div class="row"><span class="cur">NZD</span><span class="neg"></span><span class="pos"><i style="width:57.6%"></i></span><span class="val">+118</span></div>
+      <div class="row"><span class="cur">CHF</span><span class="neg"></span><span class="pos"><i style="width:31.2%"></i></span><span class="val">+64</span></div>
+      <div class="row"><span class="cur">JPY</span><span class="neg"></span><span class="pos"><i style="width:5.9%"></i></span><span class="val">+12</span></div>
+      <div class="row"><span class="cur">CAD</span><span class="neg"><i style="width:18.5%"></i></span><span class="pos"></span><span class="val">−38</span></div>
+      <div class="row"><span class="cur">EUR</span><span class="neg"><i style="width:34.6%"></i></span><span class="pos"></span><span class="val">−71</span></div>
+      <div class="row"><span class="cur">GBP</span><span class="neg"><i style="width:46.8%"></i></span><span class="pos"></span><span class="val">−96</span></div>
+      <div class="row"><span class="cur">USD</span><span class="neg"><i style="width:94.6%"></i></span><span class="pos"></span><span class="val">−194</span></div>
+      <div class="sum"><span>Sum of all eight</span><b>0</b></div>
+      <figcaption>Example values in pips. Every pair appears in two baskets with opposite signs, so the eight baskets always sum to zero.</figcaption>
+    </figure>
   </div>
 </div>
-<!-- ═══ END RESEARCH TEASER ═══ -->
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="lead">A single pair shows one currency against another. A basket shows one currency against all seven others, so you see which side of a pair is actually moving.</p>
+    <div class="steps">
+      <div>
+        <span class="n">1</span>
+        <h3>Eight currencies</h3>
+        <p>EUR, GBP, AUD, NZD, USD, CAD, CHF and JPY form 28 pairs. Together they cover the major forex market.</p>
+      </div>
+      <div>
+        <span class="n">2</span>
+        <h3>One basket per currency</h3>
+        <p>Each currency is measured against the other seven pairs at once. The basket shows its strength as one value.</p>
+      </div>
+      <div>
+        <span class="n">3</span>
+        <h3>The Secret of Zero</h3>
+        <p>What one currency gains, another loses. The eight baskets always sum to zero, which makes the ranking a closed, consistent picture.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HIGHLIGHT: AUTOQUICKTRADE ═══ -->
+<section id="aqt">
+  <div class="wrap">
+    <div class="aqt">
+      <div>
+        <span class="status">Beta · MetaTrader 5</span>
+        <h2>AutoQuickTrade</h2>
+        <p class="lead">An Expert Advisor for placing and managing trades from the chart: forex pairs, currency baskets, and other symbols such as gold, Bitcoin and stock indices. You decide on the trade; AutoQuickTrade handles size, execution and the safety checks.</p>
+        <p class="lead" style="margin-top:14px;">AutoQuickTrade is in beta. Test versions are available to members of the Discord server.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://discord.gg/PchWNuPVNN" target="_blank" rel="noopener">Join the beta on Discord</a>
+          <a class="btn ghost" href="AutoQuickTrade.html">Read the manual</a>
+        </div>
+      </div>
+      <ul>
+        <li><strong>One click from the chart.</strong> Open a single symbol, or all seven pairs of a currency basket at once.</li>
+        <li><strong>Size by value per pip.</strong> Set the amount per pip; the lot size follows. Orders above the broker's maximum volume are refused, not silently reduced.</li>
+        <li><strong>Daily kill switch.</strong> Stops trading at a set percentage of equity, per account or per magic number.</li>
+        <li><strong>Cost check.</strong> Pending OCO orders are only armed when the target covers spread and commission by a set multiple.</li>
+        <li><strong>Starts switched off.</strong> AUTO mode is always off after a restart or recompile.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TOOLS ═══ -->
+<!-- Product IDs and prices as listed on MQL5, 15 Oct 2026. Day Levels: product link still missing. -->
+<section id="tools">
+  <div class="wrap">
+    <h2>The MetaTrader 5 tools</h2>
+    <p class="lead">Each tool does one job. Start with the free ones; they show the basket idea on your own charts.</p>
+
+    <div class="groups">
+      <div class="group">
+        <h3>Foundation</h3>
+        <p class="gdesc">Build the basket charts the other tools read.</p>
+        <div class="tool">
+          <div class="name">Synthetic Chart <span class="tag">Free</span></div>
+          <p>Creates the eight currency baskets as real charts in MetaTrader&nbsp;5.</p>
+          <div class="links"><a href="https://www.mql5.com/en/market/product/177905" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+        <div class="tool">
+          <div class="name">Auto Refresh <span class="tag">Free</span></div>
+          <p>Keeps basket and custom charts up to date.</p>
+          <div class="links"><a href="https://www.mql5.com/en/market/product/176191" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Analysis</h3>
+        <p class="gdesc">Read strength, coherence and structure.</p>
+        <div class="tool">
+          <div class="name">Basket Viewer <span class="tag">Free</span></div>
+          <p>All eight baskets in one panel: pips per session, coherence and ranking.</p>
+          <div class="links"><a href="BasketViewer.html">Manual</a><a href="https://www.mql5.com/en/market/product/175595" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+        <div class="tool">
+          <div class="name">Basket Strength <span class="tag">Free</span></div>
+          <p>Shows how many of the seven pairs carry a basket move, with volatility and activity.</p>
+          <div class="links"><a href="BasketStrength.html">Manual</a><a href="https://www.mql5.com/en/market/product/176196" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+        <div class="tool">
+          <div class="name">Risk Meter</div>
+          <p>Compares risk-on and risk-off currencies as one measure.</p>
+          <div class="links"><a href="https://www.mql5.com/en/market/product/178043" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+        <div class="tool">
+          <div class="name">Cockpit</div>
+          <p>Ranges, multi-timeframe trend and performance at a glance.</p>
+          <div class="links"><a href="Cockpit.html">Manual</a><a href="https://www.mql5.com/en/market/product/181227" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+        <div class="tool">
+          <div class="name">Day Levels <span class="tag">Free</span></div>
+          <p>Marks today's and yesterday's high and low on the chart.</p>
+          <div class="links"><a href="https://www.mql5.com/en/users/mattrix/seller" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Execution</h3>
+        <p class="gdesc">Place, monitor and protect positions.</p>
+        <div class="tool">
+          <div class="name">AutoQuickTrade <span class="tag beta">Beta</span></div>
+          <p>Trades on pairs, baskets, gold, Bitcoin and indices from the chart, with sizing and safety checks. Successor of One Click Basket Trade.</p>
+          <div class="links"><a href="#aqt">Details</a><a href="AutoQuickTrade.html">Manual</a></div>
+        </div>
+        <div class="tool">
+          <div class="name">Position Monitor <span class="tag">Free</span></div>
+          <p>All open positions by group, with close controls and a daily kill switch.</p>
+          <div class="links"><a href="PositionMonitor.html">Manual</a><a href="https://www.mql5.com/en/market/product/178031" target="_blank" rel="noopener">MQL5 Market</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PLATFORMS ═══ -->
+<section id="platforms">
+  <div class="wrap">
+    <h2>Two platforms, two roles</h2>
+    <div class="platforms">
+      <div>
+        <h3>TradingView: analysis</h3>
+        <p>Basket analysis in the browser, without installing anything. Chart Info is published open source, the Basket Viewer as a protected script. Basket Strength, Session Candles, Session Overview, Risk Meter and Engulfing follow.</p>
+        <p><a href="https://www.tradingview.com/u/MATTRIX8x/" target="_blank" rel="noopener">Scripts on TradingView</a></p>
+      </div>
+      <div>
+        <h3>MetaTrader 5: execution</h3>
+        <p>Real basket charts, all 28 pairs at once and order execution, also for gold, Bitcoin and indices. MetaTrader&nbsp;4 is not supported, because it cannot build synthetic charts.</p>
+        <p><a href="https://www.mql5.com/en/users/mattrix/seller" target="_blank" rel="noopener">Products on MQL5</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RESEARCH ═══ -->
+<section id="research">
+  <div class="wrap">
+    <h2>What 520 days of basket data show</h2>
+    <p class="lead">A statistical study of currency basket behaviour across sessions, days and weeks: 1,512 combinations, nine strategies, more than 37 million simulated trades.</p>
+    <div class="findings">
+      <div class="finding"><span class="fig">73%</span><p><strong>Tuesday and Wednesday matched the weekly direction in 73% of weeks.</strong> For JPY the rate was 86%.</p></div>
+      <div class="finding"><span class="fig">50%</span><p><strong>Predicting the next session from the last one was a coin flip.</strong> The strategies that held up reacted to breakouts instead of forecasting direction.</p></div>
+      <div class="finding"><span class="fig">55%</span><p><strong>Fridays reversed the weekly trend in 55% of weeks.</strong> For NZD, USD and JPY the rate was 62–65%.</p></div>
+      <div class="finding"><span class="fig">63%</span><p><strong>Monday's daily candle matched the week's direction in 63% of weeks.</strong> When SMA alignment agreed on all four timeframes, the rate was 86%.</p></div>
+      <div class="finding"><span class="fig">0</span><p><strong>EUR and GBP showed no M15 breakout edge at any time of day.</strong> Across 760 tested time slots, the edge was limited to CHF, JPY and USD during the New York overlap.</p></div>
+    </div>
+    <p class="note">Historical backtest on past price data. The results describe the test period and are not a forecast or a trading recommendation.</p>
+    <p style="margin-top:16px;"><a href="MATTRIX_MarketBehavior_Report.html">Read the full report</a></p>
+  </div>
+</section>
+
+<!-- ═══ COMMUNITY ═══ -->
+<section id="community">
+  <div class="wrap community">
+    <div>
+      <h2>Forex Basket Traders</h2>
+      <p class="lead">The Discord server for traders who work with currency baskets. Members discuss daily basket readings, test new tool versions before release, report bugs and get support directly from the developer.</p>
+      <p class="lead dim" style="margin-top:12px;">Bug reports: post in #bug-reports with a screenshot of the Experts tab.</p>
+    </div>
+    <div>
+      <a class="btn primary" href="https://discord.gg/PchWNuPVNN" target="_blank" rel="noopener">Join Forex Basket Traders</a>
+      <p class="dim" style="margin-top:12px;font-size:0.88rem;">Free to join. Discord's privacy policy applies.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq">
+  <div class="wrap">
+    <h2>Questions</h2>
+    <details>
+      <summary>Do the tools give buy or sell signals?</summary>
+      <p>No. They measure and display currency strength. Whether and how to trade is your decision.</p>
+    </details>
+    <details>
+      <summary>What is a currency basket?</summary>
+      <p>A basket combines the seven pairs of one currency into one chart. The EUR basket, for example, shows the euro against GBP, AUD, NZD, USD, CAD, CHF and JPY at the same time.</p>
+    </details>
+    <details>
+      <summary>What is the Secret of Zero?</summary>
+      <p>The eight currencies form a closed system. Each of the 28 pairs appears in two baskets: as it is in the basket of its base currency, inverted in the basket of its quote currency. A pair that gains 20 pips adds +20 to one basket and −20 to the other, so across all eight baskets the values always sum to zero. Strength in one currency is always weakness somewhere else.</p>
+      <p>The rule also works as a data check. If the eight values do not sum to zero, a pair is missing or a price feed is out of date.</p>
+    </details>
+    <details>
+      <summary>Which tools should I start with?</summary>
+      <p>Synthetic Chart builds the basket charts, and the Basket Viewer shows all eight baskets in one panel. Both are free on the MQL5 Market.</p>
+    </details>
+    <details>
+      <summary>Why MetaTrader 5 and TradingView?</summary>
+      <p>They do different jobs. TradingView is for analysis in the browser, without installing anything. Use the same data source in all scripts and basket charts there.</p>
+      <p>MetaTrader&nbsp;5 builds the baskets as real charts (custom symbols), keeps its state between ticks for functions like the daily kill switch, and sends orders directly to the broker. TradingView scripts have no clickable chart buttons and need a webhook bridge to place orders, so execution stays in MetaTrader&nbsp;5.</p>
+    </details>
+    <details>
+      <summary>I installed an update, but nothing changed on my chart.</summary>
+      <p>MetaTrader&nbsp;5 keeps the old version running until the indicator is reloaded. Remove it from the chart and add it again from the Navigator. With many charts, save one updated chart as a template and apply that template to the others.</p>
+    </details>
+    <details>
+      <summary>What are #RON and #ROFF?</summary>
+      <p>Two baskets of eight pairs each. Every pair combines a risk-on currency (EUR, GBP, AUD, NZD) with a risk-off currency (USD, CAD, CHF, JPY); the 16 pairs are split into two sets. Measured geometrically, both baskets describe the same quantity, so the Risk Meter shows #ROFF inverted as a mirror line. A buy on #RON together with a sell on #ROFF is therefore a hedge.</p>
+    </details>
+    <details>
+      <summary>Is MetaTrader 4 supported?</summary>
+      <p>No. MetaTrader&nbsp;4 has no custom symbols, so it cannot build the basket charts the tools depend on.</p>
+    </details>
+  </div>
+</section>
 
 <div class="quote">
-  <p>"The score tells you the direction. The chart confirms the entry."</p>
-  <p style="margin-top: 12px;"><span>IN CHART VERITAS</span></p>
+  <p>The score shows the structure. The chart confirms the entry.</p>
+  <p class="sig">IN CHART VERITAS</p>
 </div>
 
 <footer>
-  <div class="copy">&copy; 2026 Matthias Scholz &mdash; FOREX BASKET TRADERS (F.B.T)</div>
-  <div style="margin-top:8px; font-size:0.95em;">
-    <a href="impressum.html" style="color:var(--cyan-dim); text-decoration:none; letter-spacing:0.5px;">Impressum &amp; Disclaimer</a>
-    <span style="color:#303858; margin:0 8px;">|</span>
-    <span id="ft-em"></span>
-  </div>
-  <div style="margin-top:6px; font-size:0.8em; color:#557;">Originally inspired by the Dashboard Power Meter concept shared by Edition GVC on ForexFactory (2019).</div>
-  <div class="disclaimer">
-    This software is provided "AS IS" for testing purposes. No guarantee of correct execution or profitability.
-    Forex trading carries a high level of risk. Do not invest money you cannot afford to lose.
-    Not financial advice. See <a href="impressum.html" style="color:#404868;">full disclaimer</a>.
+  <div class="wrap">
+    <div class="cols">
+      <div>&copy; 2026 Matthias Scholz, MATTRIX 8x, Forex Basket Traders (F.B.T)</div>
+      <div>
+        <a href="impressum.html">Impressum &amp; Disclaimer</a><span class="sep">|</span><span id="ft-em"></span>
+      </div>
+    </div>
+    <p style="margin-top:12px;">Where it started: the original basket EA MATTRIX v2 (<a href="Manual.html">manual</a>, <a href="changelog.html">changelog</a>). Originally inspired by the Dashboard Power Meter concept shared by Edition GVC on ForexFactory (2019).</p>
+    <p class="disclaimer">The software is provided "as is". There is no guarantee of correct execution or profitability. The tools display calculations based on market data; they are not investment advice and not trading recommendations. Forex trading carries a high level of risk. Do not trade with money you cannot afford to lose. See the <a href="impressum.html">full disclaimer</a>.</p>
   </div>
 </footer>
-<script>
-(function(){var a='matt';var b='mattrix8x';var c='.com';var e=a+'@'+b+c;var el=document.getElementById('ft-em');if(el){el.innerHTML='<a href="mai'+'lto:'+e+'" style="color:#008c91;text-decoration:none;">'+e+'</a>';}})();
-</script>
 
+<script>
+(function(){var a='matt';var b='mattrix8x';var c='.com';var e=a+'@'+b+c;var el=document.getElementById('ft-em');if(el){el.innerHTML='<a href="mai'+'lto:'+e+'">'+e+'</a>';}})();
+</script>
 </body>
 </html>
