@@ -83,8 +83,9 @@
   .steps .n { font-family:var(--mono); color:var(--cyan); font-size:0.9rem; }
 
   .shot { margin-top:44px; }
-  .shot img { display:block; width:100%; max-width:731px; height:auto; border:1px solid var(--border); border-radius:4px; background:#000; }
-  .shot figcaption { margin-top:10px; font-size:0.85rem; color:var(--text-dim); max-width:731px; }
+  .shots { display:grid; grid-template-columns:412fr 731fr; gap:16px; align-items:start; }
+  .shot img { display:block; width:100%; height:auto; border:1px solid var(--border); border-radius:4px; background:#000; }
+  .shot figcaption { margin-top:10px; font-size:0.85rem; color:var(--text-dim); max-width:70ch; }
 
   /* ─── Highlight: AQT ─── */
   .aqt { display:grid; grid-template-columns:1fr 1fr; gap:48px; background:linear-gradient(180deg, rgba(0,206,209,0.05), transparent 70%); border:1px solid var(--cyan-dim); border-radius:6px; padding:40px; }
@@ -143,7 +144,7 @@
 
   @media (max-width:860px) {
     .hero, .aqt, .platforms, .community { grid-template-columns:1fr; gap:32px; }
-    .steps, .groups { grid-template-columns:1fr; }
+    .steps, .groups, .shots { grid-template-columns:1fr; }
     .aqt { padding:26px; }
     .top nav a:not(.keep) { display:none; }
     section { padding:56px 0; }
@@ -178,18 +179,18 @@
       </div>
     </div>
 
-    <!-- Real values: Basket Viewer, DAY column, 15 Oct 2026. Sum must stay exactly 0. -->
+    <!-- Real values: Basket Viewer, DAY column, 15 Oct 2026 22:11 GMT+3 (same moment as the screenshots). Rounded sum = +1. -->
     <figure class="board" aria-label="Eight currency baskets on 15 October 2026; their values sum to zero">
-      <div class="row"><span class="cur">GBP</span><span class="neg"></span><span class="pos"><i style="width:53.2%"></i></span><span class="val">+529</span></div>
-      <div class="row"><span class="cur">CHF</span><span class="neg"></span><span class="pos"><i style="width:46.2%"></i></span><span class="val">+459</span></div>
-      <div class="row"><span class="cur">EUR</span><span class="neg"></span><span class="pos"><i style="width:38.4%"></i></span><span class="val">+382</span></div>
-      <div class="row"><span class="cur">NZD</span><span class="neg"></span><span class="pos"><i style="width:7.9%"></i></span><span class="val">+79</span></div>
-      <div class="row"><span class="cur">CAD</span><span class="neg"></span><span class="pos"><i style="width:7.4%"></i></span><span class="val">+74</span></div>
-      <div class="row"><span class="cur">JPY</span><span class="neg"><i style="width:25.2%"></i></span><span class="pos"></span><span class="val">−250</span></div>
-      <div class="row"><span class="cur">USD</span><span class="neg"><i style="width:28.1%"></i></span><span class="pos"></span><span class="val">−279</span></div>
-      <div class="row"><span class="cur">AUD</span><span class="neg"><i style="width:100.0%"></i></span><span class="pos"></span><span class="val">−994</span></div>
+      <div class="row"><span class="cur">GBP</span><span class="neg"></span><span class="pos"><i style="width:54.2%"></i></span><span class="val">+513</span></div>
+      <div class="row"><span class="cur">CHF</span><span class="neg"></span><span class="pos"><i style="width:47.9%"></i></span><span class="val">+453</span></div>
+      <div class="row"><span class="cur">EUR</span><span class="neg"></span><span class="pos"><i style="width:35.7%"></i></span><span class="val">+338</span></div>
+      <div class="row"><span class="cur">NZD</span><span class="neg"></span><span class="pos"><i style="width:9.8%"></i></span><span class="val">+93</span></div>
+      <div class="row"><span class="cur">CAD</span><span class="neg"></span><span class="pos"><i style="width:7.1%"></i></span><span class="val">+67</span></div>
+      <div class="row"><span class="cur">USD</span><span class="neg"><i style="width:25.6%"></i></span><span class="pos"></span><span class="val">−242</span></div>
+      <div class="row"><span class="cur">JPY</span><span class="neg"><i style="width:29.1%"></i></span><span class="pos"></span><span class="val">−275</span></div>
+      <div class="row"><span class="cur">AUD</span><span class="neg"><i style="width:100.0%"></i></span><span class="pos"></span><span class="val">−946</span></div>
       <div class="sum"><span>Sum of all eight</span><b>0</b></div>
-      <figcaption>Daily basket values in pips, Basket Viewer, 15 Oct 2026. Every pair appears in two baskets with opposite signs, so the eight baskets always sum to zero.</figcaption>
+      <figcaption>Daily basket values in pips, Basket Viewer, 15 Oct 2026. Every pair appears in two baskets with opposite signs, so the eight baskets always sum to zero. Values are rounded; the unrounded sum is exactly zero.</figcaption>
     </figure>
   </div>
 </div>
@@ -217,8 +218,11 @@
       </div>
     </div>
     <figure class="shot">
-      <img src="images/basket-gbp-d1.webp" width="731" height="415" loading="lazy" alt="Daily chart of the GBP basket in MetaTrader 5 with the Basket Strength panel: +529 pips, coherence 6 of 7, and the seven GBP pairs listed with their pip values.">
-      <figcaption>The GBP basket as a daily chart in MetaTrader&nbsp;5, with Basket Strength: +529 pips, six of seven pairs moving in the same direction. 15 Oct 2026.</figcaption>
+      <div class="shots">
+        <img src="images/basket-viewer.webp" width="412" height="284" loading="lazy" alt="Basket Viewer panel listing the eight currency baskets with daily and session pip values, coherence and direction, and the three top pairs.">
+        <img src="images/basket-gbp-d1.webp" width="731" height="415" loading="lazy" alt="Daily chart of the GBP basket in MetaTrader 5 with the Basket Strength panel: +513 pips, coherence 6 of 7, and the seven GBP pairs listed with their pip values.">
+      </div>
+      <figcaption>Left: the Basket Viewer with all eight baskets, ranked by pips and coherence. Right: the GBP basket as a daily chart with Basket Strength, six of seven pairs moving up. MetaTrader&nbsp;5, 15 Oct 2026.</figcaption>
     </figure>
   </div>
 </section>
