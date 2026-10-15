@@ -91,14 +91,13 @@
 <p>One row per basket, <b>sorted</b> from strongest to weakest by <b>pip sum &times; coherence ratio</b> for the selected reference period (section 06).</p>
 <ul>
   <li><b>Basket button</b> &mdash; opens (or focuses) that basket's chart on <span class="k">Chart timeframe when opening</span>, with your <span class="k">Chart template</span> if set</li>
-  <li><b>Value columns</b> &mdash; up to four periods, freely chosen (section 04); green = up, red = down, grey = within &plusmn;0.5. A value that rounds to zero shows <code>0</code>, without a sign</li>
+  <li><b>Value columns</b> &mdash; up to four periods, freely chosen (section 04); green = up, red = down, grey = within &plusmn;0.5</li>
   <li><b>Coh(x)</b> &mdash; how many of the seven pairs agree on the direction, e.g. <code>7/7</code>. Green / red = 6 or 7 agree, yellow = mixed, dim red = choppy. The letter shows the reference period</li>
   <li><b>Dir</b> &mdash; majority direction &#9650; / &#9660;</li>
 </ul>
 
 <h2><span class="n">04</span>Columns &amp; sessions</h2>
-<p><span class="k">Column 1</span> &hellip; <span class="k">Column 4</span> each take one period; <code>OFF</code> slots are skipped, the panel width adapts.</p>
-<p><b>Session columns follow the clock.</b> With <span class="k">Session column order</span> on <code>Chronological</code> (default) the session columns are sorted by the start of the session they show &mdash; the most recent one on the right. The table then reads left to right like the trading day: once Tokyo has opened it shows <code>LON* NYC* TYO</code> &mdash; yesterday&rsquo;s London and New York, then today&rsquo;s Tokyo &mdash; instead of putting the fresh Tokyo session in front of them. The order therefore changes during the day; <code>YTD</code>, <code>MTD</code>, <code>WTD</code> and <code>DAY</code> keep their slot. <code>Fixed</code> keeps the order of the column inputs, as before v1.13.</p>
+<p><span class="k">Column 1</span> &hellip; <span class="k">Column 4</span> each take one period; <code>OFF</code> slots are skipped, the panel width adapts. Columns keep their order &mdash; they never move around during the day.</p>
 <table>
   <tr><th>Header</th><th>Period</th></tr>
   <tr><td class="s">YTD</td><td>Year to date &mdash; from the first bar of the year</td></tr>
@@ -137,7 +136,7 @@
 
 <h2><span class="n">07</span>Top Pairs</h2>
 <p>The three best-scored pairs from all strong/weak combinations: <b>70 % basket spread + 30 % combined coherence</b>. Click a pair to open its chart.</p>
-<div class="note"><b>The value is a basket spread, not the pair's pips.</b> <code>EURAUD SELL (+186)</code> means the AUD basket is 186 pips of sum ahead of the EUR basket &mdash; EURAUD itself has not moved 186 pips.</div>
+<div class="note"><b>The value is a basket spread, not the pair's pips.</b> <code>EURAUD ▼ (+186)</code> means the AUD basket is 186 pips of sum ahead of the EUR basket &mdash; EURAUD itself has not moved 186 pips.</div>
 
 <h2><span class="n">08</span>Snapshot &amp; export</h2>
 <p>With <span class="k">Show snapshot text on chart</span> enabled, a text block to the right of the dashboard summarises the reference period: strongest and weakest currency, best pair, and a line with the <b>session hours of the current trading day</b> in server time, coloured like the columns:</p>
@@ -157,7 +156,6 @@
   <tr><td class="s">Chart</td><td>Chart timeframe / template</td><td>Used when a basket or pair chart is opened</td></tr>
   <tr><td class="s">Chart</td><td>Delete custom symbols when EA removed</td><td>Default off; never deletes while SyntheticCharts owns them</td></tr>
   <tr><td class="s">Columns</td><td>Column 1&ndash;4</td><td>Default DAY / TYO / LON / NYC</td></tr>
-  <tr><td class="s">Columns</td><td>Session column order</td><td>Chronological (default) or Fixed; see section 04</td></tr>
   <tr><td class="s">Columns</td><td>Reference period</td><td>Default AUTO; see section 06</td></tr>
   <tr><td class="s">Position</td><td>Dashboard X / Y</td><td>Position on the chart</td></tr>
   <tr><td class="s">Position</td><td>Show snapshot text</td><td>Also enables the export on click</td></tr>
