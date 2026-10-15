@@ -82,6 +82,10 @@
   .steps p { margin-top:8px; font-size:0.97rem; }
   .steps .n { font-family:var(--mono); color:var(--cyan); font-size:0.9rem; }
 
+  .shot { margin-top:44px; }
+  .shot img { display:block; width:100%; max-width:731px; height:auto; border:1px solid var(--border); border-radius:4px; background:#000; }
+  .shot figcaption { margin-top:10px; font-size:0.85rem; color:var(--text-dim); max-width:731px; }
+
   /* ─── Highlight: AQT ─── */
   .aqt { display:grid; grid-template-columns:1fr 1fr; gap:48px; background:linear-gradient(180deg, rgba(0,206,209,0.05), transparent 70%); border:1px solid var(--cyan-dim); border-radius:6px; padding:40px; }
   .status { display:inline-block; font-family:var(--mono); font-size:0.8rem; color:var(--cyan); border:1px solid var(--cyan-dim); padding:3px 9px; border-radius:3px; margin-bottom:16px; }
@@ -174,18 +178,18 @@
       </div>
     </div>
 
-    <!-- Example values only. Sum must stay exactly 0. -->
-    <figure class="board" aria-label="Example: eight currency baskets whose values sum to zero">
-      <div class="row"><span class="cur">AUD</span><span class="neg"></span><span class="pos"><i style="width:100%"></i></span><span class="val">+205</span></div>
-      <div class="row"><span class="cur">NZD</span><span class="neg"></span><span class="pos"><i style="width:57.6%"></i></span><span class="val">+118</span></div>
-      <div class="row"><span class="cur">CHF</span><span class="neg"></span><span class="pos"><i style="width:31.2%"></i></span><span class="val">+64</span></div>
-      <div class="row"><span class="cur">JPY</span><span class="neg"></span><span class="pos"><i style="width:5.9%"></i></span><span class="val">+12</span></div>
-      <div class="row"><span class="cur">CAD</span><span class="neg"><i style="width:18.5%"></i></span><span class="pos"></span><span class="val">−38</span></div>
-      <div class="row"><span class="cur">EUR</span><span class="neg"><i style="width:34.6%"></i></span><span class="pos"></span><span class="val">−71</span></div>
-      <div class="row"><span class="cur">GBP</span><span class="neg"><i style="width:46.8%"></i></span><span class="pos"></span><span class="val">−96</span></div>
-      <div class="row"><span class="cur">USD</span><span class="neg"><i style="width:94.6%"></i></span><span class="pos"></span><span class="val">−194</span></div>
+    <!-- Real values: Basket Viewer, DAY column, 15 Oct 2026. Sum must stay exactly 0. -->
+    <figure class="board" aria-label="Eight currency baskets on 15 October 2026; their values sum to zero">
+      <div class="row"><span class="cur">GBP</span><span class="neg"></span><span class="pos"><i style="width:53.2%"></i></span><span class="val">+529</span></div>
+      <div class="row"><span class="cur">CHF</span><span class="neg"></span><span class="pos"><i style="width:46.2%"></i></span><span class="val">+459</span></div>
+      <div class="row"><span class="cur">EUR</span><span class="neg"></span><span class="pos"><i style="width:38.4%"></i></span><span class="val">+382</span></div>
+      <div class="row"><span class="cur">NZD</span><span class="neg"></span><span class="pos"><i style="width:7.9%"></i></span><span class="val">+79</span></div>
+      <div class="row"><span class="cur">CAD</span><span class="neg"></span><span class="pos"><i style="width:7.4%"></i></span><span class="val">+74</span></div>
+      <div class="row"><span class="cur">JPY</span><span class="neg"><i style="width:25.2%"></i></span><span class="pos"></span><span class="val">−250</span></div>
+      <div class="row"><span class="cur">USD</span><span class="neg"><i style="width:28.1%"></i></span><span class="pos"></span><span class="val">−279</span></div>
+      <div class="row"><span class="cur">AUD</span><span class="neg"><i style="width:100.0%"></i></span><span class="pos"></span><span class="val">−994</span></div>
       <div class="sum"><span>Sum of all eight</span><b>0</b></div>
-      <figcaption>Example values in pips. Every pair appears in two baskets with opposite signs, so the eight baskets always sum to zero.</figcaption>
+      <figcaption>Daily basket values in pips, Basket Viewer, 15 Oct 2026. Every pair appears in two baskets with opposite signs, so the eight baskets always sum to zero.</figcaption>
     </figure>
   </div>
 </div>
@@ -212,6 +216,10 @@
         <p>What one currency gains, another loses. The eight baskets always sum to zero, which makes the ranking a closed, consistent picture.</p>
       </div>
     </div>
+    <figure class="shot">
+      <img src="images/basket-gbp-d1.webp" width="731" height="415" loading="lazy" alt="Daily chart of the GBP basket in MetaTrader 5 with the Basket Strength panel: +529 pips, coherence 6 of 7, and the seven GBP pairs listed with their pip values.">
+      <figcaption>The GBP basket as a daily chart in MetaTrader&nbsp;5, with Basket Strength: +529 pips, six of seven pairs moving in the same direction. 15 Oct 2026.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -367,8 +375,8 @@
   <div class="wrap">
     <h2>Questions</h2>
     <details>
-      <summary>Do the tools give buy or sell signals?</summary>
-      <p>No. They measure and display currency strength. Whether and how to trade is your decision.</p>
+      <summary>Do the tools tell me what to trade?</summary>
+      <p>No. They measure currency strength and show the result. The Basket Viewer ranks the eight currencies and lists the pairs that combine the strongest and the weakest basket. It does not time entries or exits, and it does not place trades. Whether and how to trade is your decision.</p>
     </details>
     <details>
       <summary>What is a currency basket?</summary>
