@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v1.94 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v2.01 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -99,12 +99,21 @@
       <li>Lot mode &amp; risk</li>
       <li>SL / TP basis (panel unit or ATR)</li>
       <li>AutoPyr status (step &amp; max layers)</li>
-      <li><b>P/L</b> — <b>net</b>: profit + swap &minus; est. commission (<code>c:</code>)</li>
+      <li><b>P/L</b> — <b>net</b>: profit + swap &minus; est. commission (<code>c:</code>); with TL off the pip / point sum</li>
       <li>Spread &amp; block reason</li>
     </ul>
   </div>
 </div>
 <p class="lead">A few seconds after load / profile switch the panel re-asserts itself on top, so indicator labels never cover it.</p>
+<h3>Header switches &mdash; TL and timeframe bar</h3>
+<p>Right of <b>+</b> / <b>&minus;</b> sit two switches that act on <b>all open charts</b>. They stay visible with the panel collapsed; a highlighted button (cyan) shows the current state of this chart.</p>
+<table>
+  <tr><th>Button</th><th>Effect</th></tr>
+  <tr><td class="s">TL</td><td>Trade levels on / off &mdash; the terminal's <i>Show trade levels</i> on every open chart. With TL <b>off</b> the panel also hides money: P/L in pips / points instead of the account currency, the lot line without its amount (<code>$/pip: --</code>), and the pending / OCO line labels without lot and money, showing distances only.</td></tr>
+  <tr><td class="s">1 &middot; 5 &middot; 15 &middot; H1 &middot; H4 &middot; D1</td><td>Sets every open chart to this timeframe. Charts running an EA named in <span class="k">Timeframe bar: not on charts running these EAs</span> are left alone (default: SyntheticCharts, BasketViewer &mdash; a timeframe change re-initialises them).</td></tr>
+</table>
+<div class="safe"><b>TL off for screenshots.</b> Before posting a chart on social media, switch TL off: trade lines, money and lot sizes disappear, pips and points remain. The terminal's <i>Trade</i> tab (balance, positions) is not part of the chart &mdash; close it before taking the screenshot.</div>
+<div class="note"><b>A timeframe change restarts every program on the chart.</b> Indicators and EAs re-initialise, the panel is rebuilt and keeps its state, as with a manual timeframe change. Pip P/L with TL off counts every layer equally, whatever its lot &mdash; with pyramids of different lot sizes it can differ in sign from the money P/L.</div>
 <p>By default the panel <b>starts collapsed</b> — useful when nine charts share one screen. Click <b>+</b> to open it, <b>&minus;</b> to fold it back to the header line; a pure timeframe change keeps whichever state you left it in. Set <span class="k">Start with the panel collapsed</span> to false for charts you actively trade from.</p>
 
 <h2><span class="n">04</span>Entering trades</h2>
@@ -130,6 +139,20 @@
 </ul>
 <div class="safe"><b>About those amounts.</b> They are calculated with the broker's own contract size and currency conversion, not estimated — and they are <b>net</b>: the round-trip commission is subtracted, which makes the loss at the stop bigger and the gain at the target smaller. One caveat: the figure assumes a fill at the line you drew. For market execution it holds; for a pending in a fast market it is a close estimate, not a promise.</div>
 <div class="note"><b>The EA refuses to fire on an impossible setup</b> rather than letting the broker reject it: a line on the wrong side of the entry shows <code>! SL WRONG SIDE - trade blocked</code>, and a lot the account cannot margin shows <code>! LOT &gt; MARGIN</code>, and a lot above the broker's maximum per order shows <code>! LOT &gt; MAX</code>. The pending stays armed — fix the line (or drag the stop further out to shrink the lot) and it triggers on the next touch. The reason is named in the journal.</div>
+<div class="card">
+<h3>OCO straddle and timed breakout (pair charts)</h3>
+<p>With <span class="k">OCO mode</span> set to <b>Breakout</b> or <b>Fade</b>, PEND BUY and PEND SELL each place <b>their own line</b> and both can be armed at the same time. The first line touched fires; the other line is removed (one cancels the other). Click 1 places the line one ATR away on the correct side, click 2 arms it, click 3 cancels it.</p>
+<table>
+  <tr><th>Mode</th><th>Buy line</th><th>Sell line</th><th>Stop</th><th>Target</th></tr>
+  <tr><td><b>Breakout</b></td><td>above price</td><td>below price</td><td>the opposite line</td><td>range &times; <span class="k">OCO breakout TP</span> (default 2, 0 = none)</td></tr>
+  <tr><td><b>Fade</b></td><td>below price</td><td>above price</td><td>beyond the line by <span class="k">OCO fade buffer</span> (% of the range, default 20)</td><td>the opposite line</td></tr>
+</table>
+<p>The range is the distance between the two lines. While both lines exist, each line shows its stop, target and lot, and dotted lines preview the stop and target levels; a line on the wrong side for the mode shows <b>! WRONG SIDE</b> and cannot be armed. A single armed line without its counterpart behaves like a classic pending with the normal SL/TP settings. The fill uses the same gates as BUY/SELL (spread, margin, <b>! LOT &gt; MAX</b>); a blocked fill keeps the line armed and retries after 5 seconds. Lines and armed state survive a timeframe change.</p>
+<p><b>Kept simple on purpose:</b> OCO and timed breakout work on <b>pair charts only</b>; on basket charts the classic PEND BUY/SELL applies. While a position opened by OCO is open, <b>AUTO makes no adds</b> on that chart &mdash; one entry, one stop, one target. A line can only be armed if its target pays for the costs: TP must be at least <span class="k">OCO minimum TP / cost</span> (default 3) &times; spread + round-trip commission, otherwise the label shows <b>! TP &lt; COST</b> and arming is refused (a timed breakout with a too-small range is skipped). The labels show the lot and the result at SL and TP <b>in money</b>, net of commission.</p>
+<p><b>Timed breakout</b> (<span class="k">OCO mode</span> = Timed breakout) works like Breakout, but places the lines itself. One click on PEND BUY or PEND SELL arms it (button: <b>BO WAIT hh:mm</b>). When the reference candle closes &mdash; start <span class="k">Timed breakout time</span> in <b>server time</b> (HH:MM), length <span class="k">Timed breakout minutes</span>, built from M1 &mdash; both lines are drawn on its high and low and armed. If the price is already outside the range at that moment, the breakout is <b>skipped as stale</b> (no late entry). Unfired lines are removed <span class="k">Timed breakout expiry</span> minutes after the candle close (0 = end of the server day). Clicking again while waiting or armed cancels everything. Each click arms one breakout; it does not repeat the next day.</p>
+<p><span class="k">OCO breakout SL buffer</span> (% of the range, default 0) moves the stop of Breakout and Timed breakout beyond the opposite line.</p>
+<div class="note"><b>Two risks remain:</b> a price jump across both lines fills only the side that is touched first, and a false breakout can reverse straight into the stop at the opposite line.</div>
+</div>
 
 <h2><span class="n">05</span>Lot sizing &amp; stops</h2>
 <ul>
@@ -231,17 +254,25 @@
   <tr><td class="s">Auto-pyr</td><td>Max layers, Cooldown (sec)</td><td>Automation guards</td></tr>
   <tr><td class="s">Pending</td><td>Pend timeout (sec)</td><td>Retry window, 0 = until filled/cancelled</td></tr>
   <tr><td class="s">Pending</td><td>Pend max dist (%)</td><td>Chase limit, 0 = off</td></tr>
+  <tr><td class="s">OCO</td><td>OCO mode</td><td>Off (classic) · Breakout · Fade · Timed breakout</td></tr>
+  <tr><td class="s">OCO</td><td>OCO breakout TP (range &times;)</td><td>2, 0 = no TP</td></tr>
+  <tr><td class="s">OCO</td><td>OCO fade buffer (% of range)</td><td>20</td></tr>
+  <tr><td class="s">OCO</td><td>OCO breakout SL buffer (% of range)</td><td>0 = SL on the opposite line</td></tr>
+  <tr><td class="s">OCO</td><td>OCO minimum TP / cost (&times; spread + commission)</td><td>3, 0 = off</td></tr>
+  <tr><td class="s">OCO</td><td>Timed breakout: start (server HH:MM) / minutes / expiry</td><td>15:30 · 15 · 120 (0 = end of day)</td></tr>
   <tr><td class="s">Protect</td><td>SECURE trail distance behind price (panel unit)</td><td>0 = net break-even</td></tr>
   <tr><td class="s">Protect</td><td>SECURE net-BE buffer (panel unit)</td><td>Locked above cost break-even (3)</td></tr>
   <tr><td class="s">Protect</td><td>TP distance from current price (panel unit)</td><td>0 = off</td></tr>
   <tr><td class="s">Cost</td><td>Round-trip commission per lot</td><td>0 = auto-learn from fills</td></tr>
   <tr><td class="s">Display</td><td>Start with the panel collapsed</td><td>Default on — click <b>+</b> to open. Kept across a timeframe change.</td></tr>
+  <tr><td class="s">Display</td><td>Timeframe buttons 1 5 15 H1 H4 D1 (all charts)</td><td>Default on</td></tr>
+  <tr><td class="s">Display</td><td>Timeframe bar: not on charts running these EAs</td><td>Comma list, default <code>SyntheticCharts,BasketViewer</code></td></tr>
   <tr><td class="s">Tester</td><td>Donchian lookback (bars)</td><td>Strategy Tester demo only (20)</td></tr>
 </table>
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v1.94 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v2.01 (beta) · Quick Manual</span>
 </footer>
 
 </div>
