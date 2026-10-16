@@ -59,7 +59,7 @@
 <div class="wrap">
 
 <header>
-  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v2.01 (beta)</div>
+  <div class="ey">MATTRIX 8x &nbsp;/&nbsp; MetaTrader 5 &nbsp;/&nbsp; v2.02 (beta)</div>
   <h1>AutoQuickTrade — Quick Manual</h1>
   <div class="sub">One-click trade panel for single pairs and currency baskets, with pyramiding, auto-pyramiding and line-triggered pending entries.</div>
   <div class="motto">IN CHART VERITAS &#9889;</div>
@@ -105,12 +105,12 @@
   </div>
 </div>
 <p class="lead">A few seconds after load / profile switch the panel re-asserts itself on top, so indicator labels never cover it.</p>
-<h3>Header switches &mdash; TL and timeframe bar</h3>
-<p>Right of <b>+</b> / <b>&minus;</b> sit two switches that act on <b>all open charts</b>. They stay visible with the panel collapsed; a highlighted button (cyan) shows the current state of this chart.</p>
+<h3>Switch row &mdash; timeframe bar and TL</h3>
+<p>A row <b>above the panel</b> holds switches that act on <b>all open charts</b>: the timeframe buttons on the left and <b>TL</b> on the right, directly above <b>+</b> / <b>&minus;</b>. The row stays visible with the panel collapsed; a highlighted button (cyan) shows the current state of this chart. <span class="k">Panel Y position</span> sets the top of this row (default 20); the panel starts one row lower.</p>
 <table>
   <tr><th>Button</th><th>Effect</th></tr>
   <tr><td class="s">TL</td><td>Trade levels on / off &mdash; the terminal's <i>Show trade levels</i> on every open chart. With TL <b>off</b> the panel also hides money: P/L in pips / points instead of the account currency, the lot line without its amount (<code>$/pip: --</code>), and the pending / OCO line labels without lot and money, showing distances only.</td></tr>
-  <tr><td class="s">1 &middot; 5 &middot; 15 &middot; H1 &middot; H4 &middot; D1</td><td>Sets every open chart to this timeframe. Charts running an EA named in <span class="k">Timeframe bar: not on charts running these EAs</span> are left alone (default: SyntheticCharts, BasketViewer &mdash; a timeframe change re-initialises them).</td></tr>
+  <tr><td class="s">1 &middot; 5 &middot; 15 &middot; H1 &middot; H4 &middot; D1 &middot; W1</td><td>Sets every open chart to this timeframe. Charts running an EA named in <span class="k">Timeframe bar: not on charts running these EAs</span> are left alone (default: SyntheticCharts, BasketViewer &mdash; a timeframe change re-initialises them).</td></tr>
 </table>
 <div class="safe"><b>TL off for screenshots.</b> Before posting a chart on social media, switch TL off: trade lines, money and lot sizes disappear, pips and points remain. The terminal's <i>Trade</i> tab (balance, positions) is not part of the chart &mdash; close it before taking the screenshot.</div>
 <div class="note"><b>A timeframe change restarts every program on the chart.</b> Indicators and EAs re-initialise, the panel is rebuilt and keeps its state, as with a manual timeframe change. Pip P/L with TL off counts every layer equally, whatever its lot &mdash; with pyramids of different lot sizes it can differ in sign from the money P/L.</div>
@@ -265,14 +265,14 @@
   <tr><td class="s">Protect</td><td>TP distance from current price (panel unit)</td><td>0 = off</td></tr>
   <tr><td class="s">Cost</td><td>Round-trip commission per lot</td><td>0 = auto-learn from fills</td></tr>
   <tr><td class="s">Display</td><td>Start with the panel collapsed</td><td>Default on — click <b>+</b> to open. Kept across a timeframe change.</td></tr>
-  <tr><td class="s">Display</td><td>Timeframe buttons 1 5 15 H1 H4 D1 (all charts)</td><td>Default on</td></tr>
+  <tr><td class="s">Display</td><td>Timeframe buttons 1 5 15 H1 H4 D1 W1 (all charts)</td><td>Default on</td></tr>
   <tr><td class="s">Display</td><td>Timeframe bar: not on charts running these EAs</td><td>Comma list, default <code>SyntheticCharts,BasketViewer</code></td></tr>
   <tr><td class="s">Tester</td><td>Donchian lookback (bars)</td><td>Strategy Tester demo only (20)</td></tr>
 </table>
 
 <footer>
   <span>&copy; Matthias Scholz · mattrix8x.com</span>
-  <span>AutoQuickTrade v2.01 (beta) · Quick Manual</span>
+  <span>AutoQuickTrade v2.02 (beta) · Quick Manual</span>
 </footer>
 
 </div>
